@@ -1,0 +1,14 @@
+
+a
+java:S1301"KReplace this "switch" statement by "if" statements to increase readability.(’ÎÁÄ
+S	java:S106	"9Replace this use of System.out or System.err by a logger.(îÚ¯¿ùÿÿÿÿ
+S	java:S106
+"9Replace this use of System.out or System.err by a logger.(²ôåôúÿÿÿÿ
+N	java:S106"9Replace this use of System.out or System.err by a logger.(Ï¶Ç‹
+M	java:S106"9Replace this use of System.out or System.err by a logger.(ÿ¸‰f
+N	java:S106"9Replace this use of System.out or System.err by a logger.(óÃâ‰
+Z	java:S106"9Replace this use of System.out or System.err by a logger.(²ôåôúÿÿÿÿ8à—…°Ï0
+U	java:S106"9Replace this use of System.out or System.err by a logger.(Ï¶Ç‹8à—…°Ï0
+T	java:S106"9Replace this use of System.out or System.err by a logger.(ÿ¸‰f8à—…°Ï0
+U	java:S106#"9Replace this use of System.out or System.err by a logger.(ØÃ‹½8ñ‹°Ï0
+Z	java:S106&"9Replace this use of System.out or System.err by a logger.(í”§õıÿÿÿÿ8³’•°Ï0
