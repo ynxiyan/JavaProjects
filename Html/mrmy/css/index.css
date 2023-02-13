@@ -1,0 +1,89 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+
+section::after {
+	content: '';
+	display: block;
+	clear: both;
+}
+
+section {
+	margin-top: 20px;
+}
+
+.content {
+	display: inline-block;
+}
+
+.title,
+table {
+	margin-left: 160px;
+}
+
+.content,
+.adcontent {
+	margin-left: 120px;
+}
+
+.title h2 {
+	font-size: 26px;
+}
+
+.title p {
+	font-style: italic;
+	color: #bbbcbb;
+}
+
+td {
+	padding: 10px;
+	border: 1px solid #bbbcbb;
+}
+
+hr {
+	margin-top: -1px;
+}
+
+.my,
+.jj,
+.ad {
+	width: 650px;
+}
+
+.fl1 {
+	margin-top: 20px;
+	border: 1px solid #bbbcbb;
+}
+
+.fl {
+	border: 1px solid #bbbcbb;
+}
+
+.my p:nth-of-type(1),
+.jj p:nth-of-type(1) {
+	margin-top: 20px;
+	font-weight: bold;
+}
+
+.ad {
+	border: 1px solid #bbbcbb;
+}
+
+h3 {
+	margin-left: 10px;
+}
+
+
+.ad span {
+	margin-left: 10px;
+}
+
+.adcontent {
+	margin-right: 300px;
+	margin-top: 20px;
+	width: 300px;
+	float: right;
+	border: 1px solid #bbbcbb;
+	padding: 20px;
+}

@@ -1,0 +1,35 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+
+a {
+	text-decoration: none;
+}
+
+li {
+	list-style: none;
+}
+
+body {
+	width: 700px;
+	margin: 0 auto;
+}
+
+.title h2 a {
+	float: right;
+	color: #5b666b;
+}
+
+.content {
+	margin-top: 20px;
+}
+
+.content ul li {
+	margin: 20px;
+	float: left;
+}
+
+.content ul li p {
+	font-size: 12px;
+}

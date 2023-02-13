@@ -1,0 +1,16 @@
+
+s	java:S135"YReduce the total number of break and continue statements in this loop to use at most one.(˜ïˆÿÿÿÿÿ
+T
+java:S1854"9Remove this useless assignment to local variable "score".(Ê­Áÿÿÿÿÿ
+N
+java:S1854"8Remove this useless assignment to local variable "shop".(öå¨
+W
+java:S1659"BDeclare "price" and all following declarations on a separate line.(†ƒ i
+S	java:S106"9Replace this use of System.out or System.err by a logger.(¯µ³ûûÿÿÿÿ
+N	java:S106"9Replace this use of System.out or System.err by a logger.(ì¤­×
+N	java:S106"9Replace this use of System.out or System.err by a logger.(Â¿
+S	java:S106"9Replace this use of System.out or System.err by a logger.(Ş‘›ïøÿÿÿÿ
+N	java:S106"9Replace this use of System.out or System.err by a logger.(İøáí
+S	java:S106"9Replace this use of System.out or System.err by a logger.(çÀ—øÿÿÿÿ
+S	java:S106""9Replace this use of System.out or System.err by a logger.(¥¦·üÿÿÿÿ
+N	java:S106)"9Replace this use of System.out or System.err by a logger.(ŸøÜÀ

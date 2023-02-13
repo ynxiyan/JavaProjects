@@ -1,0 +1,14 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+
+div {
+	border: 1px solid #000;
+}
+
+.img1,
+.img2,
+.img3 {
+	float: left;
+}

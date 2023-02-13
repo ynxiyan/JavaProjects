@@ -1,0 +1,50 @@
+.list {
+	width: 300px;
+}
+
+.content {
+	margin-left: 30px;
+}
+
+li {
+	list-style: none;
+}
+
+.title h1 {
+	font-size: 18px;
+	color: #fff;
+	font-weight: bold;
+	line-height: 35px;
+	background: linear-gradient(to bottom, #0467ac, #63a7d6, #b6dbf5);
+	text-indent: 1em;
+}
+
+.content p {
+	font-size: 14px;
+	font-weight: bold;
+	line-height: 30px;
+	background: linear-gradient(to bottom, #e4f1fa, #bddff7, #e4f1fa);
+	text-indent: 1em;
+}
+
+.content p a {
+	color: #0467ac;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+.content li a {
+	font-size: 12px;
+	line-height: 26px;
+	color: gray;
+}
+
+.content li a:hover {
+	color: rgb(128, 64, 0)
+}

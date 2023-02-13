@@ -1,0 +1,7 @@
+
+9
+java:S1659"#Declare "score" on a separate line.(€›ªå
+@
+java:S1481"*Remove this unused "score" local variable.(€›ªå
+S	java:S106"9Replace this use of System.out or System.err by a logger.(©µÂ—üÿÿÿÿ
+Z	java:S106"9Replace this use of System.out or System.err by a logger.(À÷ÎÕúÿÿÿÿ8ÐÝ¯¤Ï0

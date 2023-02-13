@@ -1,0 +1,75 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	width: 260px;
+	margin: 20px auto;
+}
+
+section {
+	padding: 30px;
+	background-color: #b11d1d;
+}
+
+.after::after {
+	content: '';
+	display: block;
+	clear: both;
+}
+
+a,
+p,
+.icon-angle-right {
+	color: #fff;
+}
+
+.icon-home,
+.icon-beer,
+.icon-medkit,
+.icon-truck,
+.icon-magic,
+.icon-user,
+.icon-briefcase,
+.icon-umbrella,
+.icon-laptop,
+.icon-credit-card {
+	font-size: 20px;
+	float: left;
+	position: relative;
+	top: 12px;
+	right: 10px;
+	color: #f88074;
+}
+
+.icon-angle-right {
+	float: right;
+	position: relative;
+	bottom: 28px;
+	right: 2px;
+
+}
+
+
+
+a {
+	text-decoration: none;
+}
+
+li {
+	position: relative;
+	list-style: none;
+	line-height: 40px;
+}
+
+.concent {
+	float: left;
+	position: absolute;
+	top: 65px;
+	left: 625px;
+	width: 265px;
+	height: 370px;
+	border: 5px solid #cd0507;
+	box-shadow: 0px 0px 10px black inset
+}

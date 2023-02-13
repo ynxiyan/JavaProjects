@@ -1,0 +1,6 @@
+请假条
+尊敬的{teacher}：
+我因{content}需请假{day}天，请批准！
+敬礼
+请假人：{name}
+请假时间：{yyyy}年{MM}月{dd}日

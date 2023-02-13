@@ -1,0 +1,65 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+
+.content {
+	width: 320px;
+	height: 320px;
+	margin: 20px auto;
+	border: 1px solid red;
+}
+
+a {
+	text-decoration: none;
+	line-height: 95px;
+	margin-left: 30px;
+}
+
+.a,
+.b,
+.c,
+.d,
+.e {
+	width: 100px;
+	height: 100px;
+	border: 1px dotted #000;
+}
+
+.a,
+.b,
+.c,
+.d {
+	background-color: #ff88fe;
+}
+
+.a {
+	position: relative;
+	top: 7px;
+	left: 6px;
+}
+
+.b {
+	position: relative;
+	bottom: 95px;
+	left: 210px;
+}
+
+.c {
+	position: relative;
+	top: 7px;
+	left: 6px;
+}
+
+.d {
+	position: relative;
+	bottom: 95px;
+	left: 210px;
+}
+
+.e {
+	background-color: #009cfe;
+	position: relative;
+	bottom: 299px;
+	left: 108px;
+}

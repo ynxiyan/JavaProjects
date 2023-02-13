@@ -1,0 +1,276 @@
+<script src="https://guangzan.gitee.io/awescnb/index.js"></script>
+<script>
+	const opts = {
+		//皮肤
+		theme: {
+			name: 'geek',
+			avatar: 'https://pic.cnblogs.com/avatar/2854528/20220423231517.png',
+			headerBackground: 'https://imglink.win/image/2022/12/04/YzgxC.jpeg'
+			// ...
+		},
+		//表情
+		emoji: {
+			enable: true,
+			buttonIcon: "🥳",
+			emojiList: [{
+					value: 'https://images.cnblogs.com/cnblogs_com/gshang/1626876/o_2001050555139.png',
+					label: '',
+				},
+				{
+					value: '🤣',
+					label: '笑哭',
+				},
+				{
+					value: '😃',
+					label: '大笑',
+				},
+				{
+					value: '😅',
+					label: '苦笑',
+				},
+				{
+					value: '😆',
+					label: '斜眼笑',
+				},
+				{
+					value: '😏',
+					label: '得意',
+				},
+				{
+					value: '😊',
+					label: '微笑',
+				},
+				{
+					value: '😎',
+					label: '酷！',
+				},
+				{
+					value: '😍',
+					label: '花痴',
+				},
+				{
+					value: '🙂',
+					label: '呵呵',
+				},
+				{
+					value: '🤩',
+					label: '好崇拜哦',
+				},
+				{
+					value: '🤔',
+					label: '思考',
+				},
+				{
+					value: '🙄',
+					label: '白眼',
+				},
+				{
+					value: '😜',
+					label: '略略略',
+				},
+				{
+					value: '😲',
+					label: '呆住',
+				},
+				{
+					value: '😭',
+					label: '大哭',
+				},
+				{
+					value: '🤯',
+					label: '头炸了',
+				},
+				{
+					value: '😰',
+					label: '冷汗',
+				},
+				{
+					value: '😱',
+					label: '吓死了',
+				},
+				{
+					value: '🤪',
+					label: '略略略',
+				},
+				{
+					value: '😵',
+					label: '晕',
+				},
+				{
+					value: '😡',
+					label: '愤怒',
+				},
+				{
+					value: '🥳',
+					label: '祝贺',
+				},
+				{
+					value: '🤡',
+					label: '小丑竟是我',
+				},
+				{
+					value: '🤫',
+					label: '嘘~',
+				},
+				{
+					value: '🐒',
+					label: '猴',
+				},
+				{
+					value: '🤭',
+					label: '笑笑不说话',
+				},
+				{
+					value: '🐂',
+					label: '牛',
+				},
+				{
+					value: '🍺',
+					label: '啤酒',
+				},
+				{
+					value: '(=・ω・=)',
+					label: '',
+				},
+				{
+					value: '(｀・ω・´)',
+					label: '',
+				},
+				{
+					value: '(°∀°)ﾉ',
+					label: '',
+				},
+				{
+					value: '←_←',
+					label: '',
+				},
+				{
+					value: '→_→',
+					label: '',
+				},
+				{
+					value: 'Σ(ﾟдﾟ;)',
+					label: '',
+				},
+				{
+					value: '(｡･ω･｡)',
+					label: '',
+				},
+				{
+					value: '(-_-#)',
+					label: '',
+				},
+			]
+		},
+		//GitHub
+		github: {
+			enable: true,
+			color: '#ffb3cc',
+			url: 'https://github.com/ynxiyan',
+		},
+		//个性签名
+		signature: {
+			enable: true,
+			contents: [
+				"Some things,thinking too much headache,thinking through the <b style='color:#ff6b81'>heartache</b>.",
+				"<b>有些事，想多了头疼，想通了<b style='color:#ff6b81'>心疼</b>。</b>",
+			],
+		},
+		//图片灯箱
+		imagebox: {
+			enable: true,
+		},
+		//深色模式
+		darkMode: {
+			enable: true,
+			autoDark: true,
+			autoLight: true
+		},
+		//二维码
+		qrcode: {
+			enable: true,
+			img: '',
+			desc: '',
+		},
+		//背景
+		bodyBackground: {
+			enable: true,
+			value: 'https://imglink.win/image/2022/11/29/YYl01.jpeg',
+			opacity: 0.85,
+			repeat: false,
+		},
+		//通知
+		notice: {
+			enable: true,
+			text: ['欢迎来到顔をしての博客吖', '，如果文章记得不错希望能点个赞', '收藏也是可以的', '谢谢！'],
+		},
+		//音乐播放器
+		musicPlayer: {
+			enable: true,
+			autoplay: false,
+			lrc: {
+				enable: true, // 启用歌词
+				type: 1, // 歌词类型  1 -> 字符串 3 -> url
+				color: '#10ac84', // 颜色
+			},
+			audio: [{
+				name: 'I Really Want to Stay at Your House',
+				artist: 'Samuel Kim,Lorien',
+				url: 'http://music.163.com/song/media/outer/url?id=1990743306.mp3',
+				cover: 'http://p1.music.126.net/-LHyMtXmo-yDf-eqwb8ThA==/109951168143056350.jpg?param=130y130',
+				lrc: "[00:00.000] 作词 : Rosa Walton[00:00.473] 作曲 : Rosa Walton/Samuel Kim[00:00.946] 编曲 : Samuel Kim/Rosa Walton[00:01.420]I couldn't wait for you to come clear the cupboards[00:09.070]But now you're going to leave with nothing but a sign[00:16.610]Another evening I'll be sitting reading in between your lines[00:24.350]Because I miss you all the time[00:29.240][00:30.530]So, get away[00:32.720]Another way to feel what you didn't want yourself to know[00:37.150]And let yourself go[00:39.750]You know you didn't lose your self-control[00:43.870]Let's start at the rainbow[00:46.720]Turn away[00:47.840]Another way to be where you didn't want yourself to go[00:52.670]Let yourself go[00:55.170]Is that a compromise[00:59.520][01:00.460]So what do you wanna do, what's your point-of-view[01:04.420]There's a party soon, do you wanna go[01:08.280]A handshake with you, what's your point-of-view[01:12.159]I'm on top of you, I don't wanna go[01:15.500]'Cause I really wanna stay at your house[01:19.730]And I hope this works out[01:23.170]But you know how much you broke me apart[01:26.049]I'm done with you, I'm ignoring you[01:29.379]I don't wanna know[01:32.319][01:41.180]And I'm aware that you were lying in the gutter[01:48.870]'Cause I did everything to be there by your side-ide[01:56.530]So when you tell me I'm the reason I just can't believe the lies[02:04.299]And why do I so want to call you[02:08.780][02:09.639]So what do you wanna do, what's your point-of-view[02:13.599]There's a party soon, do you wanna go[02:17.530]A handshake with you, what's your point-of-view[02:21.300]I'm on top of you, I don't wanna go[02:24.680]'Cause I really wanna stay at your house[02:28.900]And I hope this works out[02:32.340]But you know how much you broke me apart[02:35.110]I'm done with you, I'm ignoring you[02:38.539]I don't wanna know[02:41.280][02:41.400]You[02:48.210]Oh-oh-oh[02:50.960]I don't know why I'm no-one[02:56.400]So, get away[02:56.657][02:58.370]Another way to feel what you didn't want yourself to know[03:02.860]And let yourself go[03:05.710]You know you didn't lose your self-control[03:09.680]Let's start at the rainbow[03:12.620]Turn away[03:13.840]Another way to be where you didn't want yourself to go[03:18.379]Let yourself go[03:20.970]Is that a compromise[03:23.879][03:30.220]So what do you wanna do, what's your point-of-view[03:34.120]There's a party soon, do you wanna go[03:38.060]A handshake with you, what's your point-of-view[03:41.860]I'm on top of you, I don't wanna go[03:45.289]'Cause I really wanna stay at your house[03:49.440]And I hope this works out[03:52.960]But you know how much you broke me apart[03:55.759]I'm done with you, I'm ignoring you[03:59.199]I don't wanna know",
+			}, ],
+		},
+		//博文目录
+		catalog: {
+			enable: true,
+			position: 'right',
+		},
+		//按钮工具
+		tools: {
+			enable: true,
+			initialOpen: true,
+		},
+		//打赏二维码
+		donation: {
+			enable: true,
+			qrcodes: [],
+		},
+		//画笔
+		notation: {
+			enable: true,
+		},
+		//博文头图
+		postTopimage: {
+			enable: true,
+			imgs: ['https://imglink.win/image/2022/12/15/uAZK0.jpeg',
+				'https://imglink.win/image/2022/12/13/Y3vVx.jpeg',
+				'https://imglink.win/image/2022/12/11/YU58I.jpeg',
+				'https://imglink.win/image/2022/12/10/YxyIg.jpeg'
+			],
+		},
+		//博文尾图
+		postBottomimage: {
+			enable: true,
+			img: 'https://imglink.win/image/2022/12/11/YUn07.jpeg',
+			height: '200px'
+		},
+		//首页列表图片
+		indexListImg: {
+			enable: true,
+			imgs: ['https://imglink.win/image/2023/01/04/uF3Bg.png', 'https://imglink.win/image/2022/12/27/uuG2M.jpeg',
+				'https://imglink.win/image/2022/12/27/uucuJ.jpeg',
+				'https://imglink.win/image/2022/12/19/u9zos.jpeg'
+			],
+		},
+		//头部进度条
+		topProgress: {
+			enable: true,
+			page: 'all',
+			agent: 'pc',
+			background: '#FFB3CC',
+			height: '5px',
+		},
+	}
+	$.awesCnb(opts)
+</script>

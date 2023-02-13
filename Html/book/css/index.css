@@ -1,0 +1,77 @@
+.list {
+	width: 300px;
+}
+
+li {
+	list-style: none;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+.title h2 {
+	font-size: 16px;
+	text-indent: 1em;
+	line-height: 30px;
+	color: #fff;
+	background: #518700 url("../img/bang.gif") 99px 4px no-repeat;
+}
+
+.list {
+	background: linear-gradient(to bottom, #f9fbcb, #f8f8f3);
+}
+
+.content ul li {
+	text-indent: 2em;
+}
+
+.content ul li a {
+	font-size: 12px;
+	line-height: 28px;
+	color: #1a66b3;
+}
+
+.content ul li:nth-of-type(1) {
+	background: url("../img/book_no01.gif") 4px no-repeat;
+}
+
+.content ul li:nth-of-type(2) {
+	background: url("../img/book_no02.gif") 4px no-repeat;
+}
+
+.content ul li:nth-of-type(3) {
+	background: url("../img/book_no03.gif") 4px no-repeat;
+}
+
+.content ul li:nth-of-type(4) {
+	background: url("../img/book_no04.gif") 4px no-repeat;
+}
+
+.content ul li:nth-of-type(5) {
+	background: url("../img/book_no05.gif") 4px no-repeat;
+}
+
+.content ul li:nth-of-type(6) {
+	background: url("../img/book_no06.gif") 4px no-repeat;
+}
+
+.content ul li:nth-of-type(7) {
+	background: url("../img/book_no07.gif") 4px no-repeat;
+}
+
+.content ul li:nth-of-type(8) {
+	background: url("../img/book_no08.gif") 4px no-repeat;
+}
+
+.content ul li:nth-of-type(9) {
+	background: url("../img/book_no09.gif") 4px no-repeat;
+}
+
+.content ul li:nth-of-type(10) {
+	background: url("../img/book_no10.gif") 4px no-repeat;
+}
