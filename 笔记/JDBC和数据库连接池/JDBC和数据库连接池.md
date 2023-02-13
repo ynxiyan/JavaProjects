@@ -1,7 +1,5 @@
 ﻿# [JDBC和数据库连接池](https://www.cnblogs.com/ynxiyan/p/17106242.html)
 
-## JDBC
-
 ### 一、概述
 
 ---
@@ -914,6 +912,453 @@ public static void selEct() {
         throw new RuntimeException(e);
     } finally {
         JdbcUtils.close(resultSet, preparedStatement, connection);
+    }
+}
+```
+
+
+
+### 七、数据库连接池
+
+---
+
+#### 1.传统获取Connection 问题分析
+
+传统的JDBC数据库连接使用 DriverManager 来获取 ，每次向数据库建立连接的时候都要将 Connection 加载到内存中， 再验证IP地址、用户名和密码。需要数据库连接的时候，就向数据库要求一个 ，频繁的进行数据库连接操作将占用很多的系统资源 ，容易造成服务器崩溃 。
+每一次数据库连接 ，使用完后都得断开 ，如果程序出现异常而未能关闭 ，将导致数据库内存泄漏 ，最终将导致重启数据库 。
+传统获取连接的方式 ，不能控制创建的连接数量 ，如连接过多 ，也可能导致内存泄漏 ，MySQL崩溃 。
+解决传统开发中的数据库连接问题 ，可以采用数据库连接池技术(connection pool)
+
+**数据库连接池种类**
+
+```markdown
+- 1.JDBC 的数据库连接池使用 javax.sqI.DataSource 来表示 ，DataSource只是一个接口 ，该接口通常由第三方提供实现[提供.jar]
+- 2.C3P0数据库连接池速度相对较慢稳定性不错 (hibernate, spring)
+- 3.DBCP数据库连接池，速度相对C3P0较快 ，但不稳定
+- 4.Proxool数据库连接池 ，有监控连接池状态的功能 ，稳定性较C3P0差一点
+- 5.BoneCP 数据库连接池速度快
+- 6.Druid( 德鲁伊 ）是阿里提供的数据库连接池 ，集 DBCP 、C3P0 、Proxool优点于一身的库连接池
+```
+
+![image-20230213183909411](https://img2023.cnblogs.com/blog/2854528/202302/2854528-20230213202909398-791560500.png)
+
+#### 2.C3P0应用实例
+
+##### 2-1.相关参数，在程序中指定 user, url , password 等
+
+```java
+public void testC3P0_One() throws IOException, PropertyVetoException, SQLException {
+        //1.创建一个数据源对象
+        ComboPooledDataSource comboPooledDataSource = new ComboPooledDataSource();
+        //2.通过配置文件获取连接信息
+        Properties properties = new Properties();
+        properties.load(new FileInputStream("src/com/hspedu/resource/jdbc.properties"));
+        //3.设置配置文件参数
+        String url = properties.getProperty("url");
+        String user = properties.getProperty("user");
+        String password = properties.getProperty("password");
+        String driver = properties.getProperty("driver");
+        //4.给数据源comboPooledDataSource设置相关参数
+        //注意连接管理是由comboPooledDataSource来管理
+        comboPooledDataSource.setJdbcUrl(url);
+        comboPooledDataSource.setDriverClass(driver);
+        comboPooledDataSource.setUser(user);
+        comboPooledDataSource.setPassword(password);
+        //设置初始化连接数
+        comboPooledDataSource.setInitialPoolSize(10);
+        //设置最大连接数
+        comboPooledDataSource.setMaxPoolSize(50);
+        //得到连接（getConnection()就是从DataSource实现）
+        Connection connection = comboPooledDataSource.getConnection();
+        connection.close();
+}
+```
+
+##### 2-2.使用配置文件模板来完成
+
+前置操作
+    1.将C3P0的配置文件放到src目录下
+    2.设置配置文件的相关信息
+
+c3p0-config.xml：
+
+```xml
+<c3p0-config>
+
+  <named-config name="hsp_jdbc">
+<!-- 驱动类 -->
+  <property name="driverClass">com.mysql.jdbc.Driver</property>
+  <!-- url-->
+  	<property name="jdbcUrl">jdbc:mysql://127.0.0.1:3306/hsp_jdbc</property>
+  <!-- 用户名 -->
+  		<property name="user">root</property>
+  		<!-- 密码 -->
+  	<property name="password">123456</property>
+  	<!-- 每次增长的连接数-->
+    <property name="acquireIncrement">5</property>
+    <!-- 初始的连接数 -->
+    <property name="initialPoolSize">10</property>
+    <!-- 最小连接数 -->
+    <property name="minPoolSize">5</property>
+   <!-- 最大连接数 -->
+    <property name="maxPoolSize">10</property>
+
+	<!-- 可连接的最多的命令对象数 -->
+    <property name="maxStatements">5</property> 
+    
+    <!-- 每个连接对象可连接的最多的命令对象数 -->
+    <property name="maxStatementsPerConnection">2</property>
+  </named-config>
+</c3p0-config>
+```
+
+```java
+public void testC3P0_Two() throws SQLException {
+    ComboPooledDataSource comboPooledDataSource = new ComboPooledDataSource("hsp_jdbc");
+    Connection connection = comboPooledDataSource.getConnection();
+    connection.close();
+}
+```
+
+#### 3.Druid(德鲁伊)应用实例
+
+前置操作
+1.导入Druid.jar
+2.将配置文件导入到src目录下
+
+
+druid.properties:
+
+```properties
+#key=value
+driverClassName=com.mysql.jdbc.Driver
+url=jdbc:mysql://localhost:3306/hsp_jdbc?rewriteBatchedStatements=true
+#url=jdbc:mysql://localhost:3306/girls
+username=root
+password=123456
+#initial connection Size
+initialSize=10
+#min idle connecton size
+minIdle=5
+#max active connection size
+maxActive=20
+#max wait time (5000 mil seconds)
+maxWait=5000
+```
+
+```java
+public void test() throws Exception {
+        //创建Properties对象
+        Properties properties = new Properties();
+        properties.load(new FileInputStream("src/druid.properties"));
+        //创建一个指定对象的数据库连接池(Druid连接池)
+        DataSource dataSource = DruidDataSourceFactory.createDataSource(properties);
+        Connection connection = dataSource.getConnection();
+        connection.close();
+}
+```
+
+
+
+### 八、将 JDBCUtils 工具类改成Druid(德鲁伊)实现
+
+---
+
+```java
+/**
+ * @Author: XIYAN
+ * @Date: 2023/2/13 19:41
+ * @注释:基于Druid数据库连接池的工具类
+ */
+public class JdbcUtilsByDruid {
+    //创建连接池对象
+    private static DataSource dataSource;
+
+    //在静态代码块初始化代码
+    static {
+        //创建Properties对象
+        Properties properties = new Properties();
+        //读取配置文件信息
+        try {
+            properties.load(new FileInputStream("src/druid.properties"));
+            dataSource = DruidDataSourceFactory.createDataSource(properties);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    //编写getConnection方法
+    public static Connection getConnection() throws SQLException {
+        return dataSource.getConnection();
+    }
+
+    //编写colose方法
+    /*
+    注：
+    在数据库连接池技术中并不是真正的关闭连接而是把使用的Connection对象放回连接池
+     */
+    public static void close(ResultSet resultSet, Statement statement, Connection connection) {
+        try {
+            if (resultSet != null) {
+
+                resultSet.close();
+
+            }
+            if (statement != null) {
+                statement.close();
+            }
+            if (connection != null) {
+                connection.close();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+}
+```
+
+#### 1.实际使用使用工具类 JDBCUtilsByDruid
+
+##### 1-1.更新记录
+
+```java
+
+```
+
+##### 1-2.插入记录
+
+```java
+
+```
+
+##### 1-3.删除记录
+
+```java
+
+```
+
+##### 1-4.查询记录
+
+```java
+
+```
+
+
+
+### 九、Apache—DBUtils
+
+---
+
+#### 1.分析问题
+
+关闭 Connection 后 ，ResuItSet 结果集无法使用
+ResuItSet 不利于数据的管理
+
+![image-20230213175214567](https://img2023.cnblogs.com/blog/2854528/202302/2854528-20230213180938627-1989399548.png)
+
+#### 2.基本介绍
+
+commons-dbutils 是 Apache 组织提供的一个开源 JDBC（ 工具类库 ， 它是对 JDBC 的封装，使用 dbutils 能极大简化jdbc编码的工作量 。
+DbUtiIs 类：
+
+```markdown
+* QueryRunner 类 ： 该类封装了 SQL 的执行 ， 是线程安全的 。 可以实现增 、 删 、 改 、 查 、 批处理
+* 使用 QueryRunner 类实现查询
+* ResultSetHandIer 接口：该接口用于处理 java.sqI.ResultSet, 将数据按要求转换为另一种形式
+```
+
+方法：
+
+```markdown
+ - update--插入、修改、删除，返回受影响的行数
+ - insert--支持插入操作，获取自增列作为返回值
+ - query--查询操作，自动处理ResultSet需要Handler的配合
+```
+
+![image-20230213202632803](https://img2023.cnblogs.com/blog/2854528/202302/2854528-20230213202909023-865548319.png)
+
+#### 3.实际使用DBUtils
+
+##### 3-1.插入记录
+
+```java
+public void testInsert() throws SQLException {
+        //简化sql操作，结合Handler来处理常见的查询减少代码量
+        QueryRunner queryRunner = new QueryRunner();
+        //获取连接
+        Connection connection = JdbcUtils.getConnection();
+        String sql="insert into dogs values(null,?,?,?)";
+        int update = queryRunner.update(connection, sql, "a", "公", 12);
+        System.out.println(update);
+        DbUtils.closeQuietly(connection);
+}
+```
+
+##### 3-2.删除记录
+
+```java
+public void testDelete() throws SQLException {
+        QueryRunner queryRunner = new QueryRunner();
+        String sql="delete from dogs where age>?";
+        Connection connection = JdbcUtils.getConnection();
+        int update = queryRunner.update(connection, sql, 10);
+        System.out.println(update);
+        DbUtils.closeQuietly(connection);
+}
+```
+
+##### 3-3.查询记录（单条）
+
+```java
+public void testSelect() throws SQLException {
+        QueryRunner queryRunner = new QueryRunner();
+        Connection connection = JdbcUtils.getConnection();
+        String sql="select id,name,sex,age from dogs where id=?";
+        //执行sql的时候需要Handler对象，参数为查询到对象的class
+        BeanHandler<Dogs> dogsBeanHandler = new BeanHandler<>(Dogs.class);
+        Dogs dogs = queryRunner.query(connection, sql, dogsBeanHandler, 4);
+        System.out.println(dogs);
+        DbUtils.closeQuietly(connection);
+}
+```
+
+##### 3-4.查询记录（多条）
+
+```java
+public void testSelectAll() throws SQLException {
+        QueryRunner queryRunner = new QueryRunner();
+        Connection connection = JdbcUtils.getConnection();
+        String sql="select id,name,sex,age from dogs where id<?";
+        BeanListHandler<Dogs> dogsBeanHandler = new BeanListHandler<>(Dogs.class);
+        List<Dogs> dogsList = queryRunner.query(connection, sql, dogsBeanHandler, 10);
+        dogsList.forEach(System.out::println);
+        DbUtils.closeQuietly(connection);
+}
+```
+
+##### 3-5.修改记录
+
+```java
+public void testupDate() throws SQLException {
+        QueryRunner queryRunner = new QueryRunner();
+        Connection connection = JdbcUtils.getConnection();
+        String sql="update dogs set age=? where name=?";
+        int update = queryRunner.update(connection, sql, 19, "f");
+        System.out.println(update);
+        DbUtils.closeQuietly(connection);
+}
+```
+
+##### 3-6.查询记录（聚合函数）
+
+```java
+public void testAggregate() throws SQLException {
+        QueryRunner queryRunner = new QueryRunner();
+        Connection connection = JdbcUtils.getConnection();
+        //最大值
+        String maxSql="select max(age) from dogs";
+        ScalarHandler<Object> handler = new ScalarHandler<>();
+        int max = (Integer) queryRunner.query(connection, maxSql, handler);
+        System.out.println(max);
+        DbUtils.closeQuietly(connection);
+}
+```
+
+#### 4.再次分析问题（解决：抽象CRUD方法）
+
+通过编写上述代码后相对于直接使用JdbcUtils简化了不少代码，但是我们发现代码重复量太高
+
+![image-20230213202821986](https://img2023.cnblogs.com/blog/2854528/202302/2854528-20230213202908116-300204625.png)
+
+
+
+### 十、抽象CRUD
+
+---
+
+```java
+/**
+ * @Author: XIYAN
+ * @Date: 2023/2/13 15:28
+ * @注释:BaseDao是所有针对数据库操作的基本类
+ *  需要在里面设置一些通用方法来解决增删查改代码重复的问题
+ */
+public class BaseDao {
+    //定义QueryRunner类型的属性，值为对象
+    QueryRunner queryRunner = new QueryRunner();
+    /**
+     * 该方法是进行增删改的通用方法
+     * @param sql     传入需要操作的sql
+     * @param params  传入需要使用的值
+     * @return        返回受影响的行数
+     */
+    public int update(String sql, Object... params) {
+        //打开链接
+        Connection connection = JdbcUtils.getConnection();
+        try {
+            //执行成功返回受影响的行数
+            return queryRunner.update(connection, sql, params);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            //关闭连接
+            DbUtils.closeQuietly(connection);
+        }
+    }
+
+    /**
+     * 根据传入的sql查询单个对象的方法
+     * @param clazz    查询后要返回的对象
+     * @param sql      查询单个对象的sql
+     * @param params   sql参数
+     * @return         查询到的对象
+     * @param <T>      根据calzz得到一个泛型将这个泛型作为对象返回（属性与表字段相同）
+     */
+    public <T>T selectOne(Class<T> clazz,String sql,Object ... params){
+        Connection connection = JdbcUtils.getConnection();
+        try {
+            return queryRunner.query(connection,sql,new BeanHandler<>(clazz),params);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }finally{
+            DbUtils.closeQuietly(connection);
+        }
+    }
+
+    /**
+     *
+     * @param clazz     查询后要返回的对象
+     * @param sql       查询的sql
+     * @param params    sql参数
+     * @return          查询到的对象
+     * @param <T>       根据calzz得到一个泛型将这个泛型作为对象返回（属性与表字段相同）
+     */
+    public <T>List<T> selectList(Class<T> clazz,String sql,Object ... params){
+        Connection connection = JdbcUtils.getConnection();
+        try {
+            return queryRunner.query(connection,sql,new BeanListHandler<>(clazz),params);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }finally{
+            DbUtils.closeQuietly(connection);
+        }
+    }
+
+    /**
+     * 通用的聚合函数查询方法
+     * @param sql       传入的sql
+     * @param params    sql参数
+     * @return          返回查询到的值
+     */
+    public Object selectAggregate(String sql,Object ... params){
+        Connection connection = JdbcUtils.getConnection();
+        try {
+            return queryRunner.query(connection,sql,new ScalarHandler<>(),params);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }finally{
+            DbUtils.closeQuietly(connection);
+        }
     }
 }
 ```
