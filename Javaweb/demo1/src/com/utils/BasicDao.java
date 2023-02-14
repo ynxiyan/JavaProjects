@@ -5,6 +5,7 @@ import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.BeanHandler;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
 import org.apache.commons.dbutils.handlers.ScalarHandler;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
@@ -12,17 +13,17 @@ import java.util.List;
 /**
  * @Author: XIYAN
  * @Date: 2023/2/13 15:28
- * @注释:BaseDao是所有针对数据库操作的基本类
- *  需要在里面设置一些通用方法来解决增删查改代码重复的问题
+ * @注释:BaseDao是所有针对数据库操作的基本类 需要在里面设置一些通用方法来解决增删查改代码重复的问题
  */
-public class BaseDao {
+public class BasicDao {
     //定义QueryRunner类型的属性，值为对象
     QueryRunner queryRunner = new QueryRunner();
+
     /**
      * 该方法是进行增删改的通用方法
      * @param sql     传入需要操作的sql
      * @param params  传入需要使用的值
-     * @return        返回受影响的行数
+     * @return 返回受影响的行数
      */
     public int update(String sql, Object... params) {
         //打开链接

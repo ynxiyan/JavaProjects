@@ -1064,6 +1064,8 @@ public void test() throws Exception {
 
 ---
 
+通过德鲁伊数据库连接池获取连接对象
+
 ```java
 /**
  * @Author: XIYAN
@@ -1122,25 +1124,129 @@ public class JdbcUtilsByDruid {
 ##### 1-1.更新记录
 
 ```java
-
+/**
+ * 更新记录
+ */
+public static void upDate() {
+    //1.创建Connection对象
+    Connection connection = null;
+    //2.创建PeoparedStatement对象
+    PreparedStatement preparedStatement = null;
+    //3.数据库操作
+    String updateSql = "update actor set name=? where id=?";
+    try {
+        //4.得到连接
+        connection = JdbcUtilsByDruid.getConnection();
+        //5.预处理SQL语句
+        preparedStatement = connection.prepareStatement(updateSql);
+        //6.处理占位符
+        preparedStatement.setString(1, "志昂");
+        preparedStatement.setInt(2, 2);
+        //执行SQL语句并返回影响行数
+        int update = preparedStatement.executeUpdate();
+        System.out.println(update > 0 ? "更新记录成功" : "执行失败");
+    } catch (SQLException e) {
+        throw new RuntimeException(e);
+    } finally {
+        //7.关闭连接
+        JdbcUtils.close(null, preparedStatement, connection);
+    }
+}
 ```
 
 ##### 1-2.插入记录
 
 ```java
-
+/**
+ * 插入记录
+ */
+public static void inSert() {
+    Scanner scanner = new Scanner(System.in);
+    Connection connection = null;
+    PreparedStatement preparedStatement = null;
+    String insertSql = "insert into admin values(null,?,?)";
+    try {
+        connection = JdbcUtilsByDruid.getConnection();
+        preparedStatement = connection.prepareStatement(insertSql);
+        boolean flag = true;
+        while (flag) {
+            System.out.print("请输入用户名：");
+            String user = scanner.nextLine();
+            preparedStatement.setString(1, user);
+            System.out.print("请输入密码");
+            String pwd = scanner.nextLine();
+            preparedStatement.setString(2, pwd);
+            int insert = preparedStatement.executeUpdate();
+            System.out.println(insert > 0 ? "插入记录成功" : "执行失败");
+            System.out.print("是否继续添加记录(y/n)：");
+            String w = scanner.next();
+            if (!"y".equals(w)) {
+                flag = false;
+            }
+            String dubug = scanner.nextLine();
+        }
+    } catch (SQLException e) {
+        throw new RuntimeException(e);
+    } finally {
+        JdbcUtils.close(null, preparedStatement, connection);
+    }
+}
 ```
 
 ##### 1-3.删除记录
 
 ```java
-
+/**
+ * 删除记录
+ */
+public static void delEte() {
+    Scanner scanner = new Scanner(System.in);
+    Connection connection = null;
+    PreparedStatement preparedStatement = null;
+    String deleteSql = "delete from admin where username=?";
+    try {
+        connection = JdbcUtilsByDruid.getConnection();
+        preparedStatement = connection.prepareStatement(deleteSql);
+        System.out.print("请输入需要删除的用户名：");
+        String user = scanner.nextLine();
+        preparedStatement.setString(1, user);
+        int delete = preparedStatement.executeUpdate();
+        System.out.println(delete > 0 ? "删除记录成功" : "执行失败");
+    } catch (SQLException e) {
+        throw new RuntimeException(e);
+    } finally {
+        JdbcUtils.close(null, preparedStatement, connection);
+    }
+}
 ```
 
 ##### 1-4.查询记录
 
 ```java
-
+/**
+ * 查询记录
+ */
+public static void selEct() {
+    Connection connection = null;
+    PreparedStatement preparedStatement = null;
+    ResultSet resultSet = null;
+    String selectSql = "select id,username,pwd from admin";
+    try {
+        connection = JdbcUtilsByDruid.getConnection();
+        preparedStatement = connection.prepareStatement(selectSql);
+        resultSet = preparedStatement.executeQuery();
+        while (resultSet.next()) {
+            int id = resultSet.getInt(1);
+            String username = resultSet.getString(2);
+            String pwd = resultSet.getString(3);
+            System.out.println(id + "\t" + username + "\t" + pwd);
+        }
+    } catch (SQLException e) {
+        throw new RuntimeException(e);
+    } finally {
+        JdbcUtils.close(resultSet, preparedStatement, connection);
+    }
+}
 ```
 
 
@@ -1268,13 +1374,30 @@ public void testAggregate() throws SQLException {
 
 通过编写上述代码后相对于直接使用JdbcUtils简化了不少代码，但是我们发现代码重复量太高
 
-![image-20230213202821986](https://img2023.cnblogs.com/blog/2854528/202302/2854528-20230213202908116-300204625.png)
 
 
-
-### 十、抽象CRUD
+### 十、抽象CRUD（BasicDao）
 
 ---
+
+#### 1.分析问题
+
+apache-dbutils+Druid 简化了JDBC开发 ，但还有不足 ：
+
+```markdown
+* SQL 语句是固定 ，不能通过参数传入 ，通用性不好 ，需要进行改进 ，更方便执行增删改查
+* 对于 select 操作 ，如果有返回值 ，返回类型不能固定 ，需要使用泛型
+* 将来的表很多 ，业务需求复杂 ，不可能只靠一个 Java 类完成
+```
+
+![image-20230213202821986](https://img2023.cnblogs.com/blog/2854528/202302/2854528-20230213202908116-300204625.png)
+
+#### 2.基本说明
+
+DAO ：data access object 数据访问对象这样的通用类 ，称为 BasicDao ，是专门和数据库交互的 ，即完成对数据库 （ 表 ） 的 crud 操作 。
+在 BaiscDao 的基础上 ，实现一张表对应一个 Dao，更好的完成功能。
+
+#### 3.BasicDAO 应用实例
 
 ```java
 /**
@@ -1283,7 +1406,7 @@ public void testAggregate() throws SQLException {
  * @注释:BaseDao是所有针对数据库操作的基本类
  *  需要在里面设置一些通用方法来解决增删查改代码重复的问题
  */
-public class BaseDao {
+public class BasicDao {
     //定义QueryRunner类型的属性，值为对象
     QueryRunner queryRunner = new QueryRunner();
     /**
@@ -1364,7 +1487,5 @@ public class BaseDao {
 ```
 
 
-
-# 未完待续。。。。。。。
 
 所有的笔记来源于：[韩顺平 (bilibili.com)](https://space.bilibili.com/651245581)
