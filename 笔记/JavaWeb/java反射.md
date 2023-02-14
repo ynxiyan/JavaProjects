@@ -1,3 +1,5 @@
+﻿# [java反射](https://www.cnblogs.com/ynxiyan/p/17119092.html)
+
 ### 一、反射的概述
 
 ---
@@ -13,11 +15,29 @@ Java的反射（reflection）机制是指在程序的运行状态中，可以构
 
 反射机制所需的类主要有java.lang包中的Class类和java.lang.reflect包中的Constructor类（构造方法）、Field类（属性）、Method类（普通方法）和Parameter类（参数）。
 
+
+
 ### 二、反射机制原理示意图
 
-![image-20230214105924189](C:/Users/XIYAN/AppData/Roaming/Typora/typora-user-images/image-20230214105924189.png)
+---
 
-### 二、学习反射学的是什么？
+![image-20230214105924189](https://img2023.cnblogs.com/blog/2854528/202302/2854528-20230214114047166-1660299677.png)
+
+### 二、反射能做什么
+
+---
+
+```markdown
+# 在运行时判断任意一个对象所属的类
+# 在运行时构造任意一个类的对象
+# 在运行时得到任意一个类所具有的成员变量和方法
+# 在运行时调用任意一个对象的成员变量和方法
+# 生成动态代理
+```
+
+
+
+### 三、学习反射学的是什么？
 
 ---
 
@@ -51,7 +71,7 @@ Student student = new Student();
 Class<? extends Student> aClass = student.getClass();
 ```
 
-#### 2.理解
+##### 1-4.理解
 
 java 文件 ： 就是我们建立书写的 java 代码文件
 字节码文件 ： 通过 java 文件翻译之后 class 文件 （ 存在硬盘 ， 真实可见 ）
@@ -59,8 +79,49 @@ java 文件 ： 就是我们建立书写的 java 代码文件
 
 我们反射获得的就是字节码对象 ， 在内存中和硬盘中都是唯一的
 
+#### 2.获取构造方法
+
+方法类似但是方法中使用不同的规则来获取不同的构造方法 ：
+
+get（获取）constructor（构造方法）DecIared（表示私有）最后的s表示复数（所有）
+
+前置操作(获取字节码文件对象):
+
+```java
+Class<?> aClass = Class.forName("com.Student");
+```
+
+##### 2-1.获取构造方法(公共、所有)的对象
+
+```java
+aClass.getConstructors();
+```
+
+##### 2-2.获取构造方法(公共、私有、所有)的对象
+
+```java
+aClass.getDeclaredConstructors();
+```
+
+##### 2-3.获取无参或带参(参数需要类的字节码文件)构造方法
+
+```java
+aClass.getConstructor();
+aClass.getConstructor(String.class, Integer.class);
+//下面的可以获取指定的构造方法，但是与上面不同的是还可以获取私有构造方法
+aClass.getDeclaredConstructor(String.class);
+```
+
+
+
+### 四、反射优点和缺点
+
+- 优点 ：可以动态的创建和使用对象（ 也是框架底层核心 ），使用灵活，没有反射机制， 框架技术就失去底层支撑 。
+
+- 缺点 ：使用反射基本是解释执行，对执行速度有影响。
+
 
 
 # 未完待续。。。
 
-所有的笔记来源于：[韩顺平 (bilibili.com)](https://space.bilibili.com/651245581)
+部分笔记来源于：[韩顺平 (bilibili.com)](https://space.bilibili.com/651245581)
