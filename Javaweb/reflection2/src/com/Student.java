@@ -40,4 +40,13 @@ public class Student {
                 ", age=" + age +
                 '}';
     }
+
+    public void sleep() {
+        System.out.println("sleep");
+    }
+
+    public String eat(String name) {
+        System.out.println("eat" + name);
+        return name;
+    }
 }

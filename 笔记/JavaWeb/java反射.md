@@ -14,7 +14,7 @@ Java反射机制是指在运行状态中，对于任意一个类，都能够知�
 - 在 java 程序运行中 ， 对于任意一个类， 都能够通过反射知道这个类的所有属性和方法
 - 对于这任意的一个类的对象 ， 能够访问任意属性和方法
 - 这种动态获取信息以及动态调用对象成员的功能我们称为 Java 语言的反射机制 。
-（ 运行起来后的xx.class字节码文件 ， JVM 会对应的生成一个 java.lang.Class 类的对象 ， 该对象是获取成员的关键）
+	（ 运行起来后的xx.class字节码文件 ， JVM 会对应的生成一个 java.lang.Class 类的对象 ， 该对象是获取成员的关键）
 ```
 
 反射机制所需的类主要有java.lang包中的Class类和java.lang.reflect包中的Constructor类（构造方法）、Field类（属性）、Method类（普通方法）和Parameter类（参数）。
@@ -54,36 +54,42 @@ Java反射机制是指在运行状态中，对于任意一个类，都能够知�
 - 如何获取其他方法 （ 调用 ）
 ```
 
-#### 1.获取字节码对象
+#### 1.Class的常用方法
 
-##### 1-1.Class类中的静态方法
+![image-20230214160549450](C:/Users/XIYAN/AppData/Roaming/Typora/typora-user-images/image-20230214160549450.png)
+
+#### 2.获取字节码对象
+
+##### 2-1.Class类中的静态方法
 
 ```java
 Class.forName("com.Student");
 ```
 
-##### 1-2.通过类的clazz属性
+##### 2-2.通过类的clazz属性
 
 ```java
 Student.class;
 ```
 
-##### 1-3.通过对象来获得字节码文件对象
+##### 2-3.通过对象来获得字节码文件对象
 
 ```java
 Student student = new Student();
 Class<? extends Student> aClass = student.getClass();
 ```
 
-##### 1-4.理解
+##### 2-4.理解
 
-java 文件 ： 就是我们建立书写的 java 代码文件
-字节码文件 ： 通过 java 文件翻译之后 class 文件 （ 存在硬盘 ， 真实可见 ）
-字节码文件对象 ：当class文件加载内存之后，虚拟机自动创建出来的对象这个对象会包含构造器、属性、如何获取其他方法
+```markdown
+* java 文件 ： 就是我们建立书写的 java 代码文件
+* 字节码文件 ： 通过 java 文件翻译之后 class 文件 （ 存在硬盘 ， 真实可见 ）
+* 字节码文件对象 ：当class文件加载内存之后，虚拟机自动创建出来的对象这个对象会包含构造器、属性、如何获取其他方法
+```
 
 我们反射获得的就是字节码对象 ， 在内存中和硬盘中都是唯一的
 
-#### 2.获取构造方法
+#### 3.获取构造方法
 
 方法类似但是方法中使用不同的规则来获取不同的构造方法 ：
 
@@ -95,30 +101,163 @@ get（获取）constructor（构造方法）DecIared（表示私有）最后的s
 Class<?> aClass = Class.forName("com.Student");
 ```
 
-##### 2-1.获取构造方法(公共、所有)的对象
+##### 3-1.获取构造方法(公共、所有)的对象
 
 ```java
 aClass.getConstructors();
 ```
 
-##### 2-2.获取构造方法(公共、私有、所有)的对象
+##### 3-2.获取构造方法(公共、私有、所有)的对象
 
 ```java
 aClass.getDeclaredConstructors();
 ```
 
-##### 2-3.获取无参或带参(参数需要类的字节码文件)构造方法
+##### 3-3.获取无参或带参(参数需要类的字节码文件)构造方法
 
 ```java
 aClass.getConstructor();
-aClass.getConstructor(String.class, Integer.class);
+aClass.getConstructor(String.class, int.class);
 //下面的可以获取指定的构造方法，但是与上面不同的是还可以获取私有构造方法
 aClass.getDeclaredConstructor(String.class);
 ```
 
+#### 4.创建对象
+
+构造方法的作用 ：
+
+```markdown
+- 创建对象
+- 创建对象时为对象的属性赋值
+```
+
+前置操作
+
+```java
+//获取字节码文件对象
+//获取无参构造方法
+```
+
+##### 4-1.newlnstance() 创建对象的方法
+
+```java
+constructor.newInstance();
+```
+
+##### 4-2.setAccessibte(true) 设置临时访问权限  private 可以访问
+
+```java
+declaredConstructor.setAccessible(true);
+```
+
+#### 5.获取成员变量（属性）
+
+get（表示获取）Declared（表示私有）s（表示复数）
+如果获取的属性是私有的需要添加临时访问权限
+
+前置操作
+
+```java
+//获取字节码文件对象
+```
+
+##### 5-1.获取成员变量对象数组 (public)
+
+```java
+aClass.getFields();
+```
+
+##### 5-2.获取成员变量对象数组（ 包含 private)
+
+```java
+aClass.getDeclaredFields();
+```
+
+##### 5-3.获取单个成员变量对象 (public)
+
+```java
+aClass.getField("name");
+```
+
+##### 5-4.获取单个成员变量对象 （ 包含 private)
+
+```java
+aClass.getDeclaredField("name");
+name.setAccessible(true);
+```
+
+#### 6.为成员变量赋值或获取值
+
+前置操作
+
+```java
+//获取字节码文件对象
+//创建一个有属性的对象
+//获取要操作的属性
+```
+
+##### 6-1.set()	赋值
+
+```java
+//设置属性的值(参数1：要修改的对象  参数2：要修改的值)
+name.set(student, "李四");
+```
+
+##### 6-2.get()	获取值
+
+```java
+//获取属性的值(参数：要获取的对象)
+Object o = name.get(student);
+```
+
+#### 7.获取方法
+
+get（表示获取）Declared（表示私有）s（表示复数）
+如果获取的属性是私有的需要添加临时访问权限
+
+前置操作
+
+```java
+//获取字节码文件对象
+//创建一个对象
+```
+
+##### 7-1.获取当前类与父类的所有公共方法
+
+```java
+aClass.getMethods();
+```
+
+##### 7-2.获取当前类与父类的所有方法
+
+```java
+aClass.getDeclaredMethods();
+```
+
+##### 7-3.获取公共的单个方法(参数1：方法名   参数2：方法参数)
+
+```java
+aClass.getMethod("sleep");
+aClass.getMethod("eat", String.class);
+```
+
+##### 7-4.获取单个方法(参数1：方法名   参数2：方法参数)
+
+```java
+aClass.getDeclaredMethod("getName");
+aClass.getDeclaredMethod("setName", String.class);
+```
+
+##### 7-5.调用方法
+
+```java
+sleep.invoke(student);
+String invoke = (String) eat.invoke(student, "a");
+```
 
 
-### 四、反射优点和缺点
+
+### 四、反射的优点和缺点
 
 - 优点 ：可以动态的创建和使用对象（ 也是框架底层核心 ），使用灵活，没有反射机制， 框架技术就失去底层支撑 。
 

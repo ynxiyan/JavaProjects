@@ -5,7 +5,7 @@ import java.lang.reflect.Constructor;
 /**
  * @Author: XIYAN
  * @Date: 2023/2/14 10:08
- * @注释:
+ * @注释:通过测试反射获取构造方法
  */
 public class Test2 {
     public static void main(String[] args) throws ClassNotFoundException, NoSuchMethodException {
@@ -23,7 +23,7 @@ public class Test2 {
         }
         //4.获取无参或带参(参数需要类的字节码文件)构造方法
         Constructor<?> constructor = aClass.getConstructor();
-        Constructor<?> constructor1 = aClass.getConstructor(String.class, Integer.class);
+        Constructor<?> constructor1 = aClass.getConstructor(String.class, int.class);
         //也可以获取指定的构造方法，但是与上面不同的是还可以获取私有构造方法
         Constructor<?> declaredConstructor = aClass.getDeclaredConstructor(String.class);
     }
