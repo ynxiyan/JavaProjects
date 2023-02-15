@@ -20,6 +20,6 @@ public class Test {
 //        dogs.setAge(19);
         //dogs.setId(9);
         //返回
-        dogsImpl.selDogLike(like).forEach(System.out::println);
+        dogsImpl.selectDogLike(like).forEach(System.out::println);
     }
 }

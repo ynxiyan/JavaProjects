@@ -12,37 +12,37 @@ import java.util.List;
  */
 public class DogsDaoImpl extends BasicDao implements DogsDao {
     @Override
-    public int addDogs(Dogs dogs) {
+    public int insertDogs(Dogs dogs) {
         String sql = "insert into dogs(name,sex,age) values(?,?,?)";
         return update(sql, dogs.getName(), dogs.getSex(), dogs.getAge());
     }
 
     @Override
-    public int delDogs(Dogs dogs) {
+    public int deleteDogs(Dogs dogs) {
         String sql = "delete from dogs where id=?";
         return update(sql, dogs.getId());
     }
 
     @Override
-    public int upDogs(Dogs dogs, String name) {
+    public int updateDogs(Dogs dogs, String name) {
         String sql = "update dogs set name=?,sex=?,age=? where name=?";
         return update(sql, dogs.getName(), dogs.getSex(), dogs.getAge(), name);
     }
 
     @Override
-    public Dogs selDogsById(Dogs dogs) {
+    public Dogs selectDogsById(Dogs dogs) {
         String sql = "select id,name,sex,age from dogs where id=?";
         return selectOne(Dogs.class, sql, dogs.getId());
     }
 
     @Override
-    public List<Dogs> selDogsAll() {
+    public List<Dogs> selectDogsAll() {
         String sql = "select id,name,sex,age from dogs";
         return selectList(Dogs.class, sql);
     }
 
     @Override
-    public List<Dogs> selDogLike(String like) {
+    public List<Dogs> selectDogLike(String like) {
         String sql = "select id,name,sex,age from dogs where name like?";
         return selectList(Dogs.class, sql, like);
     }

@@ -16,7 +16,7 @@ public interface DogsDao {
      * @param dogs 传入新增的信息
      * @return 返回受影响的行数
      */
-    int addDogs(Dogs dogs);
+    int insertDogs(Dogs dogs);
 
     /**
      * 删除
@@ -24,7 +24,7 @@ public interface DogsDao {
      * @param dogs 传入需要删除的Id
      * @return 返回受影响的行数
      */
-    int delDogs(Dogs dogs);
+    int deleteDogs(Dogs dogs);
 
     /**
      * 修改
@@ -33,7 +33,7 @@ public interface DogsDao {
      * @param name 传入需要修改的名称
      * @return 返回受影响的行数
      */
-    int upDogs(Dogs dogs, String name);
+    int updateDogs(Dogs dogs, String name);
 
     /**
      * 通过Id查询
@@ -41,14 +41,14 @@ public interface DogsDao {
      * @param dogs 传入需要查询的Id
      * @return 返回查询的结果信息
      */
-    Dogs selDogsById(Dogs dogs);
+    Dogs selectDogsById(Dogs dogs);
 
     /**
      * 查询所有
      *
      * @return 返回查询的结果集信息
      */
-    List<Dogs> selDogsAll();
+    List<Dogs> selectDogsAll();
 
     /**
      * 模糊查询
@@ -56,5 +56,5 @@ public interface DogsDao {
      * @param like 传入需要模糊查询的名称
      * @return 返回查询的结果集信息
      */
-    List<Dogs> selDogLike(String like);
+    List<Dogs> selectDogLike(String like);
 }
