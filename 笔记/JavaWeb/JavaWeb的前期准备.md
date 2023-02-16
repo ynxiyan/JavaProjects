@@ -126,6 +126,8 @@ encoding-编码
 
 ### 四、Maven
 
+---
+
 #### 1.什么是maven
 
 Apache Maven是专门用于管理和构建Java项目的工具
@@ -265,6 +267,14 @@ mvn install			安装需要的插件
             <version>1.1.10</version>
         </dependency>
     
+    <!--    servlet-->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>4.0.0</version>
+            <scope>provided</scope>
+        </dependency>
+    
 </dependencies>
 ```
 
@@ -281,3 +291,94 @@ mvn install			安装需要的插件
 ![image-20230215194951486](https://img2023.cnblogs.com/blog/2854528/202302/2854528-20230215202545013-432628254.png)
 
 默认值为：compile
+
+tomcat：
+
+```xml
+<build>
+    <finalName>maven_servlet</finalName>
+    <plugins>
+        <!--            tomcat-->
+        <plugin>
+            <groupId>org.apache.tomcat.maven</groupId>
+            <artifactId>tomcat7-maven-plugin</artifactId>
+            <version>2.2</version>
+        </plugin>
+    </plugins>
+</build>
+```
+
+
+
+### 五、HTTP
+
+---
+
+#### 1.HTTP的概念
+
+超文本传输协议 ， 规定和约束了浏览器和服务器之间的数据传输的规则，数据传输必须按照此规则 ， 请求数据和响应数据才能够正常进行
+
+#### 2.请求数据的格式
+
+```
+GET /maven_webapp/ HTTP/1.1
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Accept-Encoding: gzip, deflate, br
+Accept-Language: zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6,zh-TW;q=0.5
+```
+
+包含部分
+
+请求行：http请求数据的第一行又包含三个部分，请求方式GET（默认为GET）/请求项目地址/协议和版本号
+
+请求方式很多	7种 ： 常用GET POST
+请求头：第二行开始，格式：key ：值	规定各种配置
+请求体：请求的时候携带的参数
+
+#### 3.响应数据的格式
+
+```
+HTTP/1.1 200
+Content-Type: text/html;charset=ISO-8859-1
+Content-Length: 57
+Date: Thu, 16 Feb 2023 06:14:32 GMT
+Keep-Alive: timeout=20
+Connection: keep-alive
+```
+
+```html
+<html>
+    <body>
+    	<h2>Hello World!</h2>
+    </body>
+</html>
+```
+
+响应行：响应数据的第一行	HTTP/版本	响应状态码	描述
+
+响应头：第二行开始	key ：value
+
+空行
+
+响应体：响应给浏览器的内容	响应体和响应头之间有应该空行
+
+#### 4.常见的响应头属性和响应状态码
+
+响应头属性：
+
+| 属性            | 说明                         |
+| --------------- | ---------------------------- |
+| Content-Type    | 表示内容的类型               |
+| Content-Length  | 表示响应内容的字节数（长度） |
+| Accept-Encoding | 表示响应的压缩算法           |
+
+响应状态码：
+
+| 状态码 | 描述      | 说明                     |
+| ------ | --------- | ------------------------ |
+| 200    | ok        | 请求成功                 |
+| 404    | Not Found | 请求资源不存在           |
+| 500    |           | 服务器发送不可预期的错误 |
+
+
+

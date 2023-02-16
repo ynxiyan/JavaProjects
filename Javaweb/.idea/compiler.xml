@@ -9,6 +9,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="maven_demo" />
         <module name="maven_webapp" />
+        <module name="maven_servlet" />
       </profile>
     </annotationProcessing>
   </component>

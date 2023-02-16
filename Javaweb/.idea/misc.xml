@@ -7,6 +7,7 @@
   </component>
   <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="FrameworkDetectionExcludesConfiguration">
+    <file type="web" url="file://$PROJECT_DIR$/maven_servlet" />
     <file type="web" url="file://$PROJECT_DIR$/maven_webapp" />
   </component>
   <component name="MavenProjectsManager">
@@ -14,6 +15,7 @@
       <list>
         <option value="$PROJECT_DIR$/maven_demo/pom.xml" />
         <option value="$PROJECT_DIR$/maven_webapp/pom.xml" />
+        <option value="$PROJECT_DIR$/maven_servlet/pom.xml" />
       </list>
     </option>
   </component>
