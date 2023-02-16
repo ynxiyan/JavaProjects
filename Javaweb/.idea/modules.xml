@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/demo1/demo1.iml" filepath="$PROJECT_DIR$/demo1/demo1.iml" />
       <module fileurl="file://$PROJECT_DIR$/javaweb.iml" filepath="$PROJECT_DIR$/javaweb.iml" />
+      <module fileurl="file://$PROJECT_DIR$/maven_webapp.iml" filepath="$PROJECT_DIR$/maven_webapp.iml" />
       <module fileurl="file://$PROJECT_DIR$/mvc3/mvc3.iml" filepath="$PROJECT_DIR$/mvc3/mvc3.iml" />
       <module fileurl="file://$PROJECT_DIR$/reflection2/reflection2.iml" filepath="$PROJECT_DIR$/reflection2/reflection2.iml" />
       <module fileurl="file://$PROJECT_DIR$/tomcat_demo/tomcat_demo.iml" filepath="$PROJECT_DIR$/tomcat_demo/tomcat_demo.iml" />

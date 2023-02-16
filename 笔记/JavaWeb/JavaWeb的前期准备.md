@@ -257,7 +257,14 @@ mvn install			安装需要的插件
         <artifactId>commons-dbutils</artifactId>
         <version>1.7</version>
     </dependency>
-
+    
+    <!--        Driud-->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid</artifactId>
+            <version>1.1.10</version>
+        </dependency>
+    
 </dependencies>
 ```
 
@@ -274,7 +281,3 @@ mvn install			安装需要的插件
 ![image-20230215194951486](https://img2023.cnblogs.com/blog/2854528/202302/2854528-20230215202545013-432628254.png)
 
 默认值为：compile
-
-
-
-# 未完待续。。。
