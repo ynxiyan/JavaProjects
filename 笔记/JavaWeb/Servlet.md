@@ -347,10 +347,249 @@ Request对象的继承关系：
 #### 4.获取Request对象请求的数据
 
 1. 获取请求行
+
+   ```http
+   GET /maven_servlet/request?name=zs HTTP/1.1
+   ```
+
+   - 获取请求方式
+
+     ```java
+     req.getMethod();
+     ```
+
+   - 获取项目路径(服务器中的地址)
+
+     ```java
+     req.getContextPath();
+     ```
+
+   - 获取url（统一资源定位符）、uri（统一资源标识符）路径
+
+     ```java
+     //http://localhost:8080/maven_servlet/request
+     req.getRequestURL();
+     ///maven_servlet/request
+     req.getRequestURI();
+     ```
+
+   - 获取参数       **getQueryString()方法仅限Get请求**
+
+     ```java
+     req.getQueryString();
+     ```
+
 2. 获取请求头
+
+   除了第一行以外，以key ：value的形式显示的数据行，可以根据key来获取
+
+   ```java
+   req.getHeader("User-Agent");
+   ```
+
 3. 获取请求体
 
+   注意：浏览器发送Get请求时不存在请求体
 
+   ```java
+   //获取字符输入流信息（纯文本）
+   BufferedReader reader = req.getReader();
+   //读取数据
+   System.out.println(reader.readLine());
+   ------------------------------------------------------
+   //获取字节输入流信息（文件）
+   ServletInputStream inputStream = req.getInputStream();
+   ```
+
+通过以上内容，我们发现无论是在Get提交后还是Post提交后，都需要获取数据，但是在获取数据的时候，两个方式的差异在于，请求参数的获取不同，其他都一样
+
+#### 5.通用的获取请求参数方法
+
+1. 获取所有参数封装的Map集合
+
+   ```java
+   Map<String, String[]> parameterMap = req.getParameterMap();
+   ```
+
+2. 根据参数的key（名称）获取单个值
+
+   ```java
+   String user = req.getParameter("user");
+   ```
+
+3. 根据参数的key（名称）获取值（数组）
+
+   ```java
+   String[] lists = req.getParameterValues("list");
+   ```
+
+4. 调用doPost()方法
+
+   ```java
+   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+       doPost(req,resp);
+       ...
+   }
+   ```
+
+#### 6.解决乱码问题
+
+Post:
+
+- 设置获取字符输入流的字符集编码和页面上的参数保持一致
+
+  ```java
+  req.setCharacterEncoding("utf-8");
+  ```
+
+Get:
+
+- 注意：tomcat8以前的版本需要转码
+
+  ```java
+  user = new String(user.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
+  ```
+
+#### 7.Request请求转发与数据共享
+
+Request请求转发：
+
+```markdown
+- 请求转发是tomcat服务器中一种内容资源的跳转方式（静态资源、动态资源）
+- 请求转发的过程：浏览器发送请求给资源1 --> 资源1处理完后将请求转发给资源2，中间的过程叫做转发
+```
+
+语法
+
+```java
+request.getRequestDispatcher("/forwords2").forward(request, response);
+```
+
+Request数据共享：
+
+转发过程中，可以共享数据（Request对象），与它功能一致的对象称为域对象
+
+Request共享数据的三种方法：
+
+1. 存储数据到request对象中
+
+   ```java
+   request.setAttribute("user","zs");
+   ```
+
+2. 根据key获取request对象中对应数据的value
+
+   ```java
+   request.getAttribute("user");
+   ```
+
+3. 根据key清除request对象中对应数据
+
+   ```java
+   request.removeAttribute("user");
+   ```
+
+
+
+### 八、HttpServletResponse接口
+
+---
+
+#### 1.HttpServletResponse的作用
+
+和request搭配，主要用于处理响应的信息，其执行流程与request一致，每次浏览器请求进来以后Tomcat服务器就会创建一个response对象，传递给Servlet，用来封装响应的信息， 如果我们需要给客户端返回指定信息，就可以通过response来进行设置
+
+#### 2.Response设置响应数据
+
+1. 响应行
+
+   ```http
+   HTTP/1.1 200 OK
+   ```
+
+   - 设置响应状态码
+
+     ```java
+     response.setStatus(302); //302(重定向)
+     ```
+
+2. 响应头
+
+   - 设置响应的网页类型（key：value）
+
+     ```java
+     response.setHeader("Content-Type","text/html;charset=ISO-8859-1");
+     -------------------------------------------------------
+     response.setContentType("text/html;charset=ISO-8859-1");
+     ```
+
+3. 响应体
+
+
+
+
+
+
+
+
+
+
+
+
+
+### 九、重定向
+
+---
+
+#### 1.重定向的应用
+
+当浏览器给资源1发送请求，资源1接收到请求后表示自己无法处理，要处理的话需要访问另外
+一个资源2
+
+#### 2.重定向的方式
+
+方式一：
+
+- 设置响应状态码为302
+
+  ```java
+  response.setStatus(302);
+  ```
+
+- 设置响应头location的值为要访问的资源地址
+
+  ```java
+  response.setHeader("location","/maven_servlet/Response2");
+  ```
+
+方式二：
+
+- 设置访问路径为要访问的资源地址
+
+  ```java
+  response.sendRedirect("/maven_servlet/Response2");
+  ```
+
+#### 3.请求转发与请求重定向的区别
+
+| 转发的特点                     | 重定向的特点                               |
+| ------------------------------ | ------------------------------------------ |
+| 浏览器的地址栏不会发送变化     | 浏览器的地址栏将会刷新                     |
+| 只能转发当前服务器内部的资源   | 可以重定向到任意位置的资源（tomcat、外部） |
+| 一次请求，可以共享资源间的数据 | 两次请求，不能共享资源间的数据             |
+
+
+
+### 十、路径的写法
+
+---
+
+| 说明           | 路径       |
+| -------------- | ---------- |
+| 转发路径       | /xx        |
+| 重定向路径     | /项目名/xx |
+| 路径给服务器用 | /xx        |
+| 路径给浏览器用 | /项目名/xx |
 
 
 
