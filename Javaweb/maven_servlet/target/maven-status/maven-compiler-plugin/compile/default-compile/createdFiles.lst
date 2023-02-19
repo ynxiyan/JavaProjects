@@ -1,1 +1,6 @@
+com\controller\TestServlet.class
+com\controller\XmlServlet.class
+com\controller\MyServlet2.class
 com\controller\MyServlet1.class
+com\controller\RequestServlet.class
+com\controller\MyServlet3.class
