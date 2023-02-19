@@ -10,11 +10,17 @@ import java.io.IOException;
  * @Date: 2023/2/16 14:59
  * @注释:
  */
-@WebServlet(urlPatterns = "/servlet2", loadOnStartup = 1)
+@WebServlet(urlPatterns = "/servlet3", loadOnStartup = 1)
 public class MyServlet3 implements Servlet {
     @Override
     public void init(ServletConfig servletConfig) throws ServletException {
-
+        //ServletConfig的三个作用：
+        //1.获取xml中servlet程序的别名
+        servletConfig.getServletName();
+        //2.获取初始化参数
+        servletConfig.getInitParameter("user");
+        //3.获取ServletContext对象(servlet的上下文，存储当前项目或servlet的一些信息)
+        servletConfig.getServletContext();
     }
 
     @Override

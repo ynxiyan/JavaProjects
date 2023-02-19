@@ -4,4 +4,26 @@
 
 <web-app>
     <display-name>Archetype Created Web Application</display-name>
+    <!--    &lt;!&ndash;    给tomcat配置一个servlet&ndash;&gt;-->
+    <!--    <servlet>-->
+    <!--        &lt;!&ndash;        为servlet程序取一个别名&ndash;&gt;-->
+    <!--        <servlet-name>XmlServlet</servlet-name>-->
+    <!--        &lt;!&ndash;        servlet程序所在的包和类名&ndash;&gt;-->
+    <!--        <servlet-class>com.controller.XmlServlet</servlet-class>-->
+    <!--        &lt;!&ndash;        servlet的初始化参数&ndash;&gt;-->
+    <!--        <init-param>-->
+    <!--            &lt;!&ndash;            参数名&ndash;&gt;-->
+    <!--            <param-name>user</param-name>-->
+    <!--            &lt;!&ndash;            参数值&ndash;&gt;-->
+    <!--            <param-value>root</param-value>-->
+    <!--        </init-param>-->
+    <!--    </servlet>-->
+    <!--    &lt;!&ndash;    配置servlet访问的地址&ndash;&gt;-->
+    <!--    <servlet-mapping>-->
+    <!--        &lt;!&ndash;        告诉服务器当前配置的使用对象&ndash;&gt;-->
+    <!--        <servlet-name>XmlServlet</servlet-name>-->
+    <!--        &lt;!&ndash;        配置访问servlet的路径&ndash;&gt;-->
+    <!--        <url-pattern>xml</url-pattern>-->
+    <!--    </servlet-mapping>-->
 </web-app>
+
