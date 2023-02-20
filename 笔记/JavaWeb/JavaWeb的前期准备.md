@@ -235,7 +235,6 @@ mvn install			安装需要的插件
         <artifactId>mysql-connector-java</artifactId>
         <version>8.0.32</version>
     </dependency>
-
     <!--        单元测试-->
     <dependency>
         <groupId>junit</groupId>
@@ -243,7 +242,6 @@ mvn install			安装需要的插件
         <version>3.8.2</version>
         <scope>test</scope>
     </dependency>
-
     <!--        JDBCutils-->
     <!-- https://mvnrepository.com/artifact/me.geso/jdbcutils -->
     <dependency>
@@ -251,7 +249,6 @@ mvn install			安装需要的插件
         <artifactId>jdbcutils</artifactId>
         <version>2.2.0</version>
     </dependency>
-
     <!--        DButils-->
     <!-- https://mvnrepository.com/artifact/commons-dbutils/commons-dbutils -->
     <dependency>
@@ -259,14 +256,19 @@ mvn install			安装需要的插件
         <artifactId>commons-dbutils</artifactId>
         <version>1.7</version>
     </dependency>
-    
     <!--        Driud-->
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>druid</artifactId>
             <version>1.1.10</version>
         </dependency>
-    
+    <!--        lombox-->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>RELEASE</version>
+            <scope>compile</scope>
+        </dependency>
     <!--    servlet-->
         <dependency>
             <groupId>javax.servlet</groupId>
@@ -274,8 +276,23 @@ mvn install			安装需要的插件
             <version>4.0.0</version>
             <scope>provided</scope>
         </dependency>
-    
+    <!--        IOUtils-->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.7</version>
+        </dependency>
 </dependencies>
+<build>
+    <plugins>
+        <!--            tomcat-->
+        <plugin>
+            <groupId>org.apache.tomcat.maven</groupId>
+            <artifactId>tomcat7-maven-plugin</artifactId>
+            <version>2.2</version>
+        </plugin>
+    </plugins>
+</build>
 ```
 
 **Maven中央仓库：**[Maven Repository: Search/Browse/Explore (mvnrepository.com)](https://mvnrepository.com/)

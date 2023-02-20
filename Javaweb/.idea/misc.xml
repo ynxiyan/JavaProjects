@@ -8,6 +8,7 @@
   <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="FrameworkDetectionExcludesConfiguration">
     <file type="web" url="file://$PROJECT_DIR$/forwords" />
+    <file type="web" url="file://$PROJECT_DIR$/login_enroll" />
     <file type="web" url="file://$PROJECT_DIR$/maven_servlet" />
     <file type="web" url="file://$PROJECT_DIR$/maven_webapp" />
   </component>
@@ -18,6 +19,7 @@
         <option value="$PROJECT_DIR$/maven_webapp/pom.xml" />
         <option value="$PROJECT_DIR$/maven_servlet/pom.xml" />
         <option value="$PROJECT_DIR$/forwords/pom.xml" />
+        <option value="$PROJECT_DIR$/login_enroll/pom.xml" />
       </list>
     </option>
   </component>

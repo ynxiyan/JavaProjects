@@ -21,7 +21,7 @@
 
 2. 实现接口中的抽象方法，service()是功能执行的方法
 
-3. 在新疆的类上添加@WebServlet注解
+3. 在新建的类上添加@WebServlet注解
 
    ```java
    @WebServlet("/servlet1")
@@ -525,28 +525,60 @@ Request共享数据的三种方法：
 
 3. 响应体
 
+   字符流：
+
+   ```java
+   //设置字符编码
+   response.setContentType("text/html;charset=utf-8");
+   PrintWriter writer = response.getWriter();
+   //向浏览器写数据
+   writer.write("responseServlet");
+   ```
+
+   字节流：
+
+   - 手动
+
+     ```java
+     //从硬盘读取文件到servlet中
+     FileInputStream fileInputStream = new FileInputStream("");
+     //获取输出流
+     ServletOutputStream outputStream = response.getOutputStream();
+     //声明数组存储文件字节
+     byte[] bytes = new byte[1024];
+     //声明整型变量存储字节长度（为-1说明字节长度读取完毕）
+     int b = 0;
+     //通过循环读取输入流里的数据并将读到的字节放在b里判断
+     while ((b = fileInputStream.read(bytes)) != -1) {
+         //从数组下标为0的元素中通过b获取到的长度读取字节并写入到浏览器（输出流）
+         outputStream.write(bytes,0,b);
+     }
+     //关闭输入流
+     fileInputStream.close();
+     ```
+
+   - 使用IOutils
+
+     ```java
+     //从硬盘读取文件到servlet中
+     FileInputStream fileInputStream = new FileInputStream("");
+     //获取输出流
+     ServletOutputStream outputStream = response.getOutputStream();
+     //使用IOutils将输入流中的数据复制到输出流中
+     IOUtils.copy(fileInputStream,outputStream);
+     //关闭流
+     fileInputStream.close();
+     ```
+
+#### 2-1.重定向
 
 
-
-
-
-
-
-
-
-
-
-
-### 九、重定向
-
----
-
-#### 1.重定向的应用
+##### 2-1-1.重定向的应用
 
 当浏览器给资源1发送请求，资源1接收到请求后表示自己无法处理，要处理的话需要访问另外
 一个资源2
 
-#### 2.重定向的方式
+##### 2-1-2.重定向的方式
 
 方式一：
 
@@ -569,8 +601,14 @@ Request共享数据的三种方法：
   ```java
   response.sendRedirect("/maven_servlet/Response2");
   ```
+  
+  注意：一般项目名不能直接写，而是通过request对象获取
+  
+  ```java
+  request.getContextPath()	//获取项目路径
+  ```
 
-#### 3.请求转发与请求重定向的区别
+##### 2-1-3.请求转发与请求重定向的区别
 
 | 转发的特点                     | 重定向的特点                               |
 | ------------------------------ | ------------------------------------------ |
@@ -580,7 +618,7 @@ Request共享数据的三种方法：
 
 
 
-### 十、路径的写法
+### 九、路径的写法
 
 ---
 
@@ -592,8 +630,4 @@ Request共享数据的三种方法：
 | 路径给浏览器用 | /项目名/xx |
 
 
-
-
-
-# 未完待续。。。
 
