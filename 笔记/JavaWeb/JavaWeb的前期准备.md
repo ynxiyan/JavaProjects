@@ -283,16 +283,6 @@ mvn install			安装需要的插件
             <version>2.7</version>
         </dependency>
 </dependencies>
-<build>
-    <plugins>
-        <!--            tomcat-->
-        <plugin>
-            <groupId>org.apache.tomcat.maven</groupId>
-            <artifactId>tomcat7-maven-plugin</artifactId>
-            <version>2.2</version>
-        </plugin>
-    </plugins>
-</build>
 ```
 
 **Maven中央仓库：**[Maven Repository: Search/Browse/Explore (mvnrepository.com)](https://mvnrepository.com/)
