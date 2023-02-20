@@ -45,9 +45,7 @@ public class JdbcUtilsByDruid {
     public static void close(ResultSet resultSet, Statement statement, Connection connection) {
         try {
             if (resultSet != null) {
-
                 resultSet.close();
-
             }
             if (statement != null) {
                 statement.close();

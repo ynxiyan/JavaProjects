@@ -68,17 +68,10 @@
             <version>RELEASE</version>
             <scope>test</scope>
         </dependency>
-
     </dependencies>
     <build>
         <finalName>login_enroll</finalName>
         <plugins>
-            <!--            tomcat-->
-            <plugin>
-                <groupId>org.apache.tomcat.maven</groupId>
-                <artifactId>tomcat7-maven-plugin</artifactId>
-                <version>2.2</version>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -86,6 +79,12 @@
                     <source>7</source>
                     <target>7</target>
                 </configuration>
+            </plugin>
+            <!--            tomcat-->
+            <plugin>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>2.2</version>
             </plugin>
         </plugins>
     </build>

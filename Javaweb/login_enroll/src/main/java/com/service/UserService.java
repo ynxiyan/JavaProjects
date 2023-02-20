@@ -5,7 +5,7 @@ import com.model.User;
 /**
  * @Author: XIYAN
  * @Date: 2023/2/20 11:15
- * @注释:判断用户接口
+ * @注释:用户接口
  */
 public interface UserService {
     /**

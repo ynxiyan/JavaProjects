@@ -11,7 +11,7 @@ import com.service.UserService;
  * @注释:实现UserService
  */
 public class UserServiceImpl implements UserService {
-    UserDao userDao = new UserDaoImpl();
+    private final UserDao userDao = new UserDaoImpl();
 
     @Override
     public User login(User user) {

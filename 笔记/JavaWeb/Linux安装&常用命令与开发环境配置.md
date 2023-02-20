@@ -631,6 +631,21 @@ grep hello *.java	//查找当前目录中所有.java结尾的文件中包含hell
 
 10. 登录mysql
 
+11. 开启远程连接
+
+    ```bash
+    //设置密码安全策略
+    set global validate_password_policy=0;
+    //降低密码的安全等级
+    set global validate_password_policy=LOW;
+    //设置密码的最低长度
+    set global validate_password_length=1;
+    //开启远程连接
+    grant all privileges on *.* to 'root'@'%' identified by '123456' with grant option;
+    //更新权限
+    flush privileges;
+    ```
+
 附加：
 
 解决Linux错误 ERROR 1045 (28000): Access denied for user 'root'@'localhost' (using password: YES）
