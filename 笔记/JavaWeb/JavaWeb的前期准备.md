@@ -236,11 +236,11 @@ mvn install			安装需要的插件
         <version>8.0.32</version>
     </dependency>
     <!--        单元测试-->
-    <dependency>
-        <groupId>junit</groupId>
-        <artifactId>junit</artifactId>
-        <version>3.8.2</version>
-        <scope>test</scope>
+     <dependency>
+         <groupId>junit</groupId>
+         <artifactId>junit</artifactId>
+         <version>4.13.2</version>
+         <scope>test</scope>
     </dependency>
     <!--        JDBCutils-->
     <!-- https://mvnrepository.com/artifact/me.geso/jdbcutils -->
@@ -288,6 +288,12 @@ mvn install			安装需要的插件
             <groupId>jstl</groupId>
             <artifactId>jstl</artifactId>
             <version>1.2</version>
+        </dependency>
+    <!--        taglibs-->
+        <dependency>
+            <groupId>taglibs</groupId>
+            <artifactId>standard</artifactId>
+            <version>1.1.2</version>
         </dependency>
     <!--        IOUtils-->
         <dependency>

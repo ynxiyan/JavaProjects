@@ -1,0 +1,6 @@
+com\controller\StatusUpServlet.class
+com\controller\StudentDelByIdServlet.class
+com\controller\StudentUpServlet.class
+com\controller\StudentPutServlet.class
+com\controller\StudentByIdServlet.class
+com\controller\StudentAllServlet.class

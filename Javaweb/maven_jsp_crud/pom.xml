@@ -19,7 +19,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>3.8.2</version>
+            <version>4.13.2</version>
             <scope>test</scope>
         </dependency>
         <!--        JDBCutils-->
@@ -69,11 +69,11 @@
             <artifactId>jstl</artifactId>
             <version>1.2</version>
         </dependency>
+        <!--        taglibs-->
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.13.2</version>
-            <scope>test</scope>
+            <groupId>taglibs</groupId>
+            <artifactId>standard</artifactId>
+            <version>1.1.2</version>
         </dependency>
     </dependencies>
     <build>
