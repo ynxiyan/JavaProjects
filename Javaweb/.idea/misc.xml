@@ -9,6 +9,8 @@
   <component name="FrameworkDetectionExcludesConfiguration">
     <file type="web" url="file://$PROJECT_DIR$/forwords" />
     <file type="web" url="file://$PROJECT_DIR$/login_enroll" />
+    <file type="web" url="file://$PROJECT_DIR$/maven_jsp" />
+    <file type="web" url="file://$PROJECT_DIR$/maven_jsp_crud" />
     <file type="web" url="file://$PROJECT_DIR$/maven_servlet" />
     <file type="web" url="file://$PROJECT_DIR$/maven_webapp" />
   </component>
@@ -20,6 +22,8 @@
         <option value="$PROJECT_DIR$/maven_servlet/pom.xml" />
         <option value="$PROJECT_DIR$/forwords/pom.xml" />
         <option value="$PROJECT_DIR$/login_enroll/pom.xml" />
+        <option value="$PROJECT_DIR$/maven_jsp/pom.xml" />
+        <option value="$PROJECT_DIR$/maven_jsp_crud/pom.xml" />
       </list>
     </option>
   </component>

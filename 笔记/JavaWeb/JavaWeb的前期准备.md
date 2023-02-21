@@ -276,6 +276,19 @@ mvn install			安装需要的插件
             <version>4.0.0</version>
             <scope>provided</scope>
         </dependency>
+    <!--    jsp-->
+        <dependency>
+            <groupId>javax.servlet.jsp</groupId>
+            <artifactId>jsp-api</artifactId>
+            <version>2.2</version>
+            <scope>provided</scope>
+        </dependency>
+    <!--        jstl-->
+        <dependency>
+            <groupId>jstl</groupId>
+            <artifactId>jstl</artifactId>
+            <version>1.2</version>
+        </dependency>
     <!--        IOUtils-->
         <dependency>
             <groupId>commons-io</groupId>
