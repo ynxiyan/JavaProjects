@@ -289,7 +289,7 @@ mvn install			安装需要的插件
             <artifactId>jstl</artifactId>
             <version>1.2</version>
         </dependency>
-    <!--        taglibs-->
+    <!--        taglibs标准库-->
         <dependency>
             <groupId>taglibs</groupId>
             <artifactId>standard</artifactId>
@@ -300,6 +300,12 @@ mvn install			安装需要的插件
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>2.7</version>
+        </dependency>
+    <!--    google图形验证码-->
+        <dependency>
+            <groupId>com.github.axet</groupId>
+            <artifactId>kaptcha</artifactId>
+            <version>0.0.9</version>
         </dependency>
 </dependencies>
 ```
