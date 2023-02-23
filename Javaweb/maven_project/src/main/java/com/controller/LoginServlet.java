@@ -28,9 +28,6 @@ public class LoginServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        //设置编码格式
-        request.setCharacterEncoding("utf-8");
-        response.setContentType("text/html;charset=utf-8");
         //获取请求参数
         String username = request.getParameter("username");
         String password = request.getParameter("password");
@@ -49,6 +46,7 @@ public class LoginServlet extends HttpServlet {
                 response.addCookie(pwdCookie);
             }
             request.getSession().setAttribute("user", user);
+            System.out.println(user);
             request.getRequestDispatcher("/list").forward(request, response);
         } else {
             request.setAttribute("msg", "用户名或密码错误");

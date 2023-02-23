@@ -8,6 +8,8 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="maven_project" />
+        <module name="mavn_filter" />
+        <module name="maven_ajax" />
         <module name="maven_demo" />
         <module name="maven_webapp" />
         <module name="forwords" />

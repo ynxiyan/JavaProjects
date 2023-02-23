@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>ajax</title>
+</head>
+<body>
+<div id="myDiv"></div>
+</body>
+<script type="text/javascript">
+    // 创建ajax对象
+    var xmlhttp;
+    if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+        xmlhttp = new XMLHttpRequest();
+    } else {// code for IE6, IE5
+        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    // 定义ajax请求
+    // method：请求的类型；GET 或 POST
+    // url：文件在服务器上的位置
+    // async：true（异步）或 false（同步）
+    xmlhttp.open("GET", "http://localhost:8080/maven_ajax/ajax", true);
+    // 发起ajax请求
+    xmlhttp.send();
+    // 获取响应    服务器给ajax请求响应以后监听的事件
+    xmlhttp.onreadystatechange = function () {
+        // 判断服务器是否成功响应数据 4 / 200
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+            // responseText	获得字符串形式的响应数据
+            // responseXML	获得 XML 形式的响应数据
+            document.getElementById("myDiv").innerHTML = xmlhttp.responseText;
+        }
+    }
+</script>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>axios</title>
+</head>
+<body>
+<form action="#" method="post">
+    用户名：<input type="text" id="username" name="username"/>
+    <span id="msg" style="color: red;visibility: hidden">用户名已存在！</span><br>
+    密码：<input type="password" id="password" name="password"/><br>
+    <input type="submit" value="添加"/>
+</form>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script type="text/javascript">
+    //获取username元素
+    var username = document.getElementById("username");
+    //监听失去光标事件
+    username.onblur = function () {
+        var uservalue = username.value;
+        //axios的get请求ajax
+        axios({
+            //指定请求方式
+            method: "get",
+            //请求地址及参数
+            url: "http://localhost:8080/maven_ajax/ajax?username=" + uservalue,
+            //响应后的处理
+        }).then(function (response) {
+            //处理结果
+            if (response.data === true) {
+                document.getElementById("msg").style.visibility = "visible";
+            } else {
+                document.getElementById("msg").style.visibility = "hidden";
+            }
+        });
+    }
+
+    //axios的post请求ajax
+    axios({
+        //指定请求方式
+        method: "post",
+        url: "http://localhost:8080/maven_ajax/ajax",
+        data: "username=" + uservalue,
+        //响应后的处理
+    }).then(function (response) {
+        //处理结果
+    });
+</script>
+</html>

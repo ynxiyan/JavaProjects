@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>register</title>
+</head>
+<body>
+<form action="#" method="post">
+    用户名：<input type="text" id="username" name="username"/>
+    <span id="msg" style="color: red;visibility: hidden">用户名已存在！</span><br>
+    密码：<input type="password" id="password" name="password"/><br>
+    <input type="submit" value="添加"/>
+</form>
+</body>
+<script type="text/javascript">
+    // 创建Ajax对象
+    var xmlhttp;
+    if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+        xmlhttp = new XMLHttpRequest();
+    } else {// code for IE6, IE5
+        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    //获取username元素
+    var username = document.getElementById("username");
+    //监听失去光标事件
+    username.onblur = function () {
+        var uservlue = username.value;
+        //发起ajax请求
+        xmlhttp.open("GET", "http://localhost:8080/maven_ajax/ajax?username=" + uservlue, true);
+        xmlhttp.send();
+        //获取服务器响应
+        xmlhttp.onreadystatechange = function () {
+            // 判断服务器是否成功响应数据 4 / 200
+            if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
+                if (xmlhttp.responseText === "true") {
+                    document.getElementById("msg").style.visibility = "visible";
+                } else {
+                    document.getElementById("msg").style.visibility = "hidden";
+                }
+            }
+        }
+    }
+
+</script>
+</html>

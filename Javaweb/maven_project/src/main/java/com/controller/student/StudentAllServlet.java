@@ -27,9 +27,6 @@ public class StudentAllServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        //设置编码
-        request.setCharacterEncoding("utf-8");
-        response.setContentType("text/html;charset=utf-8");
         //调用list()方法
         List<Student> list = studentService.list();
         //存储数据

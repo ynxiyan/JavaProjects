@@ -13,6 +13,7 @@
 <body>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <p>欢迎：${user.username}</p>
+<a href="<%=request.getContextPath()%>/logout">退出</a>
 <h4>学生列表</h4>
 <hr/>
 <a href="<%=request.getContextPath()%>/addstudent.jsp">添加</a>
