@@ -243,7 +243,6 @@ public void service(ServletRequest servletRequest, ServletResponse servletRespon
 补充 ： 
 
 除了表单的method=post 提交是执行doPost()方法以外，其他清求（ 直接访问、跳转等 ）基本都是执行doGet()方法
-方法
 
 
 

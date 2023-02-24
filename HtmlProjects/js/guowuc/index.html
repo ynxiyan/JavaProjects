@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>guowuc</title>
+	</head>
+	<style>
+		.num {
+			text-align: center;
+		}
+	</style>
+	<body>
+		<table border="1px" style="text-align: center; width: 500px;">
+			<tr>
+				<th>商品编号</th>
+				<th>名称</th>
+				<th>单价</th>
+				<th>数量</th>
+				<th>小计</th>
+			</tr>
+			<tr>
+				<td>1</td>
+				<td>卫龙</td>
+				<td>6.5</td>
+				<td>
+					<input class="desc" type="button" value="-" />
+					<input class="num" type="number" value="2" />
+					<input class="add" type="button" value="+" />
+				</td>
+				<td class="xj">13</td>
+			</tr>
+			<tr>
+				<td>2</td>
+				<td>子弟</td>
+				<td>8</td>
+				<td>
+					<input class="desc" type="button" value="-" />
+					<input class="num" type="number" value="3" />
+					<input class="add" type="button" value="+" />
+				</td>
+				<td class="xj">24</td>
+			</tr>
+		</table>
+		<p>总价：<span id="price"></span></p>
+	</body>
+	<script type="text/javascript">
+		//获取购买数量
+		var num = document.getElementsByClassName("num");
+		for (var i = 0; i < num.length; i++) {
+			nums(i);
+		}
+		//获取总价
+		var price = document.getElementById("price");
+		//获取小计
+		var xj = document.getElementsByClassName("xj");
+		var a = 0;
+		for (var i = 0; i < xj.length; i++) {
+			a += parseFloat(xj[i].innerHTML);
+		}
+		price.innerHTML = a;
+		//获取减少按钮
+		var desc = document.getElementsByClassName("desc");
+		//循环绑定减少按钮
+		for (var i = 0; i < desc.length; i++) {
+			descs(i);
+		}
+		//获取增加按钮
+		var add = document.getElementsByClassName("add");
+		//循环绑定增加按钮
+		for (var i = 0; i < add.length; i++) {
+			adds(i);
+		}
+
+		//购买数量
+		function nums(index) {
+			num[index].onblur = function() {
+				//获取单价
+				var td = num[index].parentNode.previousElementSibling.innerHTML;
+				if (num[index].value <= 0) {
+					alert("购买数量不能小于1");
+					num[index].value = 1;
+				}
+				xj[index].innerHTML = parseFloat(num[index].value * td);
+			}
+		}
+		//减少按钮
+		function descs(index) {
+			desc[index].onclick = function() {
+				//获取单价
+				var td = num[index].parentNode.previousElementSibling.innerHTML;
+				//自减1
+				parseInt(num[index].value--);
+				if (num[index].value == 0) {
+					alert("购买数量不能为0");
+					num[index].value = 1;
+					return;
+				}
+				let
+				var a = [];
+				const
+					//计算
+					xj[index].innerHTML = parseFloat(num[index].value * td);
+				price.innerHTML = parseFloat(price.innerHTML) - parseFloat(td);
+			}
+		}
+
+		//增加按钮
+		function adds(index) {
+			add[index].onclick = function() {
+				//获取单价
+				var td = num[index].parentNode.previousElementSibling.innerHTML;
+				//自增1
+				parseInt(num[index].value++);
+				//计算
+				xj[index].innerHTML = parseFloat(num[index].value * td);
+				price.innerHTML = parseFloat(price.innerHTML) + parseFloat(td);
+			}
+		}
+	</script>
+</html>
