@@ -1,6 +1,6 @@
 # [ajax与axios](https://www.cnblogs.com/ynxiyan/p/17148758.html)
 
-### Ajax
+### ajax
 
 #### 一、什么是ajax请求
 
@@ -67,7 +67,7 @@ AJAX是异步JavaScript和XML的缩写，它不是一种编程语言，而是一
 
 
 
-### Axios
+### axios
 
 #### 一、axios 是什么?
 
@@ -81,7 +81,7 @@ Axios 是一个基于 *[promise](https://javascript.info/promise-basics)* 网络
 
 ---
 
-1. 安装
+1. 导入axios
 
    使用 npm:
 
@@ -127,6 +127,82 @@ Axios 是一个基于 *[promise](https://javascript.info/promise-basics)* 网络
    ```
 
    
+
+### 借助jQuery实现请求
+
+#### 一、导入jQuery
+
+---
+
+使用 npm:
+
+```bash
+npm install jquery
+```
+
+使用 jsDelivr CDN:
+
+```html
+<script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+```
+
+#### 二、使用
+
+ajax：
+
+1. get
+
+   ```javascript
+   $.ajax({
+       type: "get",
+       url: "http://localhost:8080/maven_ajax/ajax",
+       success: function (response) {
+           alert(response);
+       }
+   });
+   ```
+
+2. post
+
+   ```javascript
+   $.ajax({
+       type: "post",
+       url: "http://localhost:8080/maven_ajax/ajax",
+       data: "username=admin",
+       success: function (response) {
+           alert(response);
+       }
+   });
+   ```
+
+3. 简写
+
+   ```javascript
+   //get请求
+   $.get("url", "data", function (response) {
+   }, json);
+   //post请求
+   $.post("url", "data", function (response) {
+   }, json);
+   ```
+
+axios：
+
+1. get
+
+   ```javascript
+   axios.get("http://localhost:8080/maven_ajax/ajax").then(function (response) {
+       response.data;
+   });
+   ```
+
+2. post
+
+   ```javascript
+   axios.post("http://localhost:8080/maven_ajax/ajax").then(function (response) {
+       response.data;
+   });
+   ```
 
 
 

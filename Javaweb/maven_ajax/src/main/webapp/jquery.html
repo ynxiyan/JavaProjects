@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>jquery</title>
+</head>
+<body>
+
+</body>
+<script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script type="text/javascript">
+    //使用jquery的ajax的get/post请求
+    $.ajax({
+        type: "post",
+        url: "http://localhost:8080/maven_ajax/ajax",
+        data: "username=admin",
+        success: function (response) {
+            alert(response);
+        }
+    });
+    //简写
+    $.get("url", "data", function (response) {
+    }, json);
+    $.post("url", "data", function (response) {
+    }, json);
+
+    //使用jquery的axios的get/post请求
+    axios.get("http://localhost:8080/maven_ajax/ajax").then(function (response) {
+        response.data;
+    });
+    axios.post("http://localhost:8080/maven_ajax/ajax").then(function (response) {
+        response.data;
+    });
+</script>
+</html>
