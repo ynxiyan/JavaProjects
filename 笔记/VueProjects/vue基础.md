@@ -138,3 +138,12 @@ new Vue({
 router是全局路由对象，负责全局事务，可以用来跳转等，除了routes还有其他的属性和方法
 
 route是局部路由对象，当前页面或组件的路由，用来获取信息
+
+
+
+### 四、解决node版本过高问题
+
+```bash
+$env:NODE_OPTIONS="--openssl-legacy-provider"
+```
+

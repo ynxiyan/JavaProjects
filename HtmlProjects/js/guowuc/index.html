@@ -71,18 +71,6 @@
 			adds(i);
 		}
 
-		//购买数量
-		function nums(index) {
-			num[index].onblur = function() {
-				//获取单价
-				var td = num[index].parentNode.previousElementSibling.innerHTML;
-				if (num[index].value <= 0) {
-					alert("购买数量不能小于1");
-					num[index].value = 1;
-				}
-				xj[index].innerHTML = parseFloat(num[index].value * td);
-			}
-		}
 		//减少按钮
 		function descs(index) {
 			desc[index].onclick = function() {
@@ -95,11 +83,8 @@
 					num[index].value = 1;
 					return;
 				}
-				let
-				var a = [];
-				const
-					//计算
-					xj[index].innerHTML = parseFloat(num[index].value * td);
+				//计算
+				xj[index].innerHTML = parseFloat(num[index].value * td);
 				price.innerHTML = parseFloat(price.innerHTML) - parseFloat(td);
 			}
 		}
