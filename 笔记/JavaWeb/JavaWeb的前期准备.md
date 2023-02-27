@@ -307,6 +307,13 @@ mvn install			安装需要的插件
             <artifactId>kaptcha</artifactId>
             <version>0.0.9</version>
         </dependency>
+    <!--        fastJSON-->
+        <!-- https://mvnrepository.com/artifact/com.alibaba/fastjson -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.83</version>
+        </dependency>
 </dependencies>
 ```
 

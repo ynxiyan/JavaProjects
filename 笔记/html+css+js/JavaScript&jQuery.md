@@ -180,13 +180,13 @@ const--常量
 2. 获取属性值
 
    ```javascript
-   getAttribute("", "");
+   getAttribute("需要获取的属性");
    ```
 
 3. 设置属性值
 
    ```javascript
-   setAttribute("", "");
+   setAttribute({"需要设置的属性":"需要设置的属性的值",});
    ```
 
 4. 获取元素
@@ -476,7 +476,117 @@ if(event.keyCode == 13){
    $().val();
    ```
 
+##### 6.节点操作
 
+1. 创建节点
+
+   注意：创建完成后还需实现插入操作
+
+   ```javascript
+   var $newNode = $("<li>需要插入的内容</li>");
+   ```
+
+2. 插入节点
+
+   - 内部插入：
+
+     append()追加到末尾
+
+     appendTo()通过索引追加到末尾
+
+     ```javascript
+     $().append($newNode);
+     ---------------------------
+     $newNode.appendTo($());
+     ```
+
+     prepend()追加到首部
+
+     prependTo()通过索引追加到首部
+
+     ```javascript
+     $().prepend($newNode);
+     ---------------------------
+     $newNode.prependTo($());
+     ```
+   
+   - 外部插入
+   
+     after()、insertAfter()追加到元素外面（后面）
+   
+     ```javascript
+     $().after($newNode);
+     -----------------------
+     $newNode.insertAfter($());
+     ```
+     
+     before()、insertBefore()追加到元素外面（前面）
+     
+     ```javascript
+     $().before($newNode);
+     -------------------------
+     $newNode.insertBefore($());
+     ```
+
+3. 复制节点
+
+   true：仅复制标签
+
+   false：包含属性、事件
+
+   ```javascript
+   $().clone(true);
+   ```
+
+4. 删除、清空节点
+
+   删除：
+
+   ```javascript
+   $().remove();
+   ```
+
+   清空：
+
+   ```javascript
+   $().empty();
+   ```
+
+5. 替换节点
+
+   ```javascript
+   $().replaceWith($newNode);
+   -----------------------------
+   $newNode.replaceAll($());
+   ```
+
+##### 7.属性操作
+
+1. 获取属性
+
+   ```javascript
+   $().attr("需要获取的属性");
+   ```
+
+2. 设置属性
+
+   ```javascript
+   $().attr({"需要设置的属性": "需要设置的属性的值"});
+   ```
+
+3. 移除属性
+
+   ```javascript
+   $().removeAttr("需要移除的属性");
+   ```
+
+4. 获取索引
+
+   ```javascript
+   $().index(元素索引);
+   ```
+
+   
 
 ### JavaScript对象与jQuery对象的转换
 
@@ -495,8 +605,5 @@ jQuery => JavaScript
 
 ```javascript
 var $divEle = $("#div");
-$divEle.get(元素索引) 或 var a = $divEle[元素索引];
+$divEle.get(元素索引); 或 var a = $divEle[元素索引];
 ```
-
-
-

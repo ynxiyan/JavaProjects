@@ -2,38 +2,29 @@
 <html>
 	<head>
 		<meta charset="utf-8" />
-		<title></title>
+		<title>jQuery轮播</title>
+		<link href="./css/index.css" type="text/css" rel="stylesheet" />
 	</head>
 	<body>
-		<input />
+		<div class="banner">
+			<ul class="banner_ul">
+				<li class="banner_img">
+					<img src="img/1.jpg" width="520px" />
+				</li>
+				<li class="banner_img">
+					<img src="img/2.png" width="520px" />
+				</li>
+			</ul>
+			<ul class="ul_btn">
+				<li class="btn" style="background-color: black;"></li>
+				<li class="btn"></li>
+			</ul>
+			<div class="left_btn"><span>
+					< </span>
+			</div>
+			<div class="right_btn"><span>></span></div>
+		</div>
 	</body>
-	<script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
-	<script type="text/javascript">
-		$().mouseover()
-		$().mouseout()
-		$().mousedown()
-		$().mouseup()
-		$().focus()
-		$().bind({
-			click: function() {},
-			mouseover: function() {},
-		});
-		//显示或隐藏
-		$().toggle(时间, "缓动函数", "回调函数");
-		//添加样式或移除样式
-		$().toggleClass("类名");
-		//淡入或淡出
-		$().fadeToggle(时间, "缓动函数", "回调函数");
-		//滑入或滑出
-		$().slideToggle(时间, "缓动函数", "回调函数");
-		//动画
-		$().animate({
-			"需要改变的属性": "需要改变的值",
-		}, 时间);
-		//停止
-		$().stop(状态(true / false), 最终位置(true / false));
-		$("input").val();
-		var $div = document.getElementsByTagName("div");
-		$($div);
-	</script>
+	<script type="text/javascript" src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+	<script type="text/javascript" src="./js/index.js"></script>
 </html>

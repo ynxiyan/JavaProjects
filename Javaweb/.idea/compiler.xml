@@ -8,15 +8,17 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="maven_project" />
-        <module name="mavn_filter" />
+        <module name="maven_crud_ajax_vue" />
         <module name="maven_ajax" />
         <module name="maven_demo" />
         <module name="maven_webapp" />
-        <module name="forwords" />
         <module name="maven_servlet" />
         <module name="maven_cookie_session" />
+        <module name="mavn_filter" />
+        <module name="forwords" />
         <module name="login_enroll" />
         <module name="maven_jsp" />
+        <module name="maven_vue" />
         <module name="maven_jsp_crud" />
       </profile>
     </annotationProcessing>

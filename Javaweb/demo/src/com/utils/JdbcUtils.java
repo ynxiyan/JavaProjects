@@ -13,13 +13,13 @@ import java.util.Properties;
 public class JdbcUtils {
     //1.定义属性（需定义成static静态属性）
     //用户名
-    private static String user;
+    private static final String user;
     //密码
-    private static String password;
+    private static final String password;
     //数据库连接点
-    private static String url;
+    private static final String url;
     //驱动
-    private static String driver;
+    private static final String driver;
 
     //2.初始化（static）
     static {
