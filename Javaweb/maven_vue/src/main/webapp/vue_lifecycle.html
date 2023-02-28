@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Vue的生命周期</title>
+</head>
+<body>
+<div id="app">
+
+</div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+<script type="text/javascript">
+    new Vue({
+        el: '#app',
+        data() {
+            return {}
+        },
+        beforeCreate() {
+            console.log("创建之前");
+        },
+        created() {
+            console.log("创建完成");
+        },
+        beforeMount() {
+            console.log("创建虚拟DOM准备放到容器中");
+        },
+        // 重要
+        mounted() {
+            console.log("页面渲染完毕");
+        },
+        beforeUpdate() {
+            console.log("修改数据之前");
+        },
+        update() {
+            console.log("修改数据之后");
+        },
+        beforeDestroy() {
+            console.log("销毁之前");
+        },
+        destroy() {
+            console.log("销毁之后");
+        }
+    })
+</script>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>vue</title>
+</head>
+<body>
+<!--准备vue容器-->
+<!--root容器中的代码我们称为Vue-->
+<div id="app">
+    <!--    插值表达式-->
+    <!--    {{}}可以读取data里的数据-->
+    <!--    双向数据绑定v-model 缩写v-model=""-->
+    <h4>姓名：<input v-model:value="name"/></h4>
+    <h4>地址：{{address}}</h4>
+    <!--    指令语法-->
+    <!--    单向数据绑定v-bind 缩写:-->
+    <a v-bind:href="list.url">{{list.name}}</a>
+</div>
+</body>
+<!--引入vue-->
+<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+<script type="text/javascript">
+    // 文档加载完成
+    window.onload = function () {
+        // 创建vue实例
+        new Vue({
+            // 用于指定当前vue对象为哪个容器服务，值为id，我们称为root它依然遵循html规范只不过添加了一些vue语法
+            el: '#app',
+            // 用于存储数据，数据是提供给el指定的容器使用
+            // data一旦更新，页面也会更新
+            data: {
+                name: '张三',
+                address: '昆明',
+                list: {
+                    name: '百度',
+                    url: 'https://www.baidu.com/',
+                }
+            }
+        });
+    }
+</script>
+</html>

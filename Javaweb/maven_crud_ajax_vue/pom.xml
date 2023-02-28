@@ -54,25 +54,6 @@
             <version>4.0.0</version>
             <scope>provided</scope>
         </dependency>
-        <!--    jsp-->
-        <dependency>
-            <groupId>javax.servlet.jsp</groupId>
-            <artifactId>jsp-api</artifactId>
-            <version>2.2</version>
-            <scope>provided</scope>
-        </dependency>
-        <!--        jstl-->
-        <dependency>
-            <groupId>jstl</groupId>
-            <artifactId>jstl</artifactId>
-            <version>1.2</version>
-        </dependency>
-        <!--        taglibs标准库-->
-        <dependency>
-            <groupId>taglibs</groupId>
-            <artifactId>standard</artifactId>
-            <version>1.1.2</version>
-        </dependency>
         <!--        fastJSON-->
         <!-- https://mvnrepository.com/artifact/com.alibaba/fastjson -->
         <dependency>
@@ -82,7 +63,7 @@
         </dependency>
     </dependencies>
     <build>
-        <finalName>maven_jsp_crud</finalName>
+        <finalName>maven_crud_ajax_vue</finalName>
         <plugins>
             <!--            tomcat-->
             <plugin>

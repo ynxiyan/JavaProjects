@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" isELIgnored="false" %>
 <html>
 <body>
-<a href="<%=request.getContextPath()%>/list">查询全部学生</a>
+<h4>maven_crud_ajax_vue</h4>
 </body>
 </html>

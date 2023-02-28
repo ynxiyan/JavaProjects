@@ -26,7 +26,7 @@ public class StudentDaoImpl extends BasicDao implements StudentDao {
     @Override
     public int insertStudent(Student student) {
         String sql = "insert into student(stu_name,grade_name,age,address,ordered,statues) values(?,?,?,?,?,?)";
-        return update(sql, student.getStu_name(), student.getGrade_name(), student.getAge(), student.getAddress(), student.getOrdered(), student.getStatus());
+        return update(sql, student.getStu_name(), student.getGrade_name(), student.getAge(), student.getAddress(), student.getOrdered(), student.getStatues());
     }
 
     @Override
@@ -44,6 +44,6 @@ public class StudentDaoImpl extends BasicDao implements StudentDao {
     @Override
     public int updateStatus(Student student) {
         String sql = "update student set statues=? where id=?";
-        return update(sql, student.getStatus(), student.getId());
+        return update(sql, student.getStatues(), student.getId());
     }
 }

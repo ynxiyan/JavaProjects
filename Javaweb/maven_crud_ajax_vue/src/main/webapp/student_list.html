@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>学生列表</title>
+    <script src="../../../../maven_jsp_crud/src/main/webapp/js/axios.min.js"></script>
+</head>
+<body>
+<h4>学生列表</h4>
+<hr/>
+<a href="student_add.html">添加</a>
+<table id="table" border="1px">
+    <tr>
+        <th>序号</th>
+        <th>姓名</th>
+        <th>年级</th>
+        <th>年龄</th>
+        <th>地址</th>
+        <th>状态</th>
+        <th colspan="2">操作</th>
+    </tr>
+    <tr>
+        <td>1</td>
+        <td>早四</td>
+        <td>一年级</td>
+        <td>12</td>
+        <td>昆明</td>
+        <td><a href="#">启用</a></td>
+        <td><a href="#">修改</a></td>
+        <td><a href="#">删除</a></td>
+    </tr>
+</table>
+</body>
+<!--引入axios-->
+<script src="js/axios-0.18.0.js"></script>
+<script type="text/javascript">
+    // 文档加载完成
+    window.onload = function () {
+        // 发送axios请求
+        axios({
+            // 请求方式
+            method: "get",
+            // 请求资源路径
+            url: "http://localhost:8080/maven_crud_ajax_vue/getStudentList",
+        }).then(function (response) {
+            // 传递过来的是字符串，通过axios处理后转为json对象
+            // 获取响应的对象数组，里面每一个元素都是一个对象
+            let student_list = response.data;
+            // 填充表格数据
+            // 表头   固定表头格式
+            let table_header = "<tr>\n" +
+                "        <th>序号</th>\n" +
+                "        <th>姓名</th>\n" +
+                "        <th>年级</th>\n" +
+                "        <th>年龄</th>\n" +
+                "        <th>地址</th>\n" +
+                "        <th>状态</th>\n" +
+                "        <th colspan=\"2\">操作</th>\n" +
+                "    </tr>"
+            // 数据
+            for (let i = 0; i < student_list.length; i++) {
+                // 存放一组对象
+                let students = student_list[i];
+                // 取值
+                let table_data = "<tr>\n" +
+                    "        <td>" + (i + 1) + "</td>\n" +
+                    "        <td>" + students.stu_name + "</td>\n" +
+                    "        <td>" + students.grade_name + "</td>\n" +
+                    "        <td>" + students.age + "</td>\n" +
+                    "        <td>" + students.address + "</td>\n" +
+                    "        <td><a href=\"#\">启用</a></td>\n" +
+                    "        <td><a href=\"#\">修改</a></td>\n" +
+                    "        <td><a href=\"#\">删除</a></td>\n" +
+                    "    </tr>"
+                // 渲染
+                table_header += table_data;
+                document.getElementById("table").innerHTML = table_header;
+            }
+        })
+    }
+</script>
+</html>

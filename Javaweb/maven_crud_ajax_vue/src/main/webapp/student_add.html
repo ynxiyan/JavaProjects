@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>添加学生</title>
+</head>
+<body>
+<form action="#" method="post">
+    学生姓名：<input type="text" id="stu_name"/><br>
+    所在年级：<select id="grade_name">
+    <option value="一年级">一年级</option>
+    <option value="二年级">二年级</option>
+</select><br>
+    学生年龄：<input type="number" id="age"/><br>
+    学生地址：<textarea id="address"></textarea><br>
+    排序：<input type="number" id="ordered"/><br>
+    <input id="btn" type="button" value="提交">
+    <input type="reset" value="重置">
+</form>
+</body>
+<!--引入axios-->
+<script src="js/axios-0.18.0.js"></script>
+<script type="text/javascript">
+    // 文档加载完成
+    window.onload = function () {
+        // 定义对象存储表单数据
+        var form_data = {
+            stu_name: document.getElementById("stu_name").value,
+            grade_name: document.getElementById("grade_name").value,
+            age: document.getElementById("age").value,
+            address: document.getElementById("address").value,
+            ordered: document.getElementById("ordered").value,
+        }
+
+        // 当表单提交时
+        document.getElementById("btn").onclick = function () {
+            // 发送axios请求
+            axios({
+                // 请求方式
+                method: "post",
+                // 请求资源地址
+                url: "http://localhost:8080/maven_crud_ajax_vue/addStudent",
+                // 携带数据
+                data: form_data,
+            }).then(function (response) {
+                alert(response.data);
+                // 判断执行是否成功
+                if (response.data == "添加成功") {
+                    // 跳转学生列表
+                    location.href = "http://localhost:8080/maven_crud_ajax_vue/student_list.html";
+                }
+            })
+        }
+    }
+</script>
+</html>
