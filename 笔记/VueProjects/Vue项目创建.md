@@ -36,7 +36,13 @@ vue init webpack 项目名
 ? Should we run `npm install` for you after the project has been created? (recommended) npm
 ```
 
-5.启动项目/停止项目(Ctrl + C)
+5.使用图形化界面创建项目
+
+```bash
+vue ui
+```
+
+6.启动项目/停止项目(Ctrl + C)
 
 ```bash
 npm run dev
