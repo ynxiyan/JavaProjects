@@ -15,6 +15,7 @@
         <module name="maven_servlet" />
         <module name="maven_cookie_session" />
         <module name="mavn_filter" />
+        <module name="sunbookshop" />
         <module name="forwords" />
         <module name="login_enroll" />
         <module name="maven_jsp" />

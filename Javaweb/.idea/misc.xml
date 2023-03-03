@@ -19,6 +19,7 @@
     <file type="web" url="file://$PROJECT_DIR$/maven_vue" />
     <file type="web" url="file://$PROJECT_DIR$/maven_webapp" />
     <file type="web" url="file://$PROJECT_DIR$/mavn_filter" />
+    <file type="web" url="file://$PROJECT_DIR$/sunbookshop" />
   </component>
   <component name="MavenProjectsManager">
     <option name="originalFiles">
@@ -36,6 +37,7 @@
         <option value="$PROJECT_DIR$/maven_ajax/pom.xml" />
         <option value="$PROJECT_DIR$/maven_vue/pom.xml" />
         <option value="$PROJECT_DIR$/maven_crud_ajax_vue/pom.xml" />
+        <option value="$PROJECT_DIR$/sunbookshop/pom.xml" />
       </list>
     </option>
   </component>

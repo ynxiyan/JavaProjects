@@ -13,6 +13,6 @@ public class TestSelectAll {
     @Test
     public void testSelectAll() {
         StudentService studentService = new StudentServiceImpl();
-        System.out.println(studentService.list());
+        //System.out.println(studentService.list());
     }
 }

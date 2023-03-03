@@ -1,8 +1,7 @@
 package com.service;
 
+import com.model.Page;
 import com.model.Student;
-
-import java.util.List;
 
 /**
  * @Author: XIYAN
@@ -15,7 +14,7 @@ public interface StudentService {
      *
      * @return 返回学生集合
      */
-    List<Student> list();
+    Page<Student> list(int pageSize, int currentPage);
 
     /**
      * 删除学生的逻辑
@@ -42,12 +41,12 @@ public interface StudentService {
     boolean upStudent(Student student);
 
     /**
-     * 通过id查询学生信息的逻辑
+     * 通过姓名和年级查询学生信息的逻辑
      *
      * @param student 传入学生id
      * @return 返回学生信息
      */
-    Student getStudentById(Student student);
+    Student getStudentByNameAndGrade(Student student);
 
     /**
      * 修改学生状态的逻辑

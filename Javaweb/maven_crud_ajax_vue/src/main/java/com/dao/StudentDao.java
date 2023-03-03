@@ -11,11 +11,18 @@ import java.util.List;
  */
 public interface StudentDao {
     /**
-     * 查询全部学生
+     * 查询分页数据
      *
      * @return 返回学生集合
      */
-    List<Student> selectAll();
+    List<Student> selectAll(int begin, int pageSize);
+
+    /**
+     * 查询总数据
+     *
+     * @return 返回总数
+     */
+    int selectByCount();
 
     /**
      * 通过id删除学生
@@ -42,13 +49,13 @@ public interface StudentDao {
     int updateStudent(Student student);
 
     /**
-     * 通过id查询学生信息
+     * 通过姓名和年级查询学生信息
      *
-     * @param student 传入学生id
+     * @param student 传入学生姓名与年级
      * @return 返回学生信息
      */
 
-    Student selectStudentById(Student student);
+    Student selectStudentByNameAndGrade(Student student);
 
     /**
      * 修改学生状态

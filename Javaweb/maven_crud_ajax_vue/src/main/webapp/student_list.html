@@ -3,80 +3,282 @@
 <head>
     <meta charset="UTF-8">
     <title>学生列表</title>
-    <script src="../../../../maven_jsp_crud/src/main/webapp/js/axios.min.js"></script>
 </head>
+<link rel="stylesheet" href="element-ui/lib/theme-chalk/index.css">
+<style>
+    .el-table .warning-row {
+        background: oldlace;
+    }
+
+    .el-table .success-row {
+        background: #f0f9eb;
+    }
+</style>
 <body>
-<h4>学生列表</h4>
-<hr/>
-<a href="student_add.html">添加</a>
-<table id="table" border="1px">
-    <tr>
-        <th>序号</th>
-        <th>姓名</th>
-        <th>年级</th>
-        <th>年龄</th>
-        <th>地址</th>
-        <th>状态</th>
-        <th colspan="2">操作</th>
-    </tr>
-    <tr>
-        <td>1</td>
-        <td>早四</td>
-        <td>一年级</td>
-        <td>12</td>
-        <td>昆明</td>
-        <td><a href="#">启用</a></td>
-        <td><a href="#">修改</a></td>
-        <td><a href="#">删除</a></td>
-    </tr>
-</table>
+<div id="app">
+    <h4>学生列表</h4>
+    <hr/>
+    <!--    <a href="student_add.html">添加</a>-->
+    <template>
+        <el-form :inline="true" :model="formInline" class="demo-form-inline">
+            <el-form-item label="学生名字">
+                <el-input v-model="formInline.stu_name" placeholder="请输入学生名字"></el-input>
+            </el-form-item>
+            <el-form-item label="年级">
+                <el-select v-model="formInline.grade_name" placeholder="请选择">
+                    <el-option label="一年级" value="一年级"></el-option>
+                    <el-option label="二年级" value="二年级"></el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="primary" @click="select">查询</el-button>
+            </el-form-item>
+        </el-form>
+        <el-button type="primary" class="el-icon-plus" @click="dialogFormVisible = true">&nbsp;新增</el-button>
+        <el-dialog title="新增学生" :visible.sync="dialogFormVisible">
+            <el-form :model="form">
+                <el-form-item label="学生姓名：" :label-width="formLabelWidth">
+                    <el-input v-model.trim="form.stu_name" autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="所在年级：" :label-width="formLabelWidth">
+                    <el-select v-model="form.grade_name" placeholder="请选择年级">
+                        <el-option label="一年级" value="一年级"></el-option>
+                        <el-option label="二年级" value="二年级"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item
+                        label="学生年龄："
+                        prop="age"
+                        :rules="[{ required: true, message: '年龄不能为空'},{ type: 'number', message: '年龄必须为数字值'}]">
+                    <el-input v-model.number="form.age" autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="学生地址：" prop="desc">
+                    <el-input type="textarea" v-model="form.address"></el-input>
+                </el-form-item>
+                <el-form-item
+                        label="排序："
+                        prop="ordered"
+                        :rules="[{ required: true, message: '排序不能为空'},{ type: 'number', message: '排序必须为数字值'}]">
+                    <el-input v-model.number="form.ordered" autocomplete="off"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="submit">确 定</el-button>
+                <el-button @click="dialogFormVisible = false">取 消</el-button>
+            </div>
+        </el-dialog>
+        <el-button type="danger" class="el-icon-delete">&nbsp;批量删除</el-button>
+        <el-table
+                :data="tableData"
+                style="width: 100%"
+                @selection-change="handleSelectionChange"
+                :row-class-name="tableRowClassName">
+            <el-table-column
+                    type="selection"
+                    width="55">
+            </el-table-column>
+            <el-table-column
+                    prop="id"
+                    label="序号"
+                    width="180">
+            </el-table-column>
+            <el-table-column
+                    prop="stu_name"
+                    label="姓名"
+                    width="180">
+            </el-table-column>
+            <el-table-column
+                    prop="grade_name"
+                    label="年级"
+                    width="180">
+            </el-table-column>
+            <el-table-column
+                    prop="age"
+                    label="年龄"
+                    width="180">
+            </el-table-column>
+            <el-table-column
+                    prop="address"
+                    label="地址">
+            </el-table-column>
+            <el-table-column
+                    prop="ordered"
+                    label="排序">
+            </el-table-column>
+            <el-table-column label="操作">
+                <template slot-scope="scope">
+                    <el-button
+                            size="mini"
+                            @click="handleEdit(scope.$index, scope.row)">编辑
+                    </el-button>
+                    <el-button
+                            size="mini"
+                            type="danger"
+                            @click="handleDelete(scope.$index, scope.row)">删除
+                    </el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+        <el-pagination
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page.sync="currentPage"
+                :page-sizes="[5, 10, 15, 20]"
+                :page-size="pageSize"
+                layout="total,sizes, prev, pager, next,jumper"
+                :total="count">
+        </el-pagination>
+    </template>
+</div>
 </body>
 <!--引入axios-->
 <script src="js/axios-0.18.0.js"></script>
+<!--引入vue-->
+<script src="js/vue.js"></script>
+<!--引入ElementUI-->
+<script src="element-ui/lib/index.js"></script>
 <script type="text/javascript">
-    // 文档加载完成
-    window.onload = function () {
-        // 发送axios请求
-        axios({
-            // 请求方式
-            method: "get",
-            // 请求资源路径
-            url: "http://localhost:8080/maven_crud_ajax_vue/getStudentList",
-        }).then(function (response) {
-            // 传递过来的是字符串，通过axios处理后转为json对象
-            // 获取响应的对象数组，里面每一个元素都是一个对象
-            let student_list = response.data;
-            // 填充表格数据
-            // 表头   固定表头格式
-            let table_header = "<tr>\n" +
-                "        <th>序号</th>\n" +
-                "        <th>姓名</th>\n" +
-                "        <th>年级</th>\n" +
-                "        <th>年龄</th>\n" +
-                "        <th>地址</th>\n" +
-                "        <th>状态</th>\n" +
-                "        <th colspan=\"2\">操作</th>\n" +
-                "    </tr>"
-            // 数据
-            for (let i = 0; i < student_list.length; i++) {
-                // 存放一组对象
-                let students = student_list[i];
-                // 取值
-                let table_data = "<tr>\n" +
-                    "        <td>" + (i + 1) + "</td>\n" +
-                    "        <td>" + students.stu_name + "</td>\n" +
-                    "        <td>" + students.grade_name + "</td>\n" +
-                    "        <td>" + students.age + "</td>\n" +
-                    "        <td>" + students.address + "</td>\n" +
-                    "        <td><a href=\"#\">启用</a></td>\n" +
-                    "        <td><a href=\"#\">修改</a></td>\n" +
-                    "        <td><a href=\"#\">删除</a></td>\n" +
-                    "    </tr>"
-                // 渲染
-                table_header += table_data;
-                document.getElementById("table").innerHTML = table_header;
+    new Vue({
+        el: '#app',
+        data() {
+            return {
+                formInline: {
+                    stu_name: '',
+                    grade_name: '',
+                },
+                dialogTableVisible: false,
+                dialogFormVisible: false,
+                form: {
+                    stu_name: '',
+                    grade_name: '',
+                    age: 0,
+                    address: '',
+                    ordered: 0,
+                },
+                formLabelWidth: '120px',
+                tableData: [{
+                    id: 0,
+                    stu_name: '',
+                    grade_name: '',
+                    age: 0,
+                    address: '',
+                    ordered: 0,
+                    statues: 0,
+                }],
+                multipleSelection: [],
+                currentPage: 1,
+                count: 100,
+                pageSize: 5,
             }
-        })
-    }
+        },
+        mounted() {
+            this.selectByAll();
+        },
+        methods: {
+            selectByAll() {
+                axios({
+                    method: 'get',
+                    url: 'http://localhost:8080/maven_crud_ajax_vue/student/list?currentPage=' + this.currentPage + "&pageSize=" + this.pageSize,
+                    // 使用箭头函数获取vue实例对象
+                }).then((response) => {
+                    this.tableData = response.data.data;
+                    this.count = response.data.count;
+                });
+            },
+            select() {
+                axios({
+                    method: 'post',
+                    url: 'http://localhost:8080/maven_crud_ajax_vue/getByNameAndGrade',
+                    data: this.formInline,
+                    // 使用箭头函数获取vue实例对象
+                }).then((response) => {
+                    this.tableData = response.data;
+                });
+            },
+            submit() {
+                axios({
+                    method: "post",
+                    url: "http://localhost:8080/maven_crud_ajax_vue/addStudent",
+                    data: this.form,
+                }).then((response) => {
+                    alert(response.data);
+                    if (response.data == "添加成功") {
+                        location.href = "http://localhost:8080/maven_crud_ajax_vue/student_list.html";
+                    }
+                });
+            },
+            handleSelectionChange(val) {
+                this.multipleSelection = val;
+            },
+            tableRowClassName({row, rowIndex}) {
+                if (row.statues === 0) {
+                    return 'warning-row';
+                } else if (row.statues === 1) {
+                    return 'success-row';
+                }
+                return '';
+            },
+            handleEdit(index, row) {
+                console.log(index, row);
+            },
+            handleDelete(index, row) {
+                console.log(index, row);
+            },
+            handleSizeChange(val) {
+                console.log(`每页 ${val} 条`);
+                this.pageSize = val;
+                this.selectByAll();
+            },
+            handleCurrentChange(val) {
+                console.log(`当前页: ${val}`);
+                this.currentPage = val;
+                this.selectByAll();
+            },
+        },
+    });
+    // // 文档加载完成
+    // window.onload = function () {
+    //     // 发送axios请求
+    //     axios({
+    //         // 请求方式
+    //         method: "get",
+    //         // 请求资源路径
+    //         url: "http://localhost:8080/maven_crud_ajax_vue/getStudentList",
+    //     }).then(function (response) {
+    //         // 传递过来的是字符串，通过axios处理后转为json对象
+    //         // 获取响应的对象数组，里面每一个元素都是一个对象
+    //         let student_list = response.data;
+    //         // 填充表格数据
+    //         // 表头   固定表头格式
+    //         let table_header = "<tr>\n" +
+    //             "        <th>序号</th>\n" +
+    //             "        <th>姓名</th>\n" +
+    //             "        <th>年级</th>\n" +
+    //             "        <th>年龄</th>\n" +
+    //             "        <th>地址</th>\n" +
+    //             "        <th>状态</th>\n" +
+    //             "        <th colspan=\"2\">操作</th>\n" +
+    //             "    </tr>"
+    //         // 数据
+    //         for (let i = 0; i < student_list.length; i++) {
+    //             // 存放一组对象
+    //             let students = student_list[i];
+    //             // 取值
+    //             let table_data = "<tr>\n" +
+    //                 "        <td>" + (i + 1) + "</td>\n" +
+    //                 "        <td>" + students.stu_name + "</td>\n" +
+    //                 "        <td>" + students.grade_name + "</td>\n" +
+    //                 "        <td>" + students.age + "</td>\n" +
+    //                 "        <td>" + students.address + "</td>\n" +
+    //                 "        <td><a href=\"#\">启用</a></td>\n" +
+    //                 "        <td><a href=\"#\">修改</a></td>\n" +
+    //                 "        <td><a href=\"#\">删除</a></td>\n" +
+    //                 "    </tr>"
+    //             // 渲染
+    //             table_header += table_data;
+    //             document.getElementById("table").innerHTML = table_header;
+    //         }
+    //     })
+    // }
 </script>
 </html>

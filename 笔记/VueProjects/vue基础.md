@@ -80,7 +80,7 @@ Vue (读音 /vjuː/，类似于 **view**) 是一套用于构建用户界面的**
    <h4>地址：{{address}}</h4>
    ```
 
-#### 2.数据绑定（指令语法）
+#### 2.数据绑定
 
 1. 单向数据绑定
 
@@ -141,7 +141,185 @@ Vue (读音 /vjuː/，类似于 **view**) 是一套用于构建用户界面的**
    });
    ```
 
+
+#### 4.事件
+
+1. 事件绑定
+
+   事件的定义都配置在methods里面，最终出现在VM上
+
+   ```html
+   <!--    事件绑定v-on: 缩写@事件名=""-->
+   <input type="button" value="按钮" v-on:click="show()"/>
+   ```
+
+   ```javascript
+   new Vue({
+       el: '#app',
+       // 数据区域
+       data() {
    
+       },
+       // 方法区域
+       methods: {
+           show() {
+               alert()
+           },
+       },
+   });
+   ```
+
+2. 常用事件修饰符
+
+   | 名称     | 说明                           |
+   | -------- | ------------------------------ |
+   | .stop    | 阻止冒泡                       |
+   | .prevent | 阻止默认事件                   |
+   | .once    | 只触发一次                     |
+   | .lazy    | 懒加载，当失去光标时才提交数据 |
+   | .number  | 将有效的字符串转为有效数字     |
+   | .trim    | 去除首尾空格                   |
+
+#### 5.条件渲染
+
+1. **v-show**：没有展示出来的元素并不是没有渲染而是使用了display进行隐藏
+
+   场景：适用于元素切换频繁的场景
+
+   ```html
+   <input type="button" @click="n<2?n++:n=0" :value="n"/>
+   <h4 v-show="n===1">欢迎：{{name}}</h4>
+   <h4 v-show="n===0">未登录</h4>
+   ```
+
+2. **v-if**：不展示的元素直接没有渲染
+
+   场景：适用于切换元素显示频率较低的场景
+
+   注意：**v-if、v-else-if、v-else**要求结构不能被打断，且元素可能无法获取到
+
+   ```html
+   <input type="button" @click="n<2?n++:n=0" :value="n"/>
+   <h4 v-if="n===0">未登录</h4>
+   <h4 v-else-if="n===1">欢迎：{{name}}</h4>
+   <h4 v-else>标签2</h4>
+   ```
+
+```javascript
+new Vue({
+    el: '#app',
+    data() {
+        return {
+            name: '张三',
+            n: 0,
+        }
+    },
+    methods: {},
+});
+```
+
+如果想要包裹一块内容可以使用template模板标签
+
+```html
+<template v-show="">
+</template>
+```
+
+#### 6.计算属性
+
+在Vue中要用的属性并不存在，但是可以通过其他属性拼接、组合、计算而来
+
+```html
+<!--使用插值表达式计算属性-->
+姓：<input type="text" v-bind="firstName"/>
+名：<input type="text" v-bind="lastName"/>
+全名：<span>{{firstName}}{{lastName}}</span>
+<hr/>
+全名：<span>{{name()}}</span>
+<hr/>
+<!--    计算后的东西认为是一个属性不能有括号-->
+全名：<span>{{name1}}</span>
+```
+
+```javascript
+new Vue({
+    el: '#app',
+    data() {
+        return {
+            firstName: '张',
+            lastName: '三',
+        }
+    },
+    methods: {
+        // 使用方法计算属性
+        name() {
+            return this.firstName + this.lastName;
+        },
+    },
+    // 计算属性区域
+    computed: {
+        name1() {
+            return this.firstName + this.lastName;
+        },
+    }
+});
+```
+
+计算属性与方法完成计算属性的区别：
+
+计算属性computed内部有缓存机制可以复用效率更高，计算属性最终会出现在Vue实例上，所以可以直接使用
+
+#### 7.循环语句
+
+```html
+<!--    遍历数组的值v-for="(别名,索引) in 数组名":key="索引"-->
+<tr v-for="(list,index) in student" :key="index">
+    <td>{{index + 1}}</td>
+    <td>{{list.name}}</td>
+    <td>{{list.age}}</td>
+</tr>
+<!--        遍历数组对象v-for="(值,键) of 数组名":key="键"-->
+<tr v-for="(value,key) of student" :key="key">
+    <td>{{value.id}}</td>
+    <td>{{value.name}}</td>
+    <td>{{value.age}}</td>
+</tr>
+<!--    遍历字符串\次数v-for="(别名,索引) of 字符串\次数":key="索引"-->
+<p style="float: left" v-for="(char,index) of str" :key="index">{{char}}</p>
+```
+
+```javascript
+new Vue({
+    el: '#app',
+    data() {
+        return {
+            // 学生数组
+            student: [{
+                id: 1,
+                name: '张三',
+                age: 12,
+            }, {
+                id: 2,
+                name: '李四',
+                age: 14,
+            }, {
+                id: 3,
+                name: '王五',
+                age: 12,
+            },],
+            str: 'seefiwesufhiwehrfeuwhreio4ihwrf',
+        }
+    },
+    methods: {},
+    computed: {},
+});
+```
+
+
+
+
+
+
 
 ### 四、插值表达式与指令语法的使用环境
 

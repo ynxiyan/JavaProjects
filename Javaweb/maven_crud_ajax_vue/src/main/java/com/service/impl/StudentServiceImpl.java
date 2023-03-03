@@ -2,6 +2,7 @@ package com.service.impl;
 
 import com.dao.StudentDao;
 import com.dao.impl.StudentDaoImpl;
+import com.model.Page;
 import com.model.Student;
 import com.service.StudentService;
 
@@ -16,8 +17,14 @@ public class StudentServiceImpl implements StudentService {
     private final StudentDao studentDao = new StudentDaoImpl();
 
     @Override
-    public List<Student> list() {
-        return studentDao.selectAll();
+    public Page<Student> list(int pageSize, int currentPage) {
+        //计算开始索引
+        int begin = (currentPage - 1) * pageSize;
+        //获取分页后的数据
+        List<Student> list = studentDao.selectAll(begin, pageSize);
+        //获取数据总数
+        int count = studentDao.selectByCount();
+        return new Page<>(count, list);
     }
 
     @Override
@@ -36,8 +43,8 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public Student getStudentById(Student student) {
-        return studentDao.selectStudentById(student);
+    public Student getStudentByNameAndGrade(Student student) {
+        return studentDao.selectStudentByNameAndGrade(student);
     }
 
     @Override

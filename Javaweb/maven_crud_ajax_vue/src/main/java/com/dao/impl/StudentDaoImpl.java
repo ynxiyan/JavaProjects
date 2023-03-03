@@ -12,9 +12,15 @@ import java.util.List;
  */
 public class StudentDaoImpl extends BasicDao implements StudentDao {
     @Override
-    public List<Student> selectAll() {
-        String sql = "select id,stu_name,grade_name,age,address,ordered,statues from student";
-        return selectList(Student.class, sql);
+    public List<Student> selectAll(int begin, int pageSize) {
+        String sql = "select id,stu_name,grade_name,age,address,ordered,statues from student limit ?,?";
+        return selectList(Student.class, sql, begin, pageSize);
+    }
+
+    @Override
+    public int selectByCount() {
+        String sql = "select count(1) from student";
+        return Integer.parseInt(selectAggregate(sql).toString());
     }
 
     @Override
@@ -36,9 +42,9 @@ public class StudentDaoImpl extends BasicDao implements StudentDao {
     }
 
     @Override
-    public Student selectStudentById(Student student) {
-        String sql = "select id,stu_name,grade_name,age,address,ordered,statues from student where id=?";
-        return selectOne(Student.class, sql, student.getId());
+    public Student selectStudentByNameAndGrade(Student student) {
+        String sql = "select id,stu_name,grade_name,age,address,ordered,statues from student where stu_name=? and grade_name=?";
+        return selectOne(Student.class, sql, student.getStu_name(), student.getGrade_name());
     }
 
     @Override
