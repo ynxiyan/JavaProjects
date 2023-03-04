@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>vue_circulate</title>
+</head>
+<body>
+<div id="app">
+    <h4>学生列表</h4>
+    <table>
+        <tr>
+            <th>序号</th>
+            <th>名字</th>
+            <th>年龄</th>
+        </tr>
+        <!--    遍历数组的值v-for="(别名,索引) in 数组名":key="索引"-->
+        <tr v-for="(list,index) in student" :key="index">
+            <td>{{index + 1}}</td>
+            <td>{{list.name}}</td>
+            <td>{{list.age}}</td>
+        </tr>
+        <!--        遍历数组对象v-for="(值,键) of 数组名":key="键"-->
+        <tr v-for="(value,key) of student" :key="key">
+            <td>{{value.id}}</td>
+            <td>{{value.name}}</td>
+            <td>{{value.age}}</td>
+        </tr>
+    </table>
+    <!--    遍历字符串\次数v-for="(别名,索引) of 字符串\次数":key="索引"-->
+    <p style="float: left" v-for="(char,index) of str" :key="index">{{char}}</p>
+</div>
+</body>
+<script src="js/vue.js"></script>
+<script type="text/javascript">
+    new Vue({
+        el: '#app',
+        data() {
+            return {
+                // 学生数组
+                student: [{
+                    id: 1,
+                    name: '张三',
+                    age: 12,
+                }, {
+                    id: 2,
+                    name: '李四',
+                    age: 14,
+                }, {
+                    id: 3,
+                    name: '王五',
+                    age: 12,
+                },],
+                str: 'seefiwesufhiwehrfeuwhreio4ihwrf',
+            }
+        },
+        methods: {},
+        computed: {},
+    });
+</script>
+</html>

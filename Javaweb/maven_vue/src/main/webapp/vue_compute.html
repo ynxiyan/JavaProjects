@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>vue_compute</title>
+</head>
+<body>
+<div id="app">
+    <!--使用插值表达式计算属性-->
+    姓：<input type="text" v-bind="firstName"/>
+    名：<input type="text" v-bind="lastName"/>
+    全名：<span>{{firstName}}{{lastName}}</span>
+    <hr/>
+    全名：<span>{{name()}}</span>
+    <hr/>
+    <!--    计算后的东西认为是一个属性不能有括号-->
+    全名：<span>{{name1}}</span>
+</div>
+</body>
+<script src="js/vue.js"></script>
+<script type="text/javascript">
+    new Vue({
+        el: '#app',
+        data() {
+            return {
+                firstName: '张',
+                lastName: '三',
+            }
+        },
+        methods: {
+            // 使用方法计算属性
+            name() {
+                return this.firstName + this.lastName;
+            },
+        },
+        // 计算属性区域
+        computed: {
+            name1() {
+                return this.firstName + this.lastName;
+            },
+        }
+    });
+</script>
+</html>

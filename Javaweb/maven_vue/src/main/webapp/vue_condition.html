@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>vue_condition</title>
+</head>
+<body>
+<div id="app">
+    <input type="button" @click="n<2?n++:n=0" :value="n"/>
+    <h4 v-show="n===1">欢迎：{{name}}</h4>
+    <h4 v-show="n===0">未登录</h4>
+    <hr/>
+    <h4 v-if="n===0">未登录</h4>
+    <h4 v-else-if="n===1">欢迎：{{name}}</h4>
+    <h4 v-else>标签2</h4>
+    <template v-show="">
+    </template>
+</div>
+</body>
+<script src="js/vue.js"></script>
+<script type="text/javascript">
+    new Vue({
+        el: '#app',
+        data() {
+            return {
+                name: '张三',
+                n: 0,
+            }
+        },
+        methods: {},
+    });
+</script>
+</html>

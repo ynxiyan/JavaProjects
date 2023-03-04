@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>后台登录</title>
+    <link href="css/login.css" rel="stylesheet">
+    <link rel="stylesheet" href="element-ui/lib/theme-chalk/index.css">
+</head>
+<body>
+<div id="app">
+    <template>
+        <div class="title">
+            <h1>太阳图书商城后台管理系统</h1>
+        </div>
+        <div class="login">
+            <img :src="imgSrc" width="100%"/>
+            <el-form class="loginPart" status-icon :model="ruleForm" :rules="rules" ref="ruleForm">
+                <h2>管理员登录</h2>
+                <el-form-item class="inputElement" prop="name">
+                    <el-input type="text" v-model="ruleForm.name" placeholder="请输入用户名">
+                    </el-input>
+                </el-form-item>
+                <el-form-item class="inputElement" prop="password">
+                    <el-input type="password" v-model="ruleForm.password" placeholder="请输入密码">
+                    </el-input>
+                </el-form-item>
+                <div class="submit">
+                    <el-button type="primary" @click="submit('ruleForm')">登录
+                    </el-button>
+                </div>
+            </el-form>
+        </div>
+    </template>
+</div>
+</body>
+<!--引入vue-->
+<script src="js/vue.js"></script>
+<!--引入axios-->
+<script src="js/axios-0.18.0.js"></script>
+<!--引入ElementUI-->
+<script src="element-ui/lib/index.js"></script>
+<script type="text/javascript">
+    new Vue({
+        el: '#app',
+        data() {
+            return {
+                imgSrc: 'imgs/login_background.png',
+                ruleForm: {
+                    name: '',
+                    password: '',
+                },
+                rules: {
+                    name: [
+                        {required: true, message: '请输入用户名', trigger: 'blur'},
+                    ],
+                    password: [
+                        {required: true, message: '请输入密码', trigger: 'blur'},
+                    ],
+                },
+            }
+        },
+        methods: {
+            submit(ruleForm) {
+                this.$refs[ruleForm].validate((valid) => {
+                    if (valid) {
+                        axios({
+                            method: 'post',
+                            url: 'http://localhost:8080/sunbookshop/login',
+                            data: this.ruleForm,
+                        }).then((response) => {
+                            if (response.data === "fail") {
+                                this.$message.error('用户名或密码错误!!!');
+                            } else {
+                                localStorage.setItem('manage', this.ruleForm.name);
+                                location.href = 'managepanel.html';
+                            }
+                        });
+                    } else {
+                        return false;
+                    }
+                });
+            },
+        },
+    });
+</script>
+</html>
