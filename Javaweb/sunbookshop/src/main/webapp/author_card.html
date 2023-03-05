@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>图书作者</title>
+    <link rel="shortcut icon" href="imgs/sunbook.ico">
+    <!--引入element-ui样式-->
+    <link rel="stylesheet" href="element-ui/lib/theme-chalk/index.css">
+</head>
+<style>
+    .clearfix:before,
+    .clearfix:after {
+        display: table;
+        content: "";
+    }
+
+    .clearfix:after {
+        clear: both
+    }
+</style>
+<body>
+<div id="app">
+    <template>
+        <!--        条件查询-->
+        <el-tabs v-model="activeName" @tab-click="handleClick">
+            <!--            按用户名查询-->
+            <el-tab-pane label="用户名查找" name="name">用户名查找<br/><br/>
+                <el-form :inline="true" :model="ruleForm" class="demo-form-inline" :rules="rules">
+                    <el-form-item label="用户名：" class="inputElement" prop="name">
+                        <el-input type="text" v-model="ruleForm.name" placeholder="请输入用户名"></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" @click="select">查询</el-button>
+                    </el-form-item>
+                </el-form>
+            </el-tab-pane>
+        </el-tabs>
+        <br/>
+        <!--        新增操作-->
+        <el-button type="primary" class="el-icon-plus">&nbsp;新增</el-button>
+        <!--        批量删除操作-->
+        <el-button type="danger" class="el-icon-delete">&nbsp;批量删除</el-button>
+        <br/><br/>
+        <!-- date遍历循环的数据 -->
+        <el-card style="width: 285px;float: left;margin-left: 20px;margin-bottom: 20px"
+                 v-for="(cardData,index) in cardData"
+                 :key="index" shadow="hover">
+            <div slot="header" class="clearfix">
+                <el-checkbox v-model="checked" :label="cardData.id" @change="ids(cardData)">
+                </el-checkbox>
+                <span>作者序号：</span>
+                <div style="float: right;position: relative;bottom: 10px">
+                    <!-- 修改按钮 -->
+                    <el-button type="text" icon="el-icon-edit-outline"></el-button>
+                    <!-- 删除按钮 -->
+                    <el-button type="text" icon="el-icon-delete"></el-button>
+                </div>
+            </div>
+            <div class="card-header">
+            </div>
+            <!-- 卡片显示的内容 -->
+            <div>
+                卡片中显示的内容
+            </div>
+        </el-card>
+        <div style="float: left">
+            <!--        分页-->
+            <el-pagination
+                    :page-sizes="[12, 24, 36, 48]"
+                    :page-size="pageSize"
+                    layout="total, sizes, prev, pager, next, jumper"
+                    :total="count">
+            </el-pagination>
+        </div>
+    </template>
+</div>
+</body>
+<!--引入vue-->
+<script src="js/vue.js"></script>
+<!--引入axios-->
+<script src="js/axios-0.18.0.js"></script>
+<!--引入ElementUI-->
+<script src="element-ui/lib/index.js"></script>
+<script type="text/javascript">
+    // 主机地址
+    var localhost = 'http://localhost:8080/sunbookshop/author';
+    new Vue({
+        el: '#app',
+        data() {
+            return {
+                // 条件查询默认显示
+                activeName: 'name',
+                // 条件查询占位符
+                ruleForm: {
+                    name: '',
+                },
+                // 数据为空提示符
+                rules: {
+                    name: [
+                        {required: true, message: '请输入用户名', trigger: 'blur'},
+                    ],
+                },
+                //多选默认不选中
+                checked: false,
+                selectionList: [],
+                cardData: [{
+                    id: '',
+                    name: '',
+                    author_introduction: '',
+                }],
+                // 分页数据占位符
+                // 当前页数
+                currentPage: 1,
+                // 每页条数
+                pageSize: 12,
+                // 总条数
+                count: 10,
+            }
+        },
+        mounted() {
+            this.list();
+        },
+        methods: {
+            // 获取作者列表
+            list() {
+                axios({
+                    method: 'get',
+                    url: localhost + '/list?currentPage=' + this.currentPage + '&pageSize=' + this.pageSize,
+                    // 使用箭头函数获取vue实例对象
+                }).then((response) => {
+                    if (response.data !== 'fail') {
+                        this.cardData = response.data.data;
+                        this.count = response.data.count;
+                    } else {
+                        this.$message.error('系统错误');
+                    }
+                });
+            },
+            // 条件查询
+            select() {
+                let url;
+                // 按用户名查询
+                if (this.ruleForm.name !== '') {
+                    url = localhost + '/getByName?name=' + this.ruleForm.name;
+                } else {
+                    this.$message({
+                        message: '请输入需要查询的参数',
+                        type: 'warning'
+                    });
+                    return false;
+                }
+                axios({
+                    method: 'get',
+                    url: url,
+                }).then((response) => {
+                    if (response.data !== 'fail') {
+                        this.cardData = response.data.data;
+                        this.count = response.data.count;
+                    } else {
+                        this.$message('查询结果为空');
+                        this.ruleForm.name = '';
+                    }
+                });
+            },
+            //获取数组中数值的下标
+            indexOf(val, ids) {
+                for (let i = 0; i < ids.length; i++) {
+                    //获取当前值的下标
+                    if (ids[i] === val)
+                        return i;
+                }
+                return -1;
+            },
+            //多选赋值ids
+            ids(val) {
+                let ids = this.selectionList;
+                //检索下标,判断当前值(或对象是否在数组中); 在则返回下标,不在则返回-1
+                let index = this.indexOf(val, ids);
+                if (ids.length > 0 && index > -1) {
+                    //删除数组中的某个元素(在取消勾选时,删除数组中的值)
+                    ids.splice(index, 1);
+                } else {
+                    //添加到数组中
+                    ids.push(val);
+                    //用逗号隔开
+                    ids.join(",");
+                }
+                console.log(val)
+            },
+        }
+    });
+</script>
+</html>

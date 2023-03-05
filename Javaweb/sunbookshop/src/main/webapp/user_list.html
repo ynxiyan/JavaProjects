@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>用户列表</title>
+    <link rel="shortcut icon" href="imgs/sunbook.ico">
+    <!--引入element-ui样式-->
+    <link rel="stylesheet" href="element-ui/lib/theme-chalk/index.css">
 </head>
-<!--引入element-ui样式-->
-<link rel="stylesheet" href="element-ui/lib/theme-chalk/index.css">
 <style>
 </style>
 <body>
@@ -120,21 +121,24 @@
         <el-table
                 :data="tableData" border
                 ref="multipleTable"
-                @selection-change="handleSelectionChange">
-            style="width: 100%">
+                @selection-change="handleSelectionChange"
+                style="width: 100%">
             <el-table-column
                     type="selection"
                     width="55">
             </el-table-column>
             <el-table-column
+                    width="100px"
                     prop="name"
                     label="用户名">
             </el-table-column>
             <el-table-column
+                    width="50px"
                     prop="sex"
                     label="性别">
             </el-table-column>
             <el-table-column
+                    width="150px"
                     prop="phone"
                     label="电话号码">
             </el-table-column>
@@ -143,10 +147,12 @@
                     label="电子邮箱">
             </el-table-column>
             <el-table-column
+                    width="100px"
                     prop="province"
                     label="省份">
             </el-table-column>
             <el-table-column
+                    width="100px"
                     prop="city"
                     label="城市">
             </el-table-column>
@@ -154,10 +160,16 @@
                     prop="address"
                     label="地址">
             </el-table-column>
-            <el-table-column label="操作">
+            <el-table-column width="300px" label="操作">
                 <template slot-scope="scope">
+                    <!--                    按用户序号重置密码-->
+                    <el-button
+                            size="mini"
+                            @click="handleReset(scope.$index, scope.row)">重置密码
+                    </el-button>
                     <!--                    按用户序号编辑用户-->
                     <el-button
+                            type="info"
                             size="mini"
                             @click="handleEdit(scope.$index, scope.row)">编辑
                     </el-button>
@@ -232,12 +244,12 @@
 <!--引入ElementUI-->
 <script src="element-ui/lib/index.js"></script>
 <script type="text/javascript">
+    // 主机地址
     var localhost = 'http://localhost:8080/sunbookshop/user';
     new Vue({
         el: '#app',
         data() {
             return {
-                // 主机地址
                 // 条件查询默认显示
                 activeName: 'name',
                 // 新增用户弹窗默认样式
@@ -345,8 +357,12 @@
                     url: localhost + '/list?currentPage=' + this.currentPage + '&pageSize=' + this.pageSize,
                     // 使用箭头函数获取vue实例对象
                 }).then((response) => {
-                    this.tableData = response.data.data;
-                    this.count = response.data.count;
+                    if (response.data !== 'fail') {
+                        this.tableData = response.data.data;
+                        this.count = response.data.count;
+                    } else {
+                        this.$message.error('系统错误');
+                    }
                 });
             },
             //获取城市列表
@@ -413,8 +429,17 @@
                     method: 'get',
                     url: url,
                 }).then((response) => {
-                    this.tableData = response.data.data;
-                    this.count = response.data.count;
+                    if (response.data !== 'fail') {
+                        this.tableData = response.data.data;
+                        this.count = response.data.count;
+                    } else {
+                        this.$message('查询结果为空');
+                        this.ruleForm.province = '';
+                        this.ruleForm.city = '';
+                        this.ruleForm.phone = '';
+                        this.ruleForm.email = '';
+                        this.ruleForm.name = '';
+                    }
                 });
             },
             // 新增用户的弹窗处理
@@ -487,8 +512,8 @@
                         this.multipleSelection = [];
                         let current = this.currentPage;
                         this.list();
-                        if (current > this.count % this.pageSize) {
-                            this.currentPage = this.count % this.pageSize;
+                        if (current > Math.floor(this.count / this.pageSize)) {
+                            this.currentPage = Math.floor(this.count / this.pageSize);
                             this.list();
                         }
                     } else {
@@ -496,9 +521,26 @@
                     }
                 });
             },
+            //重置密码
+            handleReset(index, row) {
+                axios({
+                    method: 'post',
+                    url: localhost + '/reUserById',
+                    data: row,
+                }).then((response) => {
+                    if (response.data === 'succeed') {
+                        this.$message({
+                            message: '重置用户密码成功，初始密码为：0000',
+                            type: 'success'
+                        });
+                        this.list();
+                    } else {
+                        this.$message.error('系统错误');
+                    }
+                });
+            },
             // 编辑
             handleEdit(index, row) {
-                console.log(row)
                 this.dialogEdit();
                 this.rowUser = row;
                 this.editForm = row;
@@ -554,8 +596,8 @@
                         });
                         let current = this.currentPage;
                         this.list();
-                        if (current > this.count % this.pageSize) {
-                            this.currentPage = this.count % this.pageSize;
+                        if (current > Math.floor(this.count / this.pageSize)) {
+                            this.currentPage = Math.floor(this.count / this.pageSize);
                             this.list();
                         }
                     } else {

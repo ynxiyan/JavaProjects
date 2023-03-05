@@ -3,8 +3,9 @@
 <head>
     <meta charset="utf-8"/>
     <title>SUNBOOK后台管理</title>
+    <link rel="shortcut icon" href="imgs/sunbook.ico">
+    <link rel="stylesheet" href="element-ui/lib/theme-chalk/index.css">
 </head>
-<link rel="stylesheet" href="element-ui/lib/theme-chalk/index.css">
 <style>
     body {
         margin: 0 auto;
@@ -43,55 +44,33 @@
                     </el-card>
                     <el-submenu index="1">
                         <template slot="title"><i class="el-icon-message"></i>用户管理</template>
-                        <el-menu-item index="1-1">
-                            <a href="" target="myframe">用户列表</a>
-                        </el-menu-item>
-                        <el-menu-item index="1-2">
-                            <a href="" target="myframe">订单列表</a>
-                        </el-menu-item>
+                        <el-menu-item index="1-1" @click="menu(1)">用户列表</el-menu-item>
+                        <el-menu-item index="1-2" @click="menu(2)">订单列表</el-menu-item>
                     </el-submenu>
                     <el-submenu index="2">
                         <template slot="title"><i class="el-icon-menu"></i>图书管理</template>
-                        <el-menu-item index="2-1">
-                            <a href="" target="myframe">图书信息</a>
-                        </el-menu-item>
-                        <el-menu-item index="2-2">
-                            <a href="" target="myframe">图书类型</a>
-                        </el-menu-item>
-                        <el-menu-item index="2-3">
-                            <a href="" target="myframe">图书作者</a>
-                        </el-menu-item>
+                        <el-menu-item index="2-1" @click="menu(3)">图书信息</el-menu-item>
+                        <el-menu-item index="2-2" @click="menu(4)">图书类型</el-menu-item>
+                        <el-menu-item index="2-3" @click="menu(5)">图书作者</el-menu-item>
                     </el-submenu>
                     <el-submenu index="3">
                         <template slot="title"><i class="el-icon-setting"></i>系统管理</template>
-                        <el-menu-item index="3-1">
-                            <a href="" target="myframe">修改密码</a>
-                        </el-menu-item>
+                        <el-menu-item index="3-1" @click="menu(6)">修改密码</el-menu-item>
                     </el-submenu>
                 </el-menu>
             </el-aside>
             <el-container>
                 <el-header style="text-align: right; font-size: 12px">
-                    <el-dropdown>
+                    <el-dropdown @command="handleCommand">
                         <i class="el-icon-user-solid" style="margin-right: 5px"></i>
                         <span>{{manage}}</span>
                         <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item>退出</el-dropdown-item>
+                            <el-dropdown-item command="logout">退出</el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
                 </el-header>
                 <el-main>
-                    <el-breadcrumb separator="/">
-                        <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-                        <el-breadcrumb-item><a href="user_list.html" target="myframe">用户列表</a></el-breadcrumb-item>
-                        <el-breadcrumb-item><a href="user_list.html" target="myframe">订单列表</a></el-breadcrumb-item>
-                        <el-breadcrumb-item><a href="user_list.html" target="myframe">图书信息</a></el-breadcrumb-item>
-                        <el-breadcrumb-item><a href="user_list.html" target="myframe">图书类型</a></el-breadcrumb-item>
-                        <el-breadcrumb-item><a href="user_list.html" target="myframe">图书作者</a></el-breadcrumb-item>
-                        <el-breadcrumb-item></el-breadcrumb-item>
-                    </el-breadcrumb>
-                    <br/>
-                    <iframe id="myframe" name="myframe" style="width: 99%;height: 650px" src="user_list.html"></iframe>
+                    <iframe id="myframe" name="myframe" style="width: 99%;height: 650px" :src="iframe"></iframe>
                 </el-main>
             </el-container>
         </el-container>
@@ -105,16 +84,45 @@
 <!--引入ElementUI-->
 <script src="element-ui/lib/index.js"></script>
 <script type="text/javascript">
+    // 主机地址
+    var localhost = 'http://localhost:8080/sunbookshop/';
     new Vue({
         el: '#app',
         data() {
             return {
                 manage: '',
+                iframe: 'user_list.html',
             }
         },
         mounted() {
             this.manage = localStorage.getItem('manage')
         },
+        methods: {
+            handleCommand(logout) {
+                axios({
+                    method: 'get',
+                    url: localhost + '/logout',
+                }).then((response => {
+                    if (response.data !== "fail") {
+                        this.$message.success('退出登录成功');
+                        location.href = 'login.html';
+                    } else {
+                        this.$message.error('系统错误');
+                    }
+                }));
+            },
+            menu(index) {
+                if (index === 1) {
+                    this.iframe = 'user_list.html';
+                }
+                if (index === 2) {
+                    this.iframe = 'order_list.html';
+                }
+                if (index === 5) {
+                    this.iframe = 'author_card.html';
+                }
+            }
+        }
     })
 </script>
 </html>

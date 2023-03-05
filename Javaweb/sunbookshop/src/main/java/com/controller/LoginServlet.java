@@ -1,7 +1,7 @@
 package com.controller; /**
  * @Author: XIYAN
  * @Date: 2023/3/2 16:48
- * @注释:后台管理处理接口
+ * @注释:后台管理登录处理接口
  */
 
 import com.alibaba.fastjson.JSON;
@@ -18,7 +18,7 @@ import java.io.IOException;
 
 @WebServlet(urlPatterns = "/login")
 public class LoginServlet extends HttpServlet {
-    private ManageService manageService = new ManageServiceImpl();
+    private final ManageService manageService = new ManageServiceImpl();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -34,10 +34,16 @@ public class LoginServlet extends HttpServlet {
         //调用登录方法
         Manage login = manageService.login(manage);
         //判断用户是否存在
+        String result = "fail";
         if (login != null) {
+            //存储Session对象
             request.getSession().setAttribute("manage", login.getName());
+            if (request.getSession().getAttribute("manage") != null) {
+                result = "succeed";
+            }
         } else {
-            response.getWriter().write("fail");
+            //响应执行结果
+            response.getWriter().write(result);
         }
     }
 }

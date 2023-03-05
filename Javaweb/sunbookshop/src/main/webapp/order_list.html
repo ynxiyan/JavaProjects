@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>订单列表</title>
+    <link rel="shortcut icon" href="imgs/sunbook.ico">
+    <!--引入element-ui样式-->
+    <link rel="stylesheet" href="element-ui/lib/theme-chalk/index.css">
+</head>
+<style>
+    .el-table .warning-row {
+        background: oldlace;
+    }
+
+    .el-table .success-row {
+        background: #f0f9eb;
+    }
+</style>
+<body>
+<div id="app">
+    <template>
+        <!--        条件查询-->
+        <el-tabs v-model="activeName" @tab-click="handleClick">
+            <!--            按用户名查询-->
+            <el-tab-pane label="用户名查找" name="name">用户名查找<br/><br/>
+                <el-form :inline="true" :model="ruleForm" class="demo-form-inline" :rules="rules">
+                    <el-form-item label="用户名：" class="inputElement" prop="name">
+                        <el-input type="text" v-model="ruleForm.name" placeholder="请输入用户名"></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" @click="select(1)">查询</el-button>
+                    </el-form-item>
+                </el-form>
+            </el-tab-pane>
+            <!--            按图书名称查询-->
+            <el-tab-pane label="图书名称查找" name="book_name">图书名称查找<br/><br/>
+                <el-form :inline="true" :model="ruleForm" class="demo-form-inline" :rules="rules">
+                    <el-form-item label="图书名称：" class="inputElement" prop="book_name">
+                        <el-input v-model="ruleForm.book_name" placeholder="请输入图书名称"></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" @click="select(2)">查询</el-button>
+                    </el-form-item>
+                </el-form>
+            </el-tab-pane>
+            <!--            按订购日期查询-->
+            <el-tab-pane label="订购日期查找" name="date">订购日期查找<br/><br/>
+                <el-form :inline="true" :model="ruleForm" class="demo-form-inline" :rules="rules">
+                    <el-form-item label="订购日期：" class="inputElement" prop="purchase_time">
+                        <el-date-picker
+                                v-model="ruleForm.purchase_time"
+                                type="datetime"
+                                placeholder="请选择日期与时间"
+                                :picker-options="pickerOptions">
+                        </el-date-picker>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" @click="select(3)">查询</el-button>
+                    </el-form-item>
+                </el-form>
+            </el-tab-pane>
+        </el-tabs>
+        <br/>
+        <!--        批量出库操作-->
+        <el-button type="success" @click="checkboxout">&nbsp;批量出库</el-button>
+        <!--        批量删除-->
+        <el-button type="danger" class="el-icon-delete" @click="checkboxdel">&nbsp;批量删除</el-button>
+        <br/><br/>
+        <!--        订单表格-->
+        <el-table
+                :data="tableData" border
+                ref="multipleTable"
+                @selection-change="handleSelectionChange"
+                :row-class-name="tableRowClassName"
+                style="width: 100%">
+            <el-table-column
+                    type="selection"
+                    width="55">
+            </el-table-column>
+            <el-table-column
+                    width="80px"
+                    prop="id"
+                    label="订单序号">
+            </el-table-column>
+            <el-table-column
+                    prop="book_name"
+                    label="图书名称">
+            </el-table-column>
+            <el-table-column
+                    width="80px"
+                    prop="quantity"
+                    label="购买数量">
+            </el-table-column>
+            <el-table-column
+                    width="80px"
+                    prop="price"
+                    label="单价">
+            </el-table-column>
+            <el-table-column
+                    width="80px"
+                    prop="total"
+                    label="总价">
+            </el-table-column>
+            <el-table-column
+                    width="120px"
+                    prop="name"
+                    label="用户名">
+            </el-table-column>
+            <el-table-column
+                    prop="purchase_time"
+                    label="订购日期">
+            </el-table-column>
+            <el-table-column label="操作">
+                <template slot-scope="scope">
+                    <!--                    修改出库标志-->
+                    <el-button
+                            size="mini"
+                            @click="handleEdit(scope.$index, scope.row)">出库
+                    </el-button>
+                    <!--                    按订单序号删除订单-->
+                    <el-button
+                            size="mini"
+                            type="danger"
+                            @click="handleDelete(scope.$index, scope.row)">删除
+                    </el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+        <br/><br/>
+        <!--        分页-->
+        <el-pagination
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page="currentPage"
+                :page-sizes="[5, 10, 15, 20]"
+                :page-size="pageSize"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="count">
+        </el-pagination>
+    </template>
+</div>
+</body>
+<!--引入vue-->
+<script src="js/vue.js"></script>
+<!--引入axios-->
+<script src="js/axios-0.18.0.js"></script>
+<!--引入ElementUI-->
+<script src="element-ui/lib/index.js"></script>
+<script type="text/javascript">
+    // 主机地址
+    var localhost = 'http://localhost:8080/sunbookshop/order';
+    new Vue({
+        el: '#app',
+        data() {
+            return {
+                // 条件查询默认显示
+                activeName: 'name',
+                // 条件查询占位符
+                ruleForm: {
+                    name: '',
+                    book_name: '',
+                    purchase_time: '',
+                },
+                // 日期与时间占位符
+                pickerOptions: {
+                    shortcuts: [{
+                        text: '今天',
+                        onClick(picker) {
+                            picker.$emit('pick', new Date());
+                        }
+                    }, {
+                        text: '昨天',
+                        onClick(picker) {
+                            const date = new Date();
+                            date.setTime(date.getTime() - 3600 * 1000 * 24);
+                            picker.$emit('pick', date);
+                        }
+                    }, {
+                        text: '一周前',
+                        onClick(picker) {
+                            const date = new Date();
+                            date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
+                            picker.$emit('pick', date);
+                        }
+                    }]
+                },
+                // 数据为空提示符
+                rules: {
+                    name: [
+                        {required: true, message: '请输入用户名', trigger: 'blur'},
+                    ],
+                    book_name: [
+                        {required: true, message: '请输入图书名称', trigger: 'blur'},
+                    ],
+                    purchase_time: [
+                        {required: true, message: '请选择日期与日期', trigger: 'blur'},
+                    ],
+                },
+                // 多选占位符
+                multipleSelection: [],
+                // 订单表格数据
+                tableData: [{
+                    id: '',
+                    book_name: '',
+                    quantity: '',
+                    price: '',
+                    total: '',
+                    name: '',
+                    purchase_time: '',
+                    out_fig: '',
+                }],
+                // 分页数据占位符
+                // 当前页数
+                currentPage: 1,
+                // 每页条数
+                pageSize: 5,
+                // 总条数
+                count: 10,
+            }
+        },
+        mounted() {
+            this.list();
+        },
+        methods: {
+            // 获取订单列表
+            list() {
+                axios({
+                    method: 'get',
+                    url: localhost + '/list?currentPage=' + this.currentPage + '&pageSize=' + this.pageSize,
+                    // 使用箭头函数获取vue实例对象
+                }).then((response) => {
+                    if (response.data !== 'fail') {
+                        this.tableData = response.data.data;
+                        this.count = response.data.count;
+                    } else {
+                        this.$message.error('系统错误');
+                    }
+                });
+            },
+            // 条件查询
+            select(index) {
+                let url;
+                // 按用户名查询
+                if (index === 1 && this.ruleForm.name !== '') {
+                    this.ruleForm.purchase_time = '';
+                    this.ruleForm.book_name = '';
+                    url = localhost + '/getByName?name=' + this.ruleForm.name + '&currentPage=' + this.currentPage + '&pageSize=' + this.pageSize;
+                }
+                // 按图书名称查询
+                else if (index === 2 && this.ruleForm.book_name !== '') {
+                    this.ruleForm.purchase_time = '';
+                    this.ruleForm.name = '';
+                    url = localhost + '/getBybook_name?book_name=' + this.ruleForm.book_name + '&currentPage=' + this.currentPage + '&pageSize=' + this.pageSize;
+                }
+                // 按日期和时间查询
+                else if (index === 3 && this.ruleForm.purchase_time !== '') {
+                    this.ruleForm.name = '';
+                    this.ruleForm.book_name = '';
+                    url = localhost + '/getByPurchase_time?purchase_time=' + this.ruleForm.purchase_time + '&currentPage=' + this.currentPage + '&pageSize=' + this.pageSize;
+                } else {
+                    this.$message({
+                        message: '请输入需要查询的参数',
+                        type: 'warning'
+                    });
+                    return false;
+                }
+                axios({
+                    method: 'get',
+                    url: url,
+                }).then((response) => {
+                    if (response.data !== 'fail') {
+                        this.tableData = response.data.data;
+                        this.count = response.data.count;
+                    } else {
+                        this.$message('查询结果为空');
+                        this.ruleForm.purchase_time = '';
+                        this.ruleForm.book_name = '';
+                        this.ruleForm.name = '';
+                    }
+                });
+            },
+            // 存储多选数据
+            handleSelectionChange(val) {
+                this.multipleSelection = val;
+            },
+            //订单状态
+            tableRowClassName({row, rowIndex}) {
+                if (row.out_fig === 0) {
+                    return 'warning-row';
+                } else {
+                    return 'success-row';
+                }
+            },
+            //批量出库
+            checkboxout() {
+                axios({
+                    method: 'post',
+                    url: localhost + '/outOrder',
+                    data: this.multipleSelection,
+                }).then((response) => {
+                    if (response.data === 'succeed') {
+                        this.$message({
+                            message: '批量出库成功',
+                            type: 'success'
+                        });
+                        this.multipleSelection = [];
+                        let current = this.currentPage;
+                        this.list();
+                    } else {
+                        this.$message.error('系统错误');
+                    }
+                });
+            },
+            //批量删除
+            checkboxdel() {
+                axios({
+                    method: 'post',
+                    url: localhost + '/delOrder',
+                    data: this.multipleSelection,
+                }).then((response) => {
+                    if (response.data === 'succeed') {
+                        this.$message({
+                            message: '批量删除订单成功',
+                            type: 'success'
+                        });
+                        this.multipleSelection = [];
+                        let current = this.currentPage;
+                        this.list();
+                        if (current > Math.floor(this.count / this.pageSize)) {
+                            this.currentPage = Math.floor(this.count / this.pageSize);
+                            this.list();
+                        }
+                    } else {
+                        this.$message.error('系统错误');
+                    }
+                });
+            },
+            // 修改出库标志
+            handleEdit(index, row) {
+                axios({
+                    method: 'post',
+                    url: localhost + '/outOrderById',
+                    data: row,
+                }).then((response) => {
+                    if (response.data === 'succeed') {
+                        this.$message({
+                            message: '出库成功',
+                            type: 'success'
+                        });
+                        let current = this.currentPage;
+                        this.list();
+                    } else {
+                        this.$message.error('系统错误');
+                    }
+                });
+            },
+            // 删除
+            handleDelete(index, row) {
+                axios({
+                    method: 'post',
+                    url: localhost + '/delOrderById',
+                    data: row,
+                }).then((response) => {
+                    if (response.data === 'succeed') {
+                        this.$message({
+                            message: '删除订单成功',
+                            type: 'success'
+                        });
+                        let current = this.currentPage;
+                        this.list();
+                        if (current > Math.floor(this.count / this.pageSize)) {
+                            this.currentPage = Math.floor(this.count / this.pageSize);
+                            this.list();
+                        }
+                    } else {
+                        this.$message.error('系统错误');
+                    }
+                });
+            },
+            // 查询后的分页处理
+            page() {
+                if (this.ruleForm.name !== '') {
+                    this.select(1);
+                    return false;
+                }
+                if (this.ruleForm.book_name !== '') {
+                    this.select(2);
+                    return false;
+                }
+                if (this.ruleForm.purchase_time !== '') {
+                    this.select(3);
+                    return false;
+                }
+                this.list();
+            },
+            // 修改分页数量
+            handleSizeChange(val) {
+                this.pageSize = val;
+                this.page();
+            },
+            // 切换页数
+            handleCurrentChange(val) {
+                this.currentPage = val;
+                this.page();
+            }
+        }
+    });
+</script>
+</html>

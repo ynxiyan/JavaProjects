@@ -106,4 +106,12 @@ public interface UserDao {
      * @return 返回受影响的行数
      */
     int updateUserById(User user);
+
+    /**
+     * 通过用户序号重置用户密码
+     *
+     * @param user 传入用户序号
+     * @return 返回受影响行数
+     */
+    int reUserById(User user);
 }

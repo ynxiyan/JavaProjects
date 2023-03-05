@@ -17,7 +17,7 @@ import java.util.List;
  * @注释:实现逻辑判断的用户接口
  */
 public class UserServiceImpl extends BasicDao implements UserService {
-    private UserDao userDao = new UserDaoImpl();
+    private final UserDao userDao = new UserDaoImpl();
 
     /**
      * 处理条件查询后的数据条数及用户列表
@@ -96,5 +96,10 @@ public class UserServiceImpl extends BasicDao implements UserService {
     @Override
     public boolean upUserById(User user) {
         return userDao.updateUserById(user) > 0;
+    }
+
+    @Override
+    public boolean reUserById(User user) {
+        return userDao.reUserById(user) > 0;
     }
 }

@@ -26,7 +26,7 @@ public class LoginFilter implements Filter {
         //设置服务器响应编码
         response.setContentType("text/html;charset=utf-8");
         //放行资源\路径
-        String[] paths = {"/imgs/", "element-ui", "/css/", "/js/", "/login.html", "/login"};
+        String[] paths = {"/imgs/", "/element-ui/", "/css/", "/js/", "/login.html", "/login"};
         //获取当前路径
         String url = httpServletRequest.getRequestURL().toString();
         //比对路径

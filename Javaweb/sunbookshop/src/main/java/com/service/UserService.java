@@ -101,4 +101,12 @@ public interface UserService {
      * @return
      */
     boolean upUserById(User user);
+
+    /**
+     * 逻辑判断用户序号重置用户密码
+     *
+     * @param user
+     * @return
+     */
+    boolean reUserById(User user);
 }

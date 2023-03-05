@@ -18,7 +18,7 @@ public class BasicServlet extends HttpServlet {
         //设置网页请求编码
         req.setCharacterEncoding("utf-8");
         //设置响应编码
-        resp.setContentType("text/json;charset=utf-8");
+        resp.setContentType("application/json;charset=utf-8");
         //获取路径
         String requestURI = req.getRequestURI();
         //截取最后一个/的路径

@@ -41,7 +41,6 @@ public class LoginFilter implements Filter {
         if (httpServletRequest.getSession().getAttribute("user") != null) {
             chain.doFilter(request, response);
         } else {
-            httpServletRequest.setAttribute("msg", "请先登录");
             httpServletRequest.getRequestDispatcher("/login.jsp").forward(httpServletRequest, response);
         }
     }
