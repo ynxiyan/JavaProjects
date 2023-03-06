@@ -128,6 +128,11 @@
                     width="55">
             </el-table-column>
             <el-table-column
+                    width="80px"
+                    prop="id"
+                    label="用户序号">
+            </el-table-column>
+            <el-table-column
                     width="100px"
                     prop="name"
                     label="用户名">
@@ -245,7 +250,11 @@
 <script src="element-ui/lib/index.js"></script>
 <script type="text/javascript">
     // 主机地址
-    var localhost = 'http://localhost:8080/sunbookshop/user';
+    var localhost = 'http://localhost:8080/sunbookshop/';
+    //存储编辑的原始省份信息
+    var province;
+    // 存储编辑的原始城市信息
+    var city;
     new Vue({
         el: '#app',
         data() {
@@ -254,6 +263,7 @@
                 activeName: 'name',
                 // 新增用户弹窗默认样式
                 dialogFormVisible: false,
+                // 编辑用户弹窗默认样式
                 dialogEditVisible: false,
                 // 省份下拉占位符
                 dropdown_province: [{
@@ -315,9 +325,6 @@
                     city: '',
                     address: ''
                 }],
-                //编辑用户占位符
-                //存储编辑原始数据
-                rowUser: '',
                 editForm: {
                     name: '',
                     sex: '',
@@ -343,7 +350,7 @@
             // 获取省份列表
             axios({
                 method: 'get',
-                url: localhost + '/getProvince',
+                url: localhost + '/province_city/getProvince',
                 // 使用箭头函数获取vue实例对象
             }).then((response) => {
                 this.dropdown_province = response.data;
@@ -354,7 +361,7 @@
             list() {
                 axios({
                     method: 'get',
-                    url: localhost + '/list?currentPage=' + this.currentPage + '&pageSize=' + this.pageSize,
+                    url: localhost + '/user/list?currentPage=' + this.currentPage + '&pageSize=' + this.pageSize,
                     // 使用箭头函数获取vue实例对象
                 }).then((response) => {
                     if (response.data !== 'fail') {
@@ -379,7 +386,7 @@
                 }
                 axios({
                     method: 'get',
-                    url: localhost + '/getCity?province=' + province,
+                    url: localhost + '/province_city/getCity?province=' + province,
                 }).then((response) => {
                     this.dropdown_city = response.data;
                     this.ruleForm.city = '';
@@ -396,14 +403,14 @@
                     this.ruleForm.city = '';
                     this.ruleForm.phone = '';
                     this.ruleForm.email = '';
-                    url = localhost + '/getByName?name=' + this.ruleForm.name + '&currentPage=' + this.currentPage + '&pageSize=' + this.pageSize;
+                    url = localhost + '/user/getByName?name=' + this.ruleForm.name + '&currentPage=' + this.currentPage + '&pageSize=' + this.pageSize;
                 }
                 // 按省份和城市查询
                 else if (index === 2 && this.ruleForm.province !== '' && this.ruleForm.city !== '') {
                     this.ruleForm.name = '';
                     this.ruleForm.phone = '';
                     this.ruleForm.email = '';
-                    url = localhost + '/getByProvince_city?province=' + this.ruleForm.province + '&city=' + this.ruleForm.city + '&currentPage=' + this.currentPage + '&pageSize=' + this.pageSize;
+                    url = localhost + '/user/getByProvince_city?province=' + this.ruleForm.province + '&city=' + this.ruleForm.city + '&currentPage=' + this.currentPage + '&pageSize=' + this.pageSize;
                 }
                 // 按电话号码查询
                 else if (index === 3 && this.ruleForm.phone !== '') {
@@ -411,13 +418,15 @@
                     this.ruleForm.city = '';
                     this.ruleForm.name = '';
                     this.ruleForm.email = '';
-                    url = localhost + '/getByPhone?phone=' + this.ruleForm.phone + '&currentPage=' + this.currentPage + '&pageSize=' + this.pageSize;
-                } else if (index === 4 && this.ruleForm.email !== '') {
+                    url = localhost + '/user/getByPhone?phone=' + this.ruleForm.phone + '&currentPage=' + this.currentPage + '&pageSize=' + this.pageSize;
+                }
+                // 按电子邮箱查询
+                else if (index === 4 && this.ruleForm.email !== '') {
                     this.ruleForm.province = '';
                     this.ruleForm.city = '';
                     this.ruleForm.phone = '';
                     this.ruleForm.name = '';
-                    url = localhost + '/getByEmail?email=' + this.ruleForm.email + '&currentPage=' + this.currentPage + '&pageSize=' + this.pageSize;
+                    url = localhost + '/user/getByEmail?email=' + this.ruleForm.email + '&currentPage=' + this.currentPage + '&pageSize=' + this.pageSize;
                 } else {
                     this.$message({
                         message: '请输入需要查询的参数',
@@ -460,7 +469,7 @@
                     if (valid) {
                         axios({
                             method: 'post',
-                            url: localhost + '/addUser',
+                            url: localhost + '/user/addUser',
                             data: this.form,
                         }).then((response) => {
                             if (response.data === 'succeed') {
@@ -501,7 +510,7 @@
             checkboxdel() {
                 axios({
                     method: 'post',
-                    url: localhost + '/delUser',
+                    url: localhost + '/user/delUser',
                     data: this.multipleSelection,
                 }).then((response) => {
                     if (response.data === 'succeed') {
@@ -525,7 +534,7 @@
             handleReset(index, row) {
                 axios({
                     method: 'post',
-                    url: localhost + '/reUserById',
+                    url: localhost + '/user/reUserById',
                     data: row,
                 }).then((response) => {
                     if (response.data === 'succeed') {
@@ -541,8 +550,9 @@
             },
             // 编辑
             handleEdit(index, row) {
+                province = row.province;
+                city = row.city;
                 this.dialogEdit();
-                this.rowUser = row;
                 this.editForm = row;
                 this.editForm.province_id = row.province_id;
                 this.editForm.city_id = row.city_id;
@@ -550,16 +560,16 @@
             // 更新用户
             updateForm(editForm) {
                 this.$refs[editForm].validate((valid) => {
-                    if (this.editForm.province === this.rowUser.province) {
+                    if (this.editForm.province === province) {
                         this.editForm.province = this.editForm.province_id;
                     }
-                    if (this.editForm.city === this.rowUser.city) {
+                    if (this.editForm.city === city) {
                         this.editForm.city = this.editForm.city_id;
                     }
                     if (valid) {
                         axios({
                             method: 'post',
-                            url: localhost + '/upUserById',
+                            url: localhost + '/user/upUserById',
                             data: this.editForm,
                         }).then((response) => {
                             if (response.data === 'succeed') {
@@ -586,12 +596,12 @@
             handleDelete(index, row) {
                 axios({
                     method: 'post',
-                    url: localhost + '/delUserById',
+                    url: localhost + '/user/delUserById',
                     data: row,
                 }).then((response) => {
                     if (response.data === 'succeed') {
                         this.$message({
-                            message: '批量删除用户成功',
+                            message: '删除用户成功',
                             type: 'success'
                         });
                         let current = this.currentPage;

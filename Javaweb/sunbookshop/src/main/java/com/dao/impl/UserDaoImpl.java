@@ -1,8 +1,6 @@
 package com.dao.impl;
 
 import com.dao.UserDao;
-import com.model.City;
-import com.model.Province;
 import com.model.User;
 
 import java.util.List;
@@ -25,18 +23,6 @@ public class UserDaoImpl extends BasicDao implements UserDao {
     public int selectUserByCount() {
         String sql = "select " + count + "from user";
         return Integer.parseInt(selectAggregate(sql).toString());
-    }
-
-    @Override
-    public List<Province> selectByProvince() {
-        String sql = "select id,name as 'province' from province";
-        return selectList(Province.class, sql);
-    }
-
-    @Override
-    public List<City> selectByCity(Province province) {
-        String sql = "select city.id,city.name as 'city' from province,city where province_id=province.id and province.id=?";
-        return selectList(City.class, sql, province.getId());
     }
 
     @Override

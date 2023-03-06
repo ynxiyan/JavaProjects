@@ -15,4 +15,10 @@ public class ManageDaoImpl extends BasicDao implements ManageDao {
         String sql = "select name,password from manage where name=? and password=?";
         return selectOne(Manage.class, sql, manage.getName(), manage.getPassword());
     }
+
+    @Override
+    public int updateByName(Manage manage) {
+        String sql = "update manage set password=? where name=?";
+        return update(sql, manage.getPass(), manage.getName());
+    }
 }

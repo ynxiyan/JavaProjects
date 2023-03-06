@@ -11,10 +11,15 @@ import com.service.ManageService;
  * @注释:实现逻辑判断的管理员接口
  */
 public class ManageServiceImpl implements ManageService {
-    private ManageDao manageDao = new ManageDaoImpl();
+    private final ManageDao manageDao = new ManageDaoImpl();
 
     @Override
     public Manage login(Manage manage) {
         return manageDao.selectMange(manage);
+    }
+
+    @Override
+    public boolean change(Manage manage) {
+        return manageDao.updateByName(manage) > 0;
     }
 }

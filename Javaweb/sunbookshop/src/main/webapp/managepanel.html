@@ -33,6 +33,7 @@
         <el-container style="width: 100%;height: 800px;border: 1px solid #eee">
             <el-aside width="200px" style="background-color: rgb(238, 241, 246)">
                 <el-menu
+                        style="height: 798px"
                         default-active="1-1"
                         :default-openeds="['1','2','3']"
                         background-color="#545c64"
@@ -50,12 +51,11 @@
                     <el-submenu index="2">
                         <template slot="title"><i class="el-icon-menu"></i>图书管理</template>
                         <el-menu-item index="2-1" @click="menu(3)">图书信息</el-menu-item>
-                        <el-menu-item index="2-2" @click="menu(4)">图书类型</el-menu-item>
-                        <el-menu-item index="2-3" @click="menu(5)">图书作者</el-menu-item>
+                        <el-menu-item index="2-3" @click="menu(4)">图书出版社</el-menu-item>
                     </el-submenu>
                     <el-submenu index="3">
                         <template slot="title"><i class="el-icon-setting"></i>系统管理</template>
-                        <el-menu-item index="3-1" @click="menu(6)">修改密码</el-menu-item>
+                        <el-menu-item index="3-1" @click="menu(5)">修改密码</el-menu-item>
                     </el-submenu>
                 </el-menu>
             </el-aside>
@@ -95,7 +95,7 @@
             }
         },
         mounted() {
-            this.manage = localStorage.getItem('manage')
+            this.manage = localStorage.getItem('manage');
         },
         methods: {
             handleCommand(logout) {
@@ -118,8 +118,14 @@
                 if (index === 2) {
                     this.iframe = 'order_list.html';
                 }
-                if (index === 5) {
+                if (index === 3) {
+                    this.iframe = 'book_list.html';
+                }
+                if (index === 4) {
                     this.iframe = 'author_card.html';
+                }
+                if (index === 5) {
+                    this.iframe = 'change.html';
                 }
             }
         }

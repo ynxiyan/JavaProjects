@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>订单列表</title>
+    <link rel="shortcut icon" href="imgs/sunbook.ico">
+    <!--引入element-ui样式-->
+    <link rel="stylesheet" href="element-ui/lib/theme-chalk/index.css">
+</head>
+<style>
+    .el-table .warning-row {
+        background: oldlace;
+    }
+
+    .el-table .success-row {
+        background: #f0f9eb;
+    }
+</style>
+<body>
+<div id="app">
+    <template>
+        <!--        条件查询-->
+        <el-tabs v-model="activeName" @tab-click="handleClick">
+            <!--            按图书名称查询-->
+            <el-tab-pane label="图书名称查找" name="book_name">图书名称查找<br/><br/>
+                <el-form :inline="true" :model="ruleForm" class="demo-form-inline" :rules="rules">
+                    <el-form-item label="图书名称：" class="inputElement" prop="book_name">
+                        <el-input v-model="ruleForm.book_name" placeholder="请输入图书名称"></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" @click="select(1)">查询</el-button>
+                    </el-form-item>
+                </el-form>
+            </el-tab-pane>
+            <!--            按出版社名称查询-->
+            <el-tab-pane label="出版社名称查找" name="name">出版社名称查找<br/><br/>
+                <el-form :inline="true">
+                    <el-form-item label="出版社名称：" class="inputElement" prop="name">
+                        <el-select v-model="ruleForm.name" placeholder="请选择出版社">
+                            <el-option v-for="(dropdown_author,index) in dropdown_author" :key="index"
+                                       :label="dropdown_author.name"
+                                       :value="dropdown_author.id"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" @click="select(2)">查询</el-button>
+                    </el-form-item>
+                </el-form>
+            </el-tab-pane>
+            <!--            按图书分类查询-->
+            <el-tab-pane label="图书分类查找" name="type">图书分类查找<br/><br/>
+                <el-form :inline="true">
+                    <el-form-item label="图书分类：" class="inputElement" prop="type">
+                        <el-select v-model="ruleForm.type" placeholder="请选择图书分类">
+                            <el-option v-for="(dropdown_type,index) in dropdown_type" :key="index"
+                                       :label="dropdown_type.type"
+                                       :value="dropdown_type.id"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" @click="select(3)">查询</el-button>
+                    </el-form-item>
+                </el-form>
+            </el-tab-pane>
+        </el-tabs>
+        <br/>
+        <!--        新增操作-->
+        <el-button type="primary" class="el-icon-plus" @click="dialog">&nbsp;新增</el-button>
+        <!--        新增用户弹窗-->
+        <el-dialog title="新增图书" :visible.sync="dialogFormVisible">
+            <el-form :model="form" :rules="rules" ref="form" label-width="100px" class="demo-ruleForm">
+                <el-form-item label="是否上架：" prop="in_flg">
+                    <el-switch v-model="form.in_flg"></el-switch>
+                </el-form-item>
+                <el-form-item label="图书名称：" prop="book_name">
+                    <el-input v-model="form.book_name" placeholder="请输入图书名称"></el-input>
+                </el-form-item>
+                <el-form-item label="出版社：" prop="name">
+                    <el-select v-model="form.name" placeholder="请选择出版社">
+                        <el-option v-for="(dropdown_author,index) in dropdown_author" :key="index"
+                                   :label="dropdown_author.name"
+                                   :value="dropdown_author.id"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="图书分类：" prop="type">
+                    <el-select v-model="form.type" placeholder="请选择图书分类">
+                        <el-option v-for="(dropdown_type,index) in dropdown_type" :key="index"
+                                   :label="dropdown_type.type"
+                                   :value="dropdown_type.id"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="ISBN：" prop="iSBN">
+                    <el-input v-model="form.iSBN" placeholder="请输入ISBN"></el-input>
+                </el-form-item>
+                <el-form-item prop="price" label="价格">
+                    <el-input type="number" v-model="form.price" placeholder="请输入价格"></el-input>
+                </el-form-item>
+                <el-form-item label="库存：" prop="inventory">
+                    <el-input type="number" v-model="form.inventory" placeholder="请输入库存"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="submitForm('form')">确 定</el-button>
+                <el-button @click="dialog">取 消</el-button>
+            </div>
+        </el-dialog>
+        <!--        批量出库操作-->
+        <el-button type="success" @click="checkboxout">&nbsp;批量上架</el-button>
+        <!--        批量删除-->
+        <el-button type="danger" class="el-icon-delete" @click="checkboxdel">&nbsp;批量删除</el-button>
+        <br/><br/>
+        <!--        图书表格-->
+        <el-table
+                :data="tableData" border
+                ref="multipleTable"
+                @selection-change="handleSelectionChange"
+                :row-class-name="tableRowClassName"
+                style="width: 100%">
+            <el-table-column
+                    type="selection"
+                    width="55">
+            </el-table-column>
+            <el-table-column
+                    width="80px"
+                    prop="id"
+                    label="订单序号">
+            </el-table-column>
+            <el-table-column
+                    width="250px"
+                    prop="book_name"
+                    label="图书名称">
+            </el-table-column>
+            <el-table-column
+                    width="100px"
+                    prop="name"
+                    label="出版社名称">
+            </el-table-column>
+            <el-table-column
+                    width="80px"
+                    prop="type"
+                    label="图书分类">
+            </el-table-column>
+            <el-table-column
+                    width="150px"
+                    prop="iSBN"
+                    label="ISBN">
+            </el-table-column>
+            <el-table-column
+                    width="120px"
+                    prop="price"
+                    label="价格">
+            </el-table-column>
+            <el-table-column
+                    width="120px"
+                    prop="inventory"
+                    label="库存">
+            </el-table-column>
+            <el-table-column label="操作">
+                <template slot-scope="scope">
+                    <el-tag size="small" v-show="scope.row.in_flg===1">已上架</el-tag>
+                    <!--                    修改出库标志-->
+                    <el-button
+                            v-show="scope.row.in_flg===0"
+                            size="mini"
+                            @click="handleUp(scope.$index, scope.row)">上架
+                    </el-button>
+                    <!--                    按用户序号编辑用户-->
+                    <el-button
+                            type="info"
+                            size="mini"
+                            @click="handleEdit(scope.$index, scope.row)">编辑
+                    </el-button>
+                    <!--                    按图书序号删除图书-->
+                    <el-button
+                            size="mini"
+                            type="danger"
+                            @click="handleDelete(scope.$index, scope.row)">删除
+                    </el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+        <!--        编辑用户弹窗-->
+        <el-dialog title="编辑图书" :visible.sync="dialogEditVisible">
+            <el-form :model="editForm" :rules="rules" ref="editForm" label-width="100px" class="demo-ruleForm">
+                <el-form-item label="图书名称：" prop="book_name">
+                    <el-input v-model="editForm.book_name" placeholder="请输入图书名称"></el-input>
+                </el-form-item>
+                <el-form-item label="出版社：" prop="name">
+                    <el-select v-model="editForm.name" placeholder="请选择出版社">
+                        <el-option v-for="(dropdown_author,index) in dropdown_author" :key="index"
+                                   :label="dropdown_author.name"
+                                   :value="dropdown_author.id"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="图书分类：" prop="type">
+                    <el-select v-model="editForm.type" placeholder="请选择图书分类">
+                        <el-option v-for="(dropdown_type,index) in dropdown_type" :key="index"
+                                   :label="dropdown_type.type"
+                                   :value="dropdown_type.id"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="ISBN：" prop="iSBN">
+                    <el-input v-model="editForm.iSBN" placeholder="请输入ISBN"></el-input>
+                </el-form-item>
+                <el-form-item prop="price" label="价格">
+                    <el-input type="number" v-model="editForm.price" placeholder="请输入价格"></el-input>
+                </el-form-item>
+                <el-form-item label="库存：" prop="inventory">
+                    <el-input type="number" v-model="editForm.inventory" placeholder="请输入库存"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="updateForm('editForm')">确 定</el-button>
+                <el-button @click="dialogEdit">取 消</el-button>
+            </div>
+        </el-dialog>
+        <br/><br/>
+        <!--        分页-->
+        <el-pagination
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page="currentPage"
+                :page-sizes="[5, 10, 15, 20]"
+                :page-size="pageSize"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="count">
+        </el-pagination>
+    </template>
+</div>
+</body>
+<!--引入vue-->
+<script src="js/vue.js"></script>
+<!--引入axios-->
+<script src="js/axios-0.18.0.js"></script>
+<!--引入ElementUI-->
+<script src="element-ui/lib/index.js"></script>
+<script type="text/javascript">
+    // 主机地址
+    var localhost = 'http://localhost:8080/sunbookshop/book';
+    //存储编辑的原始省份信息
+    var name;
+    // 存储编辑的原始城市信息
+    var type;
+    new Vue({
+        el: '#app',
+        data() {
+            return {
+                // 条件查询默认显示
+                activeName: 'book_name',
+                // 新增用户弹窗默认样式
+                dialogFormVisible: false,
+                // 编辑用户弹窗默认样式
+                dialogEditVisible: false,
+                // 出版社下拉占位符
+                dropdown_author: [{
+                    id: '',
+                    name: '',
+                }],
+                // 图书分类下拉占位符
+                dropdown_type: [{
+                    id: '',
+                    type: '',
+                }],
+                // 条件查询占位符
+                ruleForm: {
+                    book_name: '',
+                    name: '',
+                    type: '',
+                },
+                // 新增用户占位符
+                form: {
+                    book_name: '',
+                    name: '',
+                    type: '',
+                    iSBN: '',
+                    price: '',
+                    inventory: '',
+                    in_flg: false,
+                },
+                // 数据为空提示符
+                rules: {
+                    book_name: [
+                        {required: true, message: '请输入图书名称', trigger: 'blur'},
+                    ],
+                    name: [
+                        {required: true, message: '请选择出版社', trigger: 'blur'},
+                    ],
+                    type: [
+                        {required: true, message: '请选择图书分类', trigger: 'blur'},
+                    ],
+                    iSBN: [
+                        {required: true, message: '请输入ISBN', trigger: 'blur'},
+                    ],
+                    price: [
+                        {required: true, message: '请输入图书价格', trigger: 'blur'},
+                    ],
+                    inventory: [
+                        {required: true, message: '请输入库存数量', trigger: 'blur'},
+                    ],
+                },
+                // 多选占位符
+                multipleSelection: [],
+                // 图书表格数据
+                tableData: [{
+                    id: '',
+                    book_name: '',
+                    author_id: '',
+                    name: '',
+                    type_id: '',
+                    type: '',
+                    iSBN: '',
+                    price: '',
+                    inventory: '',
+                    in_flg: '',
+                }],
+                editForm: {
+                    id: '',
+                    book_name: '',
+                    author_id: '',
+                    name: '',
+                    type_id: '',
+                    type: '',
+                    iSBN: '',
+                    price: '',
+                    inventory: '',
+                    in_flg: '',
+                },
+                // 分页数据占位符
+                // 当前页数
+                currentPage: 1,
+                // 每页条数
+                pageSize: 5,
+                // 总条数
+                count: 10,
+            }
+        },
+        mounted() {
+            this.list();
+            // 获取出版社列表
+            axios({
+                method: 'get',
+                url: localhost + '/getAuthor',
+                // 使用箭头函数获取vue实例对象
+            }).then((response) => {
+                this.dropdown_author = response.data;
+            });
+            // 获取图书分类列表
+            axios({
+                method: 'get',
+                url: localhost + '/getType',
+                // 使用箭头函数获取vue实例对象
+            }).then((response) => {
+                this.dropdown_type = response.data;
+            });
+        },
+        methods: {
+            // 获取图书列表
+            list() {
+                axios({
+                    method: 'get',
+                    url: localhost + '/list?currentPage=' + this.currentPage + '&pageSize=' + this.pageSize,
+                    // 使用箭头函数获取vue实例对象
+                }).then((response) => {
+                    if (response.data !== 'fail') {
+                        this.tableData = response.data.data;
+                        this.count = response.data.count;
+                    } else {
+                        this.$message.error('系统错误');
+                    }
+                });
+            },
+            // 条件查询
+            select(index) {
+                let url;
+                // 按图书名称查询
+                if (index === 1 && this.ruleForm.book_name !== '') {
+                    this.ruleForm.name = '';
+                    this.ruleForm.type = '';
+                    url = localhost + '/getByBook_name?book_name=' + this.ruleForm.book_name + '&currentPage=' + this.currentPage + '&pageSize=' + this.pageSize;
+                }
+                // 按出版社查询
+                else if (index === 2 && this.ruleForm.name !== '') {
+                    this.ruleForm.book_name = '';
+                    this.ruleForm.type = '';
+                    url = localhost + '/getByAuthor?name=' + this.ruleForm.name + '&currentPage=' + this.currentPage + '&pageSize=' + this.pageSize;
+                }
+                // 按图书分类查询
+                else if (index === 3 && this.ruleForm.type !== '') {
+                    this.ruleForm.name = '';
+                    this.ruleForm.book_name = '';
+                    url = localhost + '/getByType?type=' + this.ruleForm.type + '&currentPage=' + this.currentPage + '&pageSize=' + this.pageSize;
+                } else {
+                    this.$message({
+                        message: '请输入需要查询的参数',
+                        type: 'warning'
+                    });
+                    return false;
+                }
+                axios({
+                    method: 'get',
+                    url: url,
+                }).then((response) => {
+                    if (response.data !== 'fail') {
+                        this.tableData = response.data.data;
+                        this.count = response.data.count;
+                    } else {
+                        this.$message('查询结果为空');
+                        this.ruleForm.name = '';
+                        this.ruleForm.book_name = '';
+                        this.ruleForm.type = '';
+                    }
+                });
+            },
+            // 新增用户的弹窗处理
+            dialog() {
+                this.form.name = '';
+                this.ruleForm.name = '';
+                this.dialogFormVisible = !this.dialogFormVisible;
+            },
+            // 编辑用户弹窗处理
+            dialogEdit() {
+                this.form.name = '';
+                this.ruleForm.name = '';
+                this.dialogEditVisible = !this.dialogEditVisible;
+            },
+            // 新增用户
+            submitForm(form) {
+                this.$refs[form].validate((valid) => {
+                    if (valid) {
+                        let in_flg = this.form.in_flg;
+                        if (this.form.in_flg === false) {
+                            this.form.in_flg = 0;
+                        } else {
+                            this.form.in_flg = 1;
+                        }
+                        axios({
+                            method: 'post',
+                            url: localhost + '/addBook',
+                            data: this.form,
+                        }).then((response) => {
+                            if (response.data === 'succeed') {
+                                let message = '';
+                                if (in_flg === false) {
+                                    message = '暂未上架，请稍后自行上架';
+                                }
+                                this.$message({
+                                    message: '新增图书成功' + message,
+                                    type: 'success'
+                                });
+                                this.dialog();
+                                this.form = {
+                                    book_name: '',
+                                    name: '',
+                                    type: '',
+                                    ISBN: '',
+                                    price: '',
+                                    inventory: '',
+                                    in_flg: false,
+                                };
+                                this.list();
+                            } else {
+                                this.$message.error('系统错误');
+                            }
+                        });
+                    } else {
+                        this.$message({
+                            message: '请填写信息',
+                            type: 'warning'
+                        });
+                        return false;
+                    }
+                });
+            },
+            // 存储多选数据
+            handleSelectionChange(val) {
+                this.multipleSelection = val;
+            },
+            //图书状态
+            tableRowClassName({row, rowIndex}) {
+                if (row.in_flg === 0) {
+                    return 'warning-row';
+                } else {
+                    return 'success-row';
+                }
+            },
+            //批量上架
+            checkboxout() {
+                axios({
+                    method: 'post',
+                    url: localhost + '/outBook',
+                    data: this.multipleSelection,
+                }).then((response) => {
+                    if (response.data === 'succeed') {
+                        this.$message({
+                            message: '批量上架成功',
+                            type: 'success'
+                        });
+                        this.multipleSelection = [];
+                        let current = this.currentPage;
+                        this.list();
+                    } else {
+                        this.$message.error('系统错误');
+                    }
+                });
+            },
+            //批量删除
+            checkboxdel() {
+                axios({
+                    method: 'post',
+                    url: localhost + '/delBook',
+                    data: this.multipleSelection,
+                }).then((response) => {
+                    if (response.data === 'succeed') {
+                        this.$message({
+                            message: '批量删除图书成功',
+                            type: 'success'
+                        });
+                        this.multipleSelection = [];
+                        let current = this.currentPage;
+                        this.list();
+                        if (current > Math.floor(this.count / this.pageSize)) {
+                            this.currentPage = Math.floor(this.count / this.pageSize);
+                            this.list();
+                        }
+                    } else {
+                        this.$message.error('系统错误');
+                    }
+                });
+            },
+            // 修改上架标志
+            handleUp(index, row) {
+                axios({
+                    method: 'post',
+                    url: localhost + '/outBookById',
+                    data: row,
+                }).then((response) => {
+                    if (response.data === 'succeed') {
+                        this.$message({
+                            message: '上架成功',
+                            type: 'success'
+                        });
+                        let current = this.currentPage;
+                        this.list();
+                    } else {
+                        this.$message.error('系统错误');
+                    }
+                });
+            },
+            // 编辑
+            handleEdit(index, row) {
+                name = row.name;
+                type = row.type;
+                this.dialogEdit();
+                this.editForm = row;
+                this.editForm.author_id = row.author_id;
+                this.editForm.type_id = row.type_id;
+            },
+            // 更新用户
+            updateForm(editForm) {
+                this.$refs[editForm].validate((valid) => {
+                    if (this.editForm.name === name) {
+                        this.editForm.name = this.editForm.author_id;
+                    }
+                    if (this.editForm.type === type) {
+                        this.editForm.type = this.editForm.type_id;
+                    }
+                    if (valid) {
+                        axios({
+                            method: 'post',
+                            url: localhost + '/upBook',
+                            data: this.editForm,
+                        }).then((response) => {
+                            if (response.data === 'succeed') {
+                                this.$message({
+                                    message: '更新图书信息成功',
+                                    type: 'success'
+                                });
+                                this.dialogEdit();
+                                this.list();
+                            } else {
+                                this.$message.error('系统错误');
+                            }
+                        });
+                    } else {
+                        this.$message({
+                            message: '请填写信息',
+                            type: 'warning'
+                        });
+                        return false;
+                    }
+                });
+            },
+            // 删除
+            handleDelete(index, row) {
+                axios({
+                    method: 'post',
+                    url: localhost + '/delBookById',
+                    data: row,
+                }).then((response) => {
+                    if (response.data === 'succeed') {
+                        this.$message({
+                            message: '删除图书成功',
+                            type: 'success'
+                        });
+                        let current = this.currentPage;
+                        this.list();
+                        if (current > Math.floor(this.count / this.pageSize)) {
+                            this.currentPage = Math.floor(this.count / this.pageSize);
+                            this.list();
+                        }
+                    } else {
+                        this.$message.error('系统错误');
+                    }
+                });
+            },
+            // 查询后的分页处理
+            page() {
+                if (this.ruleForm.book_name !== '') {
+                    this.select(1);
+                    return false;
+                }
+                if (this.ruleForm.name !== '') {
+                    this.select(2);
+                    return false;
+                }
+                if (this.ruleForm.type !== '') {
+                    this.select(3);
+                    return false;
+                }
+                this.list();
+            },
+            // 修改分页数量
+            handleSizeChange(val) {
+                this.pageSize = val;
+                this.page();
+            },
+            // 切换页数
+            handleCurrentChange(val) {
+                this.currentPage = val;
+                this.page();
+            }
+        }
+    });
+</script>
+</html>

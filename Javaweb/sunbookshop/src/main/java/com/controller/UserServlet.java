@@ -5,9 +5,7 @@ package com.controller; /**
  */
 
 import com.alibaba.fastjson.JSON;
-import com.model.City;
 import com.model.Page;
-import com.model.Province;
 import com.model.User;
 import com.service.UserService;
 import com.service.impl.UserServiceImpl;
@@ -18,7 +16,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 
 @WebServlet(urlPatterns = "/user/*")
 public class UserServlet extends BasicServlet {
@@ -42,29 +39,6 @@ public class UserServlet extends BasicServlet {
         } else {
             response.getWriter().write(result);
         }
-    }
-
-    //获取省份列表
-    public void getProvince(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        //获取省份列表
-        List<Province> provinceList = userService.getProvince();
-        //将Java对象转为json字符串
-        String jsonString = JSON.toJSONString(provinceList);
-        //将数据响应给前端axios
-        response.getWriter().write(jsonString);
-    }
-
-    //获取城市列表
-    public void getCity(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        //获取省份列表
-        int province_id = Integer.parseInt(request.getParameter("province"));
-        Province newProvince = new Province();
-        newProvince.setId(province_id);
-        List<City> cityList = userService.getCity(newProvince);
-        //将Java对象转为json字符串
-        String jsonString = JSON.toJSONString(cityList);
-        //将数据响应给前端axios
-        response.getWriter().write(jsonString);
     }
 
     //通过用户名查询用户

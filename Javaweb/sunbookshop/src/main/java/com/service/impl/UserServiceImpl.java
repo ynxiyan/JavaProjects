@@ -3,9 +3,7 @@ package com.service.impl;
 import com.dao.UserDao;
 import com.dao.impl.BasicDao;
 import com.dao.impl.UserDaoImpl;
-import com.model.City;
 import com.model.Page;
-import com.model.Province;
 import com.model.User;
 import com.service.UserService;
 
@@ -43,16 +41,6 @@ public class UserServiceImpl extends BasicDao implements UserService {
         //获取数据总数
         int count = userDao.selectUserByCount();
         return new Page<>(count, list);
-    }
-
-    @Override
-    public List<Province> getProvince() {
-        return userDao.selectByProvince();
-    }
-
-    @Override
-    public List<City> getCity(Province province) {
-        return userDao.selectByCity(province);
     }
 
     @Override

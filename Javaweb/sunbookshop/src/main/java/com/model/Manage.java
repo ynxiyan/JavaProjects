@@ -15,13 +15,16 @@ public class Manage {
     private String name;
     //密码
     private String password;
+    //更新密码占位符
+    private String pass;
 
     public Manage() {
     }
 
-    public Manage(Integer id, String name, String password) {
+    public Manage(Integer id, String name, String password, String pass) {
         this.id = id;
         this.name = name;
         this.password = password;
+        this.pass = pass;
     }
 }

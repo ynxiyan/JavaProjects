@@ -15,4 +15,12 @@ public interface ManageService {
      * @return
      */
     Manage login(Manage manage);
+
+    /**
+     * 逻辑判断通过用户名修改密码
+     *
+     * @param manage 传入用户名和密码
+     * @return 返回执行结果
+     */
+    boolean change(Manage manage);
 }

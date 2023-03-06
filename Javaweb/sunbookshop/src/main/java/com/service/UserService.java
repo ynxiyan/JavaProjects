@@ -1,11 +1,7 @@
 package com.service;
 
-import com.model.City;
 import com.model.Page;
-import com.model.Province;
 import com.model.User;
-
-import java.util.List;
 
 /**
  * @Author: XIYAN
@@ -21,21 +17,6 @@ public interface UserService {
      * @return 返回用户列表
      */
     Page<User> list(int pageSize, int currentPage);
-
-    /**
-     * 逻辑判断省份列表
-     *
-     * @return 返回省份列表
-     */
-    List<Province> getProvince();
-
-    /**
-     * 逻辑判断城市列表
-     *
-     * @param province 传入省份序号
-     * @return 返回城市列表
-     */
-    List<City> getCity(Province province);
 
     /**
      * 逻辑判断用户名查询用户信息
@@ -97,16 +78,16 @@ public interface UserService {
     /**
      * 逻辑判断用户序号更新用户信息
      *
-     * @param user
-     * @return
+     * @param user 传入用户序号和用户信息
+     * @return 返回执行结果
      */
     boolean upUserById(User user);
 
     /**
      * 逻辑判断用户序号重置用户密码
      *
-     * @param user
-     * @return
+     * @param user 传入用户序号
+     * @return 返回执行结果
      */
     boolean reUserById(User user);
 }
