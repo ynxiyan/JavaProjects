@@ -9,6 +9,7 @@
   <component name="FrameworkDetectionExcludesConfiguration">
     <file type="web" url="file://$PROJECT_DIR$/forwords" />
     <file type="web" url="file://$PROJECT_DIR$/login_enroll" />
+    <file type="web" url="file://$PROJECT_DIR$/login_register" />
     <file type="web" url="file://$PROJECT_DIR$/maven_ajax" />
     <file type="web" url="file://$PROJECT_DIR$/maven_cookie_session" />
     <file type="web" url="file://$PROJECT_DIR$/maven_crud_ajax_vue" />
@@ -38,6 +39,7 @@
         <option value="$PROJECT_DIR$/maven_vue/pom.xml" />
         <option value="$PROJECT_DIR$/maven_crud_ajax_vue/pom.xml" />
         <option value="$PROJECT_DIR$/sunbookshop/pom.xml" />
+        <option value="$PROJECT_DIR$/login_register/pom.xml" />
       </list>
     </option>
   </component>
