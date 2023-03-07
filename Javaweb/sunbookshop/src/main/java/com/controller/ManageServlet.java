@@ -38,7 +38,7 @@ public class ManageServlet extends BasicServlet {
         }
     }
 
-    //比对原始密码与用户输入是否一致
+    //更新密码
     public void chahge(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         //从请求体读取一行数据
         String readLine = request.getReader().readLine();
