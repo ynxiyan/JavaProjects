@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>register</title>
+    <link href="css/login.css" rel="stylesheet">
+    <link rel="stylesheet" href="element-ui/lib/theme-chalk/index.css">
+</head>
+<body>
+<div id="app">
+    <template>
+        <div class="login">
+            <img :src="imgSrc" width="100%"/>
+            <el-form class="loginPart" :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px">
+                <h2>用户注册</h2>
+                <el-form-item class="inputElement" label="用户名" prop="username">
+                    <el-input type="text" placeholder="请输入用户名" v-model="ruleForm.username"
+                              autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item class="inputElement" label="密码" prop="password">
+                    <el-input type="password" placeholder="请输入密码" v-model="ruleForm.password"
+                              autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item class="inputElement" label="再次输入密码" prop="checkPass">
+                    <el-input type="password" placeholder="请再次输入密码"
+                              v-model="ruleForm.checkPass"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
+                    <el-button @click="resetForm('ruleForm')">重置</el-button>
+                </el-form-item>
+            </el-form>
+        </div>
+    </template>
+</div>
+</body>
+<!--引入vue-->
+<script src="js/vue.js"></script>
+<!--引入axios-->
+<script src="js/axios-0.18.0.js"></script>
+<!--引入ElementUI-->
+<script src="element-ui/lib/index.js"></script>
+<script type="text/javascript">
+    // 主机地址
+    var localhost = 'http://localhost:8080/login_register/users';
+    new Vue({
+        el: '#app',
+        data() {
+            var checkUserName = (rule, value, callback) => {
+                if (!value) {
+                    return callback(new Error('请输入用户名'));
+                } else {
+                    callback();
+                }
+            };
+            var validatePassword = (rule, value, callback) => {
+                if (value === '') {
+                    callback(new Error('请输入密码'));
+                } else {
+                    if (this.ruleForm.checkPass !== '') {
+                        this.$refs.ruleForm.validateField('checkPass');
+                    }
+                    callback();
+                }
+            };
+            var validatecheckPass = (rule, value, callback) => {
+                if (value === '') {
+                    callback(new Error('请再次输入密码'));
+                } else if (value !== this.ruleForm.password) {
+                    callback(new Error('两次输入密码不一致!'));
+                } else {
+                    callback();
+                }
+            };
+            return {
+                imgSrc: 'imgs/OIP.jpg',
+                ruleForm: {
+                    username: '',
+                    password: '',
+                    checkPass: '',
+                },
+                rules: {
+                    username: [
+                        {validator: checkUserName, trigger: 'blur'},
+                    ],
+                    password: [
+                        {validator: validatePassword, trigger: 'blur'}
+                    ],
+                    checkPass: [
+                        {validator: validatecheckPass, trigger: 'blur'}
+                    ],
+                }
+            }
+        },
+        methods: {
+            submitForm(formName) {
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+                        axios({
+                            method: 'post',
+                            url: localhost + '/register',
+                            data: this.ruleForm,
+                        }).then((response) => {
+                            if (response.data !== "fail") {
+                                this.$message.success('注册成功');
+                                location.href = 'login.html';
+                            } else {
+                                this.$message.error('系统错误');
+                            }
+                        });
+                    } else {
+                        return false;
+                    }
+                });
+            },
+            resetForm(formName) {
+                this.$refs[formName].resetFields();
+            }
+        }
+    });
+</script>
+</html>
