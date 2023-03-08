@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>用户列表</title>
+    <link rel="shortcut icon" href="imgs/sunbook.ico">
+    <!--引入element-ui样式-->
+    <link rel="stylesheet" href="element-ui/lib/theme-chalk/index.css">
+</head>
+<style>
+</style>
+<body>
+<div id="app">
+    <template>
+        <!--        条件查询-->
+        <el-tabs v-model="activeName" @tab-click="handleClick">
+            <!--            按用户名查询-->
+            <el-tab-pane label="用户名查找" name="name">用户名查找<br/><br/>
+                <el-form :inline="true" :model="ruleForm" class="demo-form-inline" :rules="rules">
+                    <el-form-item label="用户名：" class="inputElement" prop="name">
+                        <el-input type="text" v-model="ruleForm.name" placeholder="请输入用户名"></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" @click="select(1)">查询</el-button>
+                    </el-form-item>
+                </el-form>
+            </el-tab-pane>
+            <!--            按省份和城市查询-->
+            <el-tab-pane label="省份和城市查找" name="province">省份查找<br/><br/>
+                <el-form :inline="true">
+                    <el-form-item label="省份：" class="inputElement" prop="province">
+                        <el-select @change="getCity" v-model="ruleForm.province" placeholder="请选择省份">
+                            <el-option v-for="(dropdown_province,index) in dropdown_province" :key="index"
+                                       :label="dropdown_province.province"
+                                       :value="dropdown_province.id"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="城市：" class="inputElement" prop="city">
+                        <el-select v-model="ruleForm.city" placeholder="请选择城市">
+                            <el-option v-for="(dropdown_city,index) in dropdown_city" :key="index"
+                                       :label="dropdown_city.city"
+                                       :value="dropdown_city.id"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" @click="select(2)">查询</el-button>
+                    </el-form-item>
+                </el-form>
+            </el-tab-pane>
+            <!--            按电话号码-->
+            <el-tab-pane label="电话号码查找" name="phone">电话号码查找<br/><br/>
+                <el-form :inline="true" :model="ruleForm" class="demo-form-inline" :rules="rules">
+                    <el-form-item label="电话号码：" class="inputElement" prop="phone">
+                        <el-input v-model="ruleForm.phone" placeholder="请输入电话号码"></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" @click="select(3)">查询</el-button>
+                    </el-form-item>
+                </el-form>
+            </el-tab-pane>
+            <!--            按电子邮箱查询-->
+            <el-tab-pane label="电子邮箱查找" name="email">电子邮箱查找<br/><br/>
+                <el-form :inline="true" :model="ruleForm" class="demo-form-inline" :rules="rules">
+                    <el-form-item label="电子邮箱：" class="inputElement" prop="email">
+                        <el-input type="email" v-model="ruleForm.email" placeholder="请输入电子邮箱"></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" @click="select(4)">查询</el-button>
+                    </el-form-item>
+                </el-form>
+            </el-tab-pane>
+        </el-tabs>
+        <br/>
+        <!--        新增操作-->
+        <el-button type="primary" class="el-icon-plus" @click="dialog">&nbsp;新增</el-button>
+        <!--        新增用户弹窗-->
+        <el-dialog title="新增用户" :visible.sync="dialogFormVisible">
+            <el-form :model="form" :rules="rules" ref="form" label-width="100px" class="demo-ruleForm">
+                <el-form-item label="用户名：" prop="name">
+                    <el-input v-model="form.name" placeholder="请输入用户名"></el-input>
+                </el-form-item>
+                <el-form-item label="性别：">
+                    <el-radio-group v-model="form.sex">
+                        <el-radio label="男"></el-radio>
+                        <el-radio label="女"></el-radio>
+                    </el-radio-group>
+                </el-form-item>
+                <el-form-item label="电话号码：" prop="phone">
+                    <el-input v-model="form.phone" placeholder="请输入电话号码"></el-input>
+                </el-form-item>
+                <el-form-item prop="email" label="邮箱">
+                    <el-input v-model="form.email" placeholder="请输入电子邮箱"></el-input>
+                </el-form-item>
+                <el-form-item label="省份：" prop="province">
+                    <el-select @change="getCity" v-model="form.province" placeholder="请选择省份">
+                        <el-option v-for="(dropdown_province,index) in dropdown_province" :key="index"
+                                   :label="dropdown_province.province"
+                                   :value="dropdown_province.id"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="城市：" prop="city">
+                    <el-select v-model="form.city" placeholder="请选择城市">
+                        <el-option v-for="(dropdown_city,index) in dropdown_city" :key="index"
+                                   :label="dropdown_city.city"
+                                   :value="dropdown_city.id"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="地址：">
+                    <el-input type="textarea" v-model="form.address" placeholder="请输入地址"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="submitForm('form')">确 定</el-button>
+                <el-button @click="dialog">取 消</el-button>
+            </div>
+        </el-dialog>
+        <!--        批量删除操作-->
+        <el-button type="danger" class="el-icon-delete" @click="checkboxdel">&nbsp;批量删除</el-button>
+        <br/><br/>
+        <!--        用户表格-->
+        <el-table
+                :data="tableData" border
+                ref="multipleTable"
+                @selection-change="handleSelectionChange"
+                style="width: 100%">
+            <el-table-column
+                    type="selection"
+                    width="55">
+            </el-table-column>
+            <el-table-column
+                    width="80px"
+                    prop="id"
+                    label="用户序号">
+            </el-table-column>
+            <el-table-column
+                    width="100px"
+                    prop="name"
+                    label="用户名">
+            </el-table-column>
+            <el-table-column
+                    width="50px"
+                    prop="sex"
+                    label="性别">
+            </el-table-column>
+            <el-table-column
+                    width="150px"
+                    prop="phone"
+                    label="电话号码">
+            </el-table-column>
+            <el-table-column
+                    prop="email"
+                    label="电子邮箱">
+            </el-table-column>
+            <el-table-column
+                    width="100px"
+                    prop="province"
+                    label="省份">
+            </el-table-column>
+            <el-table-column
+                    width="100px"
+                    prop="city"
+                    label="城市">
+            </el-table-column>
+            <el-table-column
+                    prop="address"
+                    label="地址">
+            </el-table-column>
+            <el-table-column width="300px" label="操作">
+                <template slot-scope="scope">
+                    <!--                    按用户序号重置密码-->
+                    <el-button
+                            size="mini"
+                            @click="handleReset(scope.$index, scope.row)">重置密码
+                    </el-button>
+                    <!--                    按用户序号编辑用户-->
+                    <el-button
+                            type="info"
+                            size="mini"
+                            @click="handleEdit(scope.$index, scope.row)">编辑
+                    </el-button>
+                    <!--                    按用户序号删除用户-->
+                    <el-button
+                            size="mini"
+                            type="danger"
+                            @click="handleDelete(scope.$index, scope.row)">删除
+                    </el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+        <!--        编辑用户弹窗-->
+        <el-dialog title="编辑用户" :visible.sync="dialogEditVisible">
+            <el-form :model="editForm" :rules="rules" ref="editForm" label-width="100px" class="demo-ruleForm">
+                <el-form-item label="用户名：" prop="name">
+                    <el-input v-model="editForm.name" placeholder="请输入用户名"></el-input>
+                </el-form-item>
+                <el-form-item label="性别：">
+                    <el-radio-group v-model="editForm.sex">
+                        <el-radio label="男"></el-radio>
+                        <el-radio label="女"></el-radio>
+                    </el-radio-group>
+                </el-form-item>
+                <el-form-item label="电话号码：" prop="phone">
+                    <el-input v-model="editForm.phone" placeholder="请输入电话号码"></el-input>
+                </el-form-item>
+                <el-form-item prop="email" label="邮箱">
+                    <el-input v-model="editForm.email" placeholder="请输入电子邮箱"></el-input>
+                </el-form-item>
+                <el-form-item label="省份：" prop="province">
+                    <el-select @change="getCity" v-model="editForm.province" placeholder="请选择省份">
+                        <el-option v-for="(dropdown_province,index) in dropdown_province" :key="index"
+                                   :label="dropdown_province.province"
+                                   :value="dropdown_province.id"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="城市：" prop="city">
+                    <el-select v-model="editForm.city" placeholder="请选择城市">
+                        <el-option v-for="(dropdown_city,index) in dropdown_city" :key="index"
+                                   :label="dropdown_city.city"
+                                   :value="dropdown_city.id"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="地址：">
+                    <el-input type="textarea" v-model="editForm.address" placeholder="请输入地址"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="updateForm('editForm')">确 定</el-button>
+                <el-button @click="dialogEdit">取 消</el-button>
+            </div>
+        </el-dialog>
+        <br/><br/>
+        <!--        分页-->
+        <el-pagination
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page="currentPage"
+                :page-sizes="[5, 10, 15, 20]"
+                :page-size="pageSize"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="count">
+        </el-pagination>
+    </template>
+</div>
+</body>
+<!--引入vue-->
+<script src="js/vue.js"></script>
+<!--引入axios-->
+<script src="js/axios-0.18.0.js"></script>
+<!--引入ElementUI-->
+<script src="element-ui/lib/index.js"></script>
+<script type="text/javascript">
+    // 主机地址
+    var localhost = 'http://localhost:8080/sunbookshop/';
+    //存储编辑的原始省份信息
+    var province;
+    // 存储编辑的原始城市信息
+    var city;
+    new Vue({
+        el: '#app',
+        data() {
+            return {
+                // 条件查询默认显示
+                activeName: 'name',
+                // 新增用户弹窗默认样式
+                dialogFormVisible: false,
+                // 编辑用户弹窗默认样式
+                dialogEditVisible: false,
+                // 省份下拉占位符
+                dropdown_province: [{
+                    id: '',
+                    province: '',
+                }],
+                // 城市下拉占位符
+                dropdown_city: [{
+                    id: '',
+                    city: '',
+                }],
+                // 条件查询占位符
+                ruleForm: {
+                    name: '',
+                    province: '',
+                    city: '',
+                    phone: '',
+                    email: '',
+                },
+                // 新增用户占位符
+                form: {
+                    name: '',
+                    sex: '男',
+                    phone: '',
+                    email: '',
+                    province: '',
+                    city: '',
+                    address: '',
+                },
+                // 数据为空提示符
+                rules: {
+                    name: [
+                        {required: true, message: '请输入用户名', trigger: 'blur'},
+                    ],
+                    phone: [
+                        {required: true, message: '请输入电话号码', trigger: 'blur'},
+                    ],
+                    province: [
+                        {required: true, message: '请选择省份', trigger: 'blur'},
+                    ],
+                    city: [
+                        {required: true, message: '请选择城市', trigger: 'blur'},
+                    ],
+                    email: [
+                        {required: true, message: '请输入电子邮箱', trigger: 'blur'},
+                    ],
+                },
+                // 多选占位符
+                multipleSelection: [],
+                // 用户表格数据
+                tableData: [{
+                    name: '',
+                    sex: '',
+                    phone: '',
+                    email: '',
+                    province_id: '',
+                    province: '',
+                    city_id: '',
+                    city: '',
+                    address: ''
+                }],
+                editForm: {
+                    name: '',
+                    sex: '',
+                    phone: '',
+                    email: '',
+                    province_id: '',
+                    province: '',
+                    city_id: '',
+                    city: '',
+                    address: ''
+                },
+                // 分页数据占位符
+                // 当前页数
+                currentPage: 1,
+                // 每页条数
+                pageSize: 5,
+                // 总条数
+                count: 10,
+            }
+        },
+        mounted() {
+            this.list();
+            // 获取省份列表
+            axios({
+                method: 'get',
+                url: localhost + '/province_city/getProvince',
+                // 使用箭头函数获取vue实例对象
+            }).then((response) => {
+                this.dropdown_province = response.data;
+            });
+        },
+        methods: {
+            // 获取用户列表
+            list() {
+                axios({
+                    method: 'get',
+                    url: localhost + '/user/list?currentPage=' + this.currentPage + '&pageSize=' + this.pageSize,
+                    // 使用箭头函数获取vue实例对象
+                }).then((response) => {
+                    if (response.data !== 'fail') {
+                        this.tableData = response.data.data;
+                        this.count = response.data.count;
+                    } else {
+                        this.$message.error('系统错误');
+                    }
+                });
+            },
+            //获取城市列表
+            getCity() {
+                let province = '';
+                if (this.ruleForm.province !== '') {
+                    province = this.ruleForm.province;
+                }
+                if (this.form.province !== '') {
+                    province = this.form.province;
+                }
+                if (this.editForm.province !== '') {
+                    province = this.editForm.province;
+                }
+                axios({
+                    method: 'get',
+                    url: localhost + '/province_city/getCity?province=' + province,
+                }).then((response) => {
+                    this.dropdown_city = response.data;
+                    this.ruleForm.city = '';
+                    this.form.city = '';
+                    this.editForm.city = '';
+                });
+            },
+            // 条件查询
+            select(index) {
+                let url;
+                // 按用户名查询
+                if (index === 1 && this.ruleForm.name !== '') {
+                    this.ruleForm.province = '';
+                    this.ruleForm.city = '';
+                    this.ruleForm.phone = '';
+                    this.ruleForm.email = '';
+                    url = localhost + '/user/getByName?name=' + this.ruleForm.name + '&currentPage=' + this.currentPage + '&pageSize=' + this.pageSize;
+                }
+                // 按省份和城市查询
+                else if (index === 2 && this.ruleForm.province !== '' && this.ruleForm.city !== '') {
+                    this.ruleForm.name = '';
+                    this.ruleForm.phone = '';
+                    this.ruleForm.email = '';
+                    url = localhost + '/user/getByProvince_city?province=' + this.ruleForm.province + '&city=' + this.ruleForm.city + '&currentPage=' + this.currentPage + '&pageSize=' + this.pageSize;
+                }
+                // 按电话号码查询
+                else if (index === 3 && this.ruleForm.phone !== '') {
+                    this.ruleForm.province = '';
+                    this.ruleForm.city = '';
+                    this.ruleForm.name = '';
+                    this.ruleForm.email = '';
+                    url = localhost + '/user/getByPhone?phone=' + this.ruleForm.phone + '&currentPage=' + this.currentPage + '&pageSize=' + this.pageSize;
+                }
+                // 按电子邮箱查询
+                else if (index === 4 && this.ruleForm.email !== '') {
+                    this.ruleForm.province = '';
+                    this.ruleForm.city = '';
+                    this.ruleForm.phone = '';
+                    this.ruleForm.name = '';
+                    url = localhost + '/user/getByEmail?email=' + this.ruleForm.email + '&currentPage=' + this.currentPage + '&pageSize=' + this.pageSize;
+                } else {
+                    this.$message({
+                        message: '请输入需要查询的参数',
+                        type: 'warning'
+                    });
+                    return false;
+                }
+                axios({
+                    method: 'get',
+                    url: url,
+                }).then((response) => {
+                    if (response.data !== 'fail') {
+                        this.tableData = response.data.data;
+                        this.count = response.data.count;
+                    } else {
+                        this.$message('查询结果为空');
+                        this.ruleForm.province = '';
+                        this.ruleForm.city = '';
+                        this.ruleForm.phone = '';
+                        this.ruleForm.email = '';
+                        this.ruleForm.name = '';
+                    }
+                });
+            },
+            // 新增用户的弹窗处理
+            dialog() {
+                this.form.province = '';
+                this.ruleForm.province = '';
+                this.dialogFormVisible = !this.dialogFormVisible;
+            },
+            // 编辑用户弹窗处理
+            dialogEdit() {
+                this.form.province = '';
+                this.ruleForm.province = '';
+                this.dialogEditVisible = !this.dialogEditVisible;
+            },
+            // 新增用户
+            submitForm(form) {
+                this.$refs[form].validate((valid) => {
+                    if (valid) {
+                        axios({
+                            method: 'post',
+                            url: localhost + '/user/addUser',
+                            data: this.form,
+                        }).then((response) => {
+                            if (response.data === 'succeed') {
+                                this.$message({
+                                    message: '新增用户成功，初始密码为：0000',
+                                    type: 'success'
+                                });
+                                this.dialog();
+                                this.form = {
+                                    name: '',
+                                    sex: '男',
+                                    phone: '',
+                                    email: '',
+                                    province: '',
+                                    city: '',
+                                    address: '',
+                                };
+                                this.list();
+                            } else {
+                                this.$message.error('系统错误');
+                            }
+                        });
+                    } else {
+                        this.$message({
+                            message: '请填写信息',
+                            type: 'warning'
+                        });
+                        return false;
+                    }
+                });
+                this.ruleForm.province = '';
+            },
+            // 存储多选数据
+            handleSelectionChange(val) {
+                this.multipleSelection = val;
+            },
+            //批量删除
+            checkboxdel() {
+                axios({
+                    method: 'post',
+                    url: localhost + '/user/delUser',
+                    data: this.multipleSelection,
+                }).then((response) => {
+                    if (response.data === 'succeed') {
+                        this.$message({
+                            message: '批量删除用户成功',
+                            type: 'success'
+                        });
+                        this.multipleSelection = [];
+                        let current = this.currentPage;
+                        this.list();
+                        if (current > Math.floor(this.count / this.pageSize)) {
+                            this.currentPage = Math.floor(this.count / this.pageSize);
+                            this.list();
+                        }
+                    } else {
+                        this.$message.error('系统错误');
+                    }
+                });
+            },
+            //重置密码
+            handleReset(index, row) {
+                axios({
+                    method: 'post',
+                    url: localhost + '/user/reUserById',
+                    data: row,
+                }).then((response) => {
+                    if (response.data === 'succeed') {
+                        this.$message({
+                            message: '重置用户密码成功，初始密码为：0000',
+                            type: 'success'
+                        });
+                        this.list();
+                    } else {
+                        this.$message.error('系统错误');
+                    }
+                });
+            },
+            // 编辑
+            handleEdit(index, row) {
+                province = row.province;
+                city = row.city;
+                this.dialogEdit();
+                this.editForm = row;
+                this.editForm.province_id = row.province_id;
+                this.editForm.city_id = row.city_id;
+            },
+            // 更新用户
+            updateForm(editForm) {
+                this.$refs[editForm].validate((valid) => {
+                    if (this.editForm.province === province) {
+                        this.editForm.province = this.editForm.province_id;
+                    }
+                    if (this.editForm.city === city) {
+                        this.editForm.city = this.editForm.city_id;
+                    }
+                    if (valid) {
+                        axios({
+                            method: 'post',
+                            url: localhost + '/user/upUserById',
+                            data: this.editForm,
+                        }).then((response) => {
+                            if (response.data === 'succeed') {
+                                this.$message({
+                                    message: '更新用户信息成功',
+                                    type: 'success'
+                                });
+                                this.dialogEdit();
+                                this.list();
+                            } else {
+                                this.$message.error('系统错误');
+                            }
+                        });
+                    } else {
+                        this.$message({
+                            message: '请填写信息',
+                            type: 'warning'
+                        });
+                        return false;
+                    }
+                });
+            },
+            // 删除
+            handleDelete(index, row) {
+                axios({
+                    method: 'post',
+                    url: localhost + '/user/delUserById',
+                    data: row,
+                }).then((response) => {
+                    if (response.data === 'succeed') {
+                        this.$message({
+                            message: '删除用户成功',
+                            type: 'success'
+                        });
+                        let current = this.currentPage;
+                        this.list();
+                        if (current > Math.floor(this.count / this.pageSize)) {
+                            this.currentPage = Math.floor(this.count / this.pageSize);
+                            this.list();
+                        }
+                    } else {
+                        this.$message.error('系统错误');
+                    }
+                });
+            },
+            // 查询后的分页处理
+            page() {
+                if (this.ruleForm.name !== '') {
+                    this.select(1);
+                    return false;
+                }
+                if (this.ruleForm.province !== '' && this.ruleForm.city !== '') {
+                    this.select(2);
+                    return false;
+                }
+                if (this.ruleForm.phone !== '') {
+                    this.select(3);
+                    return false;
+                }
+                if (this.ruleForm.email !== '') {
+                    this.select(4);
+                    return false;
+                }
+                this.list();
+            },
+            // 修改分页数量
+            handleSizeChange(val) {
+                this.pageSize = val;
+                this.page();
+            },
+            // 切换页数
+            handleCurrentChange(val) {
+                this.currentPage = val;
+                this.page();
+            }
+        }
+    });
+</script>
+</html>
