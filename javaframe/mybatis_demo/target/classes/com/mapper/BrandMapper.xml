@@ -24,22 +24,39 @@
         <result column="brand_name" property="brandName"/>
         <result column="company_name" property="companyName"/>
     </resultMap>
-<!--    使用主键返回
-            1. 设置useGeneratedKeys的属性值为true；
-            2. 设置keyProperty的属性值为主键对应的实体属性名称-->
+    <!--    使用主键返回
+                1. 设置useGeneratedKeys的属性值为true；
+                2. 设置keyProperty的属性值为主键对应的实体属性名称-->
     <insert id="add" useGeneratedKeys="true" keyProperty="id">
         insert into tb_brand (brand_name, company_name, ordered, description, status)
-        values (#{brandName},#{companyName},#{ordered},#{description},#{status});
+        values (#{brandName}, #{companyName}, #{ordered}, #{description}, #{status});
     </insert>
     <update id="update">
         update tb_brand
-        set brand_name   = #{brandName},
-            company_name = #{companyName},
-            ordered      = #{ordered},
-            description  = #{description},
-            status       = #{status}
+        <set>
+            <if test="brandName != null and brandName != ''">
+                brand_name = #{brandName},
+            </if>
+            <if test="companyName != null and companyName != ''">
+                company_name = #{companyName},
+            </if>
+            <if test="ordered != null">
+                ordered = #{ordered},
+            </if>
+            <if test="description != null and description != ''">
+                description = #{description},
+            </if>
+            <if test="status != null">
+                status = #{status}
+            </if>
+        </set>
         where id = #{id};
     </update>
+    <delete id="deleteById">
+        delete
+        from tb_brand
+        where id = #{id};
+    </delete>
     <select id="selectAll" resultMap="brandResultMap">
         select *
         from tb_brand;

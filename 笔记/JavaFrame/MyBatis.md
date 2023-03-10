@@ -1,4 +1,4 @@
-# [MyBatis](https://www.cnblogs.com/ynxiyan/p/17201088.html)
+﻿# [MyBatis](https://www.cnblogs.com/ynxiyan/p/17201088.html)
 
 ### 一、什么是MyBatis
 
@@ -286,11 +286,11 @@ MyBatis的配置文件包含了会深深影响MyBatis行为的设置和属性信
 </select>
 ```
 
+### 六、使用配置文件开发
 
+----
 
-### 六、参数占位符
-
----
+#### 1. 参数占位符
 
 1. \#{}
 
@@ -309,11 +309,7 @@ MyBatis的配置文件包含了会深深影响MyBatis行为的设置和属性信
 - 参数传递时使用#{}
 - 表名列名不固定时使用${}
 
-
-
-### 七、特殊字符处理
-
----
+#### 2. 特殊字符处理
 
 1. 转义字符
 
@@ -330,11 +326,7 @@ MyBatis的配置文件包含了会深深影响MyBatis行为的设置和属性信
    ]]>
    ```
 
-
-
-### 八、参数的设置
-
----
+#### 3. 参数的设置
 
 Mapper:
 
@@ -358,7 +350,7 @@ companyName = "%" + companyName + "%";
 brandName = "%" + brandName + "%";
 ```
 
-#### 1. 散装参数
+##### 3-1. 散装参数
 
 如果方法中有多个参数，需要使用@Param注解
 
@@ -376,7 +368,7 @@ List<Brand> selectByCondition(@Param("status") int status, @Param("companyName")
 System.out.println(sqlSession.getMapper(BrandMapper.class).selectByCondition(status, companyName, brandName));
 ```
 
-#### 2. 对象参数
+##### 3-2. 对象参数
 
 对象的属性名称要和参数占位符名称一致
 
@@ -396,7 +388,7 @@ brand.setBrandName(brandName);
 System.out.println(sqlSession.getMapper(BrandMapper.class).selectByCondition(brand));
 ```
 
-#### 3. Map集合参数
+##### 3-3. Map集合参数
 
 Map集合的键要和参数占位符名称保持一致
 
@@ -416,17 +408,13 @@ map.put("brandName", brandName);
 System.out.println(sqlSession.getMapper(BrandMapper.class).selectByCondition(map));
 ```
 
-
-
-### 九、动态SQL
-
----
+#### 4.动态SQL
 
 动态 SQL 是 MyBatis 的强大特性之一。如果你使用过 JDBC 或其它类似的框架，你应该能理解根据不同条件拼接 SQL 语句有多痛苦，例如拼接时要确保不能忘记添加必要的空格，还要注意去掉列表最后一个列名的逗号。利用动态 SQL，可以彻底摆脱这种痛苦。
 
-#### 1. 多条件查询
+##### 4-1. 多条件查询
 
-##### 1-1. \<if>
+###### 4-1-1. \<if>
 
 条件判断	test属性：写逻辑表达式
 
@@ -452,7 +440,7 @@ System.out.println(sqlSession.getMapper(BrandMapper.class).selectByCondition(map
 1. 恒等式	1=1
 2. \<where>
 
-##### 1-2. \<where>
+###### 4-1-2. \<where>
 
 解决\<if>标签可能造成的sql语法错误
 
@@ -474,9 +462,9 @@ System.out.println(sqlSession.getMapper(BrandMapper.class).selectByCondition(map
 </select>
 ```
 
-#### 2. 单条件查询
+##### 4-2. 单条件查询
 
-##### 2-1. \<choose>
+###### 4-2-1. \<choose>
 
 选择分支，类似于java的switch语句
 
@@ -502,13 +490,9 @@ System.out.println(sqlSession.getMapper(BrandMapper.class).selectByCondition(map
 </select>
 ```
 
+#### 5. 添加、修改
 
-
-### 十、添加、修改
-
----
-
-#### 1. 添加
+##### 5-1. 添加
 
 ```xml
 <insert id="add">
@@ -530,7 +514,7 @@ SqlSession sqlSession = sqlSessionFactory.openSession(true);
 sqlSession.commit();
 ```
 
-##### 1-1. 主键返回
+###### 5-1-1. 主键返回
 
 使用主键返回
 
@@ -544,9 +528,9 @@ sqlSession.commit();
 </insert>
 ```
 
-#### 2.修改
+##### 5-2.修改
 
-##### 2-1. 修改全部字段
+###### 5-2-1. 修改全部字段
 
 ```xml
 <update id="update">
@@ -560,7 +544,7 @@ sqlSession.commit();
 </update>
 ```
 
-##### 2-2. 修改指定字段
+###### 5-2-2. 修改指定字段
 
 使用**\<set>**和**\<if>**标签判断哪些值不为空
 
@@ -588,9 +572,174 @@ sqlSession.commit();
 </update>
 ```
 
+#### 6.删除
+
+##### 6-1. 批量删除
+
+使用\<foreach>标签遍历需要删除的id，即遍历id数组
+
+```java
+/**
+ * 批量删除
+ *
+ * @param id 传入id数组
+ */
+void deleteByIds(@Param("ids") int[] id);
+```
+
+```xml
+<delete id="deleteByIds">
+    delete
+    from tb_brand
+    where id in
+    # collection：需要遍历的数组名称
+    # item：需要遍历的键
+    # separator：分隔符
+    # open：开始
+    # close：结束
+    <foreach collection="ids" item="id" separator="," open="(" close=")">
+        #{id}
+    </foreach>
+</delete>
+```
+
+**注意：**
+
+- mybatis会将数组参数，封装为一个Map集合
+
+- 默认为：array = 数组
+
+- 可以使用@Param注解改变Map集合的默认key的名称
+
+##### 6-2. 删除指定
+
+```xml
+<delete id="deleteById">
+    delete
+    from tb_brand
+    where id = #{id};
+</delete>
+```
+
+#### 7.参数传递
+
+在进行参数传递时，mybatis会使用ParamNameResolver类将参数封装
+
+注意：**使用@Param注解，替换Map集合默认的arg键名**
+
+MyBatis 参数封装 ：
+
+1. 单个参数 ：
+
+   - Model类型 ：
+
+     直接使用属性名（要保证属性名和参数占位符名称一致）
+
+   - Map集合 ：
+
+     直接使用键名（要保证键名和参数占位符名称一致）
+
+   - CotIection ：封装为Map集合
+
+     ```java
+     map.put("arg0",CotIection集合);
+     map.put("cotIection",CotIection集合);
+     ```
+
+   - List ：封装为Map集合
+
+     ```java
+     map.put("arg0",List集合);
+     map.put("cotIection",CotIection集合);
+     map.put("list",List集合);
+     ```
+
+   - Array ：封装为Map集合
+
+     ```java
+     map.put("arg0",数组);
+     map.put("array",数组);
+     ```
+
+   - 其他类型 ：直接使用
+
+2. 多个参数 ： 封装为Map集合
+
+   ```java
+   map.put("arg0"，参数1);		|		map.put("param1"，参数1);	
+   map.put("arg1", 参数2);		 |		 map.put("param2"， 参数2);
+   ```
 
 
 
+### 七、使用注解开发
+
+---
+
+使用注解来映射简单语句会使代码显得更加简洁，但对于稍微复杂一点的语句，Java注解不仅力不从心，还会让你本就复杂的SQL语句更加混乱不堪。因此，如果你需要做一些很复杂的操作最好
+用XML来映射语句
+选择何种方式来配置映射，以及认为是否应该要统一映射语句定义的形式，完全取决于你和你的团队。换句话说，永远不要拘泥于一种方式，你可以很轻松在基于汪解和XML的语句映射方式间自由自移植和切换
+
+```markdown
+# 查询 ： @Select 	# 添加 ： @lnsert	 # 修改 ： @Update	 # 删除 ： @Delete
+```
+
+**提示：**
+
+- 注解完成简单功能
+- 配置文件完成复杂功能
 
 
+
+### 八、MyBatis的缓存机制
+
+---
+
+#### 1. 概述
+
+![image-20230310102638024](https://img2023.cnblogs.com/blog/2854528/202303/2854528-20230310113029073-1057627226.png)
+
+图片来自：[mic老师面试资料_哔哩哔哩_bilibili](https://www.bilibili.com/video/BV1YR4y127Yt/?p=2&spm_id_from=333.1007.top_right_bar_window_history.content.click)
+
+Mybatis缓存机制是指Mybatis框架提供的一种提高查询效率的功能，它可以将经常查询的数据存储在内存中，减少和数据库的交互次数；Mybatis缓存机制分为一级缓存和二级缓存
+
+**一级缓存：**
+
+一级缓存是SqlSession级别的缓存，也称为本地缓存；它默认开启，只对当前SqlSession有效；当SqlSession执行增删改操作或者关闭时，一级缓存会失效
+
+<a style="color:red">注意：</a>执行**insert**、**update**、**delete**操作会刷新缓存
+
+**二级缓存：**
+
+二级缓存是mapper级别的缓存，它是基于namespace的缓存，一个命名空间（namespace）对应一个二级缓存，也称为全局缓存。它需要手动开启和配置，可以跨SqlSession共享数据。二级缓存可以自定义实现Cache接口来扩展
+
+#### 2. 如何开启和配置二级缓存
+
+要开启和配置二级缓存，需要做以下几个步骤：
+
+- 1.在全局配置文件mybatis-config.xml中设置cacheEnabled为true，这是开启二级缓存的前提。
+
+  ```xml
+  <!--显式的开启二级缓存-->
+  <settings>
+      <setting name="cacheEnabled" value="true"/>
+  </settings>
+  ```
+
+- 2.在mapper.xml或mapper.java的命名空间中添加\<cache/>标签，这是开启二级缓存的必要条件。
+
+  ```xml
+  <!--    开启二级缓存
+    readOnly：表示缓存以只读的形式保存，当有新的缓存进入的时候，会直接删除旧的缓存，如果不配置这个属性，会导致一个报错。
+    flushInterval：刷新间隔，以毫秒为单位。即缓存的刷新间隔，默认不刷新
+    size：引用数目，默认为1024
+    eviction：回收策略，有四个值，分别对应四种不同的缓存回收策略，
+     默认是LRU，即移除最长时间不使用的缓存。
+     其次是FIFO，按照缓存进入的时间移除最早进入的缓存。-->
+  <cache readOnly="true"/>
+  ```
+
+- 3.让返回的Model(POJO)实现Serializable接口（序列化），这是使用二级缓存的要求。
+
+如果需要自定义缓存实现，可以在\<cache/>标签中指定type属性为自定义的Cache接口实现类。
 
