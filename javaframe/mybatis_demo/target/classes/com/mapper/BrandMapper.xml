@@ -4,6 +4,8 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!--        namespace:名称空间-->
 <mapper namespace="com.mapper.BrandMapper">
+    <!--    开启二级缓存-->
+    <cache readOnly="true"/>
     <!--    &lt;!&ndash;    sql片段&ndash;&gt;-->
     <!--    <sql id="brand_select">-->
     <!--        id, brand_name as brandName, company_name as companyName, ordered, description, status-->
@@ -56,6 +58,22 @@
         delete
         from tb_brand
         where id = #{id};
+    </delete>
+    <delete id="deleteByIds">
+        delete
+        from tb_brand
+        where id in
+        # mybatis会将数组参数，封装为一个Map集合
+        # 默认为：array = 数组
+        # 可以使用@Param注解改变Map集合的默认key的名称
+        # collection：需要遍历的数组名称
+        # item：需要遍历的键
+        # separator：分隔符
+        # open：开始
+        # close：结束
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
     </delete>
     <select id="selectAll" resultMap="brandResultMap">
         select *

@@ -338,6 +338,12 @@ mvn install			安装需要的插件
         <artifactId>logback-core</artifactId>
         <version>1.2.3</version>
     </dependency>
+    <!--        spring-->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>5.2.10.RELEASE</version>
+        </dependency>
 </dependencies>
 ```
 

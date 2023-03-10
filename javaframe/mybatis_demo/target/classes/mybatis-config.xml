@@ -3,6 +3,10 @@
         PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
+    <!--显式的开启二级缓存-->
+    <settings>
+        <setting name="cacheEnabled" value="true"/>
+    </settings>
     <!--    给实体类起别名并使用包扫描-->
     <typeAliases>
         <package name="com.model"/>
