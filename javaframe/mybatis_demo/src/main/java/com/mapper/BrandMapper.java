@@ -1,6 +1,7 @@
 package com.mapper;
 
 import com.model.Brand;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -40,7 +41,24 @@ public interface BrandMapper {
      * @return 返回商品列表
      */
     List<Brand> selectByCondition(Map map);
+
     List<Brand> selectByConditionSingle(Brand brand);
+
     void add(Brand brand);
+
     int update(Brand brand);
+
+    /**
+     * 根据id删除
+     *
+     * @param id
+     */
+    void deleteById(int id);
+
+    /**
+     * 批量删除
+     *
+     * @param id 传入id数组
+     */
+    void deleteByIds(@Param("ids") int[] id);
 }

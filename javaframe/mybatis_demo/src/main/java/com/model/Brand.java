@@ -2,13 +2,15 @@ package com.model;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * @Author: XIYAN
  * @Date: 2023/3/9 15:04
  * @注释:
  */
 @Data
-public class Brand {
+public class Brand implements Serializable {
     // id 主键
     private Integer id;
     // 品牌名称
