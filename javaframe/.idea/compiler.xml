@@ -7,8 +7,12 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="spring_core" />
+        <module name="spring_mybatis" />
+        <module name="spring_auto" />
         <module name="mybatis_demo" />
+        <module name="spring_datasource" />
+        <module name="spring_note" />
+        <module name="spring_disposition" />
       </profile>
     </annotationProcessing>
   </component>

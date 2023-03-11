@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <!--    配置bean
+    id属性表示给bean起别名
+    class属性表示给bean定义类型-->
+    <!--    <bean id="userDao" class="com.spring_disposition.dao.impl.UserDaoImpl">-->
+    <!--        <property name="databaesName" value="mysql"/>-->
+    <!--        <property name="connectionNum" value="10"/>-->
+    <!--    </bean>-->
+    <!--    &lt;!&ndash;    <bean id="UserDaoFactory" class="com.spring_disposition.factory.UserDaoFactory"/>&ndash;&gt;-->
+    <!--    &lt;!&ndash;    <bean id="userDao" factory-bean="UserDaoFactory" factory-method="getUserDao"/>&ndash;&gt;-->
+    <!--    &lt;!&ndash;    <bean id="userDao" class="com.spring_disposition.factory.UserDaoFactory" factory-method="getUserDao"/>&ndash;&gt;-->
+    <!--    <bean id="userService" class="com.spring_disposition.service.impl.UserServiceImpl">-->
+    <!--        &lt;!&ndash;        配置service与dao的关系-->
+    <!--        name属性表示配置哪一个具体的属性-->
+    <!--        ref属性表示参照哪一个bean&ndash;&gt;-->
+    <!--        <property name="userDao" ref="userDao"/>-->
+    <!--    </bean>-->
+    <!--    <bean id="UserDao" class="com.spring_disposition.factory.UserDaoFactoryBean"/>-->
+    <bean id="bookDao" class="com.spring_disposition.dao.impl.BookDaoImpl"/>
+</beans>

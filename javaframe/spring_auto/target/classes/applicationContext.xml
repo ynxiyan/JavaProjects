@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <!--    <bean id="bookDao" class="com.spring_auto.dao.impl.BookDaoImpl"/>-->
+    <!--    <bean id="bookService" class="com.spring_auto.service.ipml.BookServiceImpl" autowire="byType"/>-->
+    <bean id="bookDao" class="com.spring_auto.dao.impl.BookDaoImpl">
+        <!--        数组注入-->
+        <property name="array">
+            <array>
+                <value>1</value>
+                <value>2</value>
+            </array>
+        </property>
+        <!--        list集合注入-->
+        <property name="list">
+            <list>
+                <value>list1</value>
+                <value>list2</value>
+            </list>
+        </property>
+        <!--        set集合注入-->
+        <property name="set">
+            <set>
+                <value>set1</value>
+                <value>set2</value>
+                <value>set1</value>
+            </set>
+        </property>
+        <!--        map集合注入-->
+        <property name="map">
+            <map>
+                <entry key="key1" value="map1"/>
+                <entry key="key2" value="map2"/>
+            </map>
+        </property>
+        <!--        properties注入-->
+        <property name="properties">
+            <props>
+                <prop key="key1">pro1</prop>
+                <prop key="key2">pro2</prop>
+            </props>
+        </property>
+    </bean>
+</beans>

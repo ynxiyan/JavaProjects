@@ -339,11 +339,23 @@ mvn install			安装需要的插件
         <version>1.2.3</version>
     </dependency>
     <!--        spring-->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-            <version>5.2.10.RELEASE</version>
-        </dependency>
+    <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-context</artifactId>
+        <version>5.2.10.RELEASE</version>
+    </dependency>
+    <!--    spring操作jdbc-->
+    <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-jdbc</artifactId>
+        <version>5.2.10.RELEASE</version>
+    </dependency>
+    <!--    spring整合mybatis-->
+    <dependency>
+        <groupId>org.mybatis</groupId>
+        <artifactId>mybatis-spring</artifactId>
+        <version>1.3.0</version>
+    </dependency>
 </dependencies>
 ```
 
