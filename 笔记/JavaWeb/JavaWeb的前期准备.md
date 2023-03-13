@@ -362,6 +362,12 @@ mvn install			安装需要的插件
         <artifactId>spring-test</artifactId>
         <version>5.2.10.RELEASE</version>
     </dependency>
+    <!--        aop切面-->
+    <dependency>
+        <groupId>org.aspectj</groupId>
+        <artifactId>aspectjweaver</artifactId>
+        <version>1.9.4</version>
+    </dependency>
 </dependencies>
 ```
 

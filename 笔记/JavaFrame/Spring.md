@@ -784,7 +784,7 @@ ApplicationContext applicationContext = new AnnotationConfigApplicationContext(S
 
 ---
 
-AOP(Aspect Oriented programming) 面向切面编程,一种编程范式,指导开发者如何组织程序结构
+AOP(Aspect Oriented programming) 面向切面编程，一种编程范式，指导开发者如何组织程序结构
 
 **作用:**在不惊动原始设计的基础上为其进行功能增强
 
@@ -913,9 +913,154 @@ AOP(Aspect Oriented programming) 面向切面编程,一种编程范式,指导开
 - 通常不使用异常作为匹配规则
 ```
 
-#### 5. 通知类型
+#### 5. AOP通知类型
+
+AOP通知描述了抽取的共性功能，根据共性功能抽取的位置不同，最终运行代码时要将其加入到合理的位置
+
+![image-20230313141139952](C:/Users/XIYAN/AppData/Roaming/Typora/typora-user-images/image-20230313141139952.png)
+
+| 名称                           | 说明                                                         |
+| ------------------------------ | ------------------------------------------------------------ |
+| 前置通知[@Before]              | 追加功能到方法执行前,类似于在代码1或者代码2添加内容          |
+| 后置通知[@After]               | 追加功能到方法执行后,不管方法执行的过程中有没有抛出异常都会执行，类似于在代 码5添加内容 |
+| 环绕通知[@Around]              | 环绕通知功能比较强大，它可以追加功能到方法执行的前后，这也是比较常用的方式， 它可以实现其他四种通知类型的功能 |
+| 返回后通知[@AfterReturning]    | 追加功能到方法执行后，只有方法正常执行结束后才进行,类似于在代码3添加内容， 如果方法执行抛出异常，返回后通知将不会被添加 |
+| 抛出异常后通知[@AfterThrowing] | 追加功能到方法抛出异常后，只有方法执行出异常才进行,类似于在代码4添加内 容，只有方法抛出异常后才会被添加 |
+
+**环绕通知：**
+
+- 环绕通知依赖形参ProceedingJoinPoint才能实现对原始方法的调用
+- 环绕通知可以隔离原始方法的调用执行
+- 环绕通知返回值设置为Object类型
+- 环绕通知中可以对原始方法调用过程中出现的异常进行处理
+
+```java
+//声明该类是一个bean
+@Component
+//声明当前类为AOP切面类
+@Aspect
+public class MyAdvice {
+    //定义切入点
+    @Pointcut("execution(void *..*Dao+.*(..))")
+    private void ad() {
+    }
+
+    //绑定当前通知方法与切入点之间的绑定关系（在原始切入点方法前运行）
+    @Around("ad()")
+    public Object arund(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
+        //获取当前目标对象的签名信息
+        Signature signature = proceedingJoinPoint.getSignature();
+        //通过签名信息获取类型名称（接口名称）
+        String typeName = signature.getDeclaringTypeName();
+        //通过签名信息获取方法名称
+        String name = signature.getName();
+        System.out.println(System.currentTimeMillis());
+        //表示对原始方法的调用
+        Object proceed = proceedingJoinPoint.proceed();
+        System.out.println(System.currentTimeMillis());
+        //返回原始方法的值
+        return proceed;
+    }
+}
+```
+
+<a style="color:red">注意：</a>
+
+1. 环绕通知必须依赖形参ProceedingJoinPoint才能实现对原始方法的调用，进而实现原始方法调用前后同时添加通知
+
+2. 通知中如果未使用ProceedingJoinPoint对原始方法进行调用将跳过原始方法的执行
+3. 对原始方法的调用可以不接收返回值，通知方法设置成void即可，如果接收返回值，最好设定为 Object类型
+4. 原始方法的返回值如果是void类型，通知方法的返回值类型可以设置成void,也可以设置Object
+5. 由于无法预知原始方法运行后是否会抛出异常，因此环绕通知方法必须要处理Throwable异常
+
+#### 6. AOP获取数据
+
+##### 6-1. 获取切入点方法参数
+
+- JoinPoint：适用于前置、后置、返回后、抛出异常后通知
+- ProceedingJoinPoint：适用于环绕通知
+
+```java
+@Before("ad()")
+public void before(JoinPoint joinPoint) {
+    //获取目标对象的参数
+    Object[] args = joinPoint.getArgs();
+}
+
+@After("ad()")
+public void after(JoinPoint joinPoint) {
+    //获取目标对象的参数
+    Object[] args = joinPoint.getArgs();
+}
+
+@Around("ad()")
+public Object around(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
+    //获取目标对象的参数
+    Object[] args = proceedingJoinPoint.getArgs();
+    Object proceed = proceedingJoinPoint.proceed();
+    return proceed;
+}
+```
+
+##### 6-2. 获取切入点方法的返回值
+
+- 返回后通知
+- 环绕通知
+
+```java
+@Around("ad()")
+public Object around(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
+    //获取目标对象的返回值
+    Object proceed = proceedingJoinPoint.proceed();
+    return proceed;
+}
+
+//如果返回后通知存在返回值，则将返回值传入形参o中
+@AfterReturning(value = "ad()", returning = "o")
+public void afterReturning(Object o) {
+}
+```
+
+<a style="color:red">注意：</a>在返回后通知里如果需要同时获取参数和返回值，JoinPoint或ProceedingJoinPoint形参必须写在第一位
+
+##### 6-3. 获取切入点方法运行异常信息
+
+- 抛出异常后通知
+- 环绕通知
+
+```java
+@Around("ad()")
+public Object around(ProceedingJoinPoint proceedingJoinPoint) {
+    //获取异常
+    Object proceed = null;
+    try {
+        proceed = proceedingJoinPoint.proceed();
+    } catch (Throwable e) {
+        throw new RuntimeException(e);
+    }
+    return proceed;
+}
+//在抛出异常后通知执行时，则将异常信息传入形参throwable中
+@AfterThrowing(value = "ad()",throwing = "throwable")
+public void afterThrowing(Throwable throwable) {
+}
+```
 
 
+
+### 七、事务（Transaction）
+
+---
+
+#### 1. 事务的简介
+
+
+
+#### 2. 事务角色
+
+
+
+#### 3. 事务属性
 
 
 
