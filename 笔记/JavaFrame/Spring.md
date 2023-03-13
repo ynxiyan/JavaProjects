@@ -136,7 +136,7 @@ Spring Framework 是 Spring 生态圈中最基础的项目 ， 是其他项目�
 
 
 
-### 四、核心容器
+### 四、核心容器（IoC）
 
 ---
 
@@ -729,7 +729,195 @@ ApplicationContext applicationContext = new AnnotationConfigApplicationContext(S
    System.out.println(accountService.findAll());
    ```
 
+#### 2.整合Junit
+
+1. 引入相应坐标
+
+   ```xml
+   <dependencies>
+       <dependency>
+           <groupId>org.springframework</groupId>
+           <artifactId>spring-context</artifactId>
+           <version>5.2.10.RELEASE</version>
+       </dependency>
+       <dependency>
+           <groupId>junit</groupId>
+           <artifactId>junit</artifactId>
+           <version>4.13.2</version>
+           <scope>test</scope>
+       </dependency>
+       <!--        spring整合junit-->
+       <dependency>
+           <groupId>org.springframework</groupId>
+           <artifactId>spring-test</artifactId>
+           <version>5.2.10.RELEASE</version>
+       </dependency>
+   </dependencies>
+   ```
+
+2. 配置测试类
+
+   ```java
+   //标记该类为spring的类运行器
+   @RunWith(SpringJUnit4ClassRunner.class)
+   //载入spring的配置信息
+   @ContextConfiguration(classes = SpringConfig.class)
+   ```
+
+3. 测试
+
+   ```java
+   public class AccountServiceTest {
+       @Autowired
+       private AccountService accountService = new AccounServiceImpl();
    
+       @Test
+       public void testFind() {
+           System.out.println(accountService.findAll());
+       }
+   }
+   ```
+
+
+
+### 六、通知（AOP）
+
+---
+
+AOP(Aspect Oriented programming) 面向切面编程,一种编程范式,指导开发者如何组织程序结构
+
+**作用:**在不惊动原始设计的基础上为其进行功能增强
+
+​				**Spring理念：**无入侵式/无侵入式				**Spring的本质：**代理模式
+
+#### 1. 核心概念
+
+- 连接点(JoinPoint)：程序执行过程中的任意位置，粒度为执行方法、抛出异常、设置变量等
+  - 在SpringAOP中，理解为方法的执行
+
+- 切入点(Pointcut):匹配连接点的式子
+
+  - 在SpringAOP中，一个切入点可以描述一个具体方法，也可也匹配多个方法
+
+    - 一个具体的方法:如com.itheima.dao包下的BookDao接口中的无形参无返回值的save方法
+    - 匹配多个方法:所有的save方法，所有的get开头的方法，所有以Dao结尾的接口中的任意方法，所有带有一个参数的方法
+
+    <a>注意：</a>连接点范围要比切入点范围大，是切入点的方法也一定是连接点，但是是连接点的方法就不一 定要被增强，所以可能不是切入点。
+
+- 通知(Advice):在切入点处执行的操作，也就是共性功能
+  - 在SpringAOP中，功能最终以方法的形式呈现
+
+- 通知类：定义通知的类
+
+- 切面(Aspect):描述通知与切入点的对应关系。
+
+- 目标对象(Target)：原始功能去掉共性功能对应的类产生的对象，这种对象是无法直接完成最终 工作的
+
+- 代理(Proxy)：目标对象无法直接完成工作，需要对其进行功能回填，通过原始对象的代理对象实 现
+
+#### 2. AOP入门
+
+1. 导入相应坐标
+
+   ```xml
+   <dependencies>
+       <dependency>
+           <groupId>org.springframework</groupId>
+           <artifactId>spring-context</artifactId>
+           <version>5.2.10.RELEASE</version>
+       </dependency>
+       <!--        aop切面-->
+       <dependency>
+           <groupId>org.aspectj</groupId>
+           <artifactId>aspectjweaver</artifactId>
+           <version>1.9.4</version>
+       </dependency>
+   </dependencies>
+   ```
+
+2. 定义AOP
+
+   ```java
+   //声明该类是一个bean
+   @Component
+   //声明当前类为AOP切面类
+   @Aspect
+   public class MyAdvice {
+       //定义切入点
+       @Pointcut("execution(void com.spring_aop.dao.BookDao.update())")
+       private void ad(){}
+       //绑定当前通知方法与切入点之间的绑定关系（在原始切入点方法前运行）
+       @Before("ad()")
+       public void method(){
+           System.out.println(System.currentTimeMillis());
+       }
+   }
+   ```
+
+3. 配置AOP
+
+   ```java
+   @Configuration
+   @ComponentScan("com.spring_aop")
+   //使用注解开发AOP
+   @EnableAspectJAutoProxy
+   public class SpringConfig {
+   }
+   ```
+
+#### 3. AOP的工作流程
+
+1. Spring容器启动
+2. 读取所有切面配置中的切入点
+3. 初始化bean
+
+注意第1步在容器启动的时候，bean对象还没有被创建成功
+
+```markdown
+- 匹配失败，创建原始对象
+	匹配失败说明不需要增强，直接调用原始对象的方法即可。 
+- 匹配成功，创建原始对象（目标对象）的代理对象
+	匹配成功说明需要对其进行增强
+# 对哪个类做增强，这个类对应的对象就叫做目标对象
+# 因为要对目标对象进行功能增强，而采用的技术是动态代理，所以会为其创建一个代理对象
+# 最终运行的是代理对象的方法，在该方法中会对原始方法进行功能增强
+```
+
+4. 获取bean执行方法
+   - 获取的bean是原始对象时，调用方法并执行，完成操作 获取的bean是代理对象时，根据代
+   - 理对象的运行模式运行原始方法与增强的内容，完成操作
+
+#### 4. AOP切入点表达式
+
+**切入点表达式标准格式：**动作关键字(访问修饰符[可省略] 返回值 包名.类/接口名.方法名(参数) 异常名[可省略]）
+
+​			切入点:要进行增强的方法				切入点表达式:要进行增强的方法的描述方式
+
+![image-20230313103146774](https://img2023.cnblogs.com/blog/2854528/202303/2854528-20230313110130257-575100037.png)
+
+**通配符：**
+
+![image-20230313103628056](https://img2023.cnblogs.com/blog/2854528/202303/2854528-20230313110129374-1116687354.png)
+
+**书写技巧：**
+
+```markdown
+- 所有代码按照标准规范开发，否则以下技巧全部失效
+- 描述切入点通常描述接口，而不描述实现类,如果描述到实现类，就出现紧耦合了
+- 访问控制修饰符针对接口开发均采用public描述（可省略访问控制修饰符描述）
+- 返回值类型对于增删改类使用精准类型加速匹配，对于查询类使用\*通配快速描述
+- 包名书写尽量不使用..匹配，效率过低，常用\*做单个包描述匹配，或精准匹配
+- 接口名/类名书写名称与模块相关的采用\*匹配，例如UserService书写成\*Service，绑定业务
+- 层接口名 方法名书写以动词进行精准匹配，名词采用匹配，例如getById书写getBy,selectAll书写成 selectAll
+- 参数规则较为复杂，根据业务方法灵活调整
+- 通常不使用异常作为匹配规则
+```
+
+#### 5. 通知类型
+
+
+
+
 
 
 

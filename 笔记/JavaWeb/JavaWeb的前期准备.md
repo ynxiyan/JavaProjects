@@ -356,6 +356,12 @@ mvn install			安装需要的插件
         <artifactId>mybatis-spring</artifactId>
         <version>1.3.0</version>
     </dependency>
+    <!--        spring整合junit-->
+    <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-test</artifactId>
+        <version>5.2.10.RELEASE</version>
+    </dependency>
 </dependencies>
 ```
 
