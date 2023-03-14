@@ -3,6 +3,8 @@ package com.spring_mybatis.config;
 import com.alibaba.druid.pool.DruidDataSource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
 
@@ -44,15 +46,39 @@ public class JdbcByDruidConfig {
      */
     @Bean
     public DataSource druidDataSource() {
+        //创建DruidDataSource对象
         DruidDataSource druidDataSource = new DruidDataSource();
+        //设置JDBC驱动
         druidDataSource.setDriverClassName(driver);
+        //设置数据库连接源
         druidDataSource.setUrl(url);
+        //设置用户名
         druidDataSource.setUsername(username);
+        //设置密码
         druidDataSource.setPassword(password);
+        //设置初始连接大小
         druidDataSource.setInitialSize(initialSize);
+        //设置最小空闲连接大小
         druidDataSource.setMinIdle(minIdle);
+        //设置最大活动连接大小
         druidDataSource.setMaxActive(maxActive);
+        //设置最长等待时间
         druidDataSource.setMaxWait(maxWait);
         return druidDataSource;
+    }
+
+    /**
+     * 设置Spring事务管理器
+     *
+     * @param dataSource 传入数据库连接池对象
+     * @return 返回配置好的事务处理器
+     */
+    @Bean
+    public PlatformTransactionManager platformTransactionManager(DataSource dataSource) {
+        //创建DataSourceTransactionManager对象
+        DataSourceTransactionManager dataSourceTransactionManager = new DataSourceTransactionManager();
+        //设置数据库连接源对象的事务管理器为Spring事务管理器
+        dataSourceTransactionManager.setDataSource(dataSource);
+        return dataSourceTransactionManager;
     }
 }

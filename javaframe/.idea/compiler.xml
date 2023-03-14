@@ -10,6 +10,7 @@
         <module name="spring_datasource" />
         <module name="spring_note" />
         <module name="spring_disposition" />
+        <module name="springmvc_demo" />
         <module name="spring_mybatis" />
         <module name="spring_auto" />
         <module name="mybatis_demo" />

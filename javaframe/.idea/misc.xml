@@ -8,6 +8,7 @@
   <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="FrameworkDetectionExcludesConfiguration">
     <file type="web" url="file://$PROJECT_DIR$/mybatis_demo" />
+    <file type="web" url="file://$PROJECT_DIR$/springmvc_demo" />
   </component>
   <component name="MavenProjectsManager">
     <option name="originalFiles">
@@ -21,6 +22,7 @@
         <option value="$PROJECT_DIR$/spring_note/pom.xml" />
         <option value="$PROJECT_DIR$/spring_mybatis/pom.xml" />
         <option value="$PROJECT_DIR$/spring_aop/pom.xml" />
+        <option value="$PROJECT_DIR$/springmvc_demo/pom.xml" />
       </list>
     </option>
   </component>

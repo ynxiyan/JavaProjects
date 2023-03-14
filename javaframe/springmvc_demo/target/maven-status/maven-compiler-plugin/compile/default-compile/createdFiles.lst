@@ -1,0 +1,3 @@
+com\springmvc_demo\controller\UserController.class
+com\springmvc_demo\controller\config\SpringMvcConfig.class
+com\springmvc_demo\controller\config\ServletContainersInitConfig.class

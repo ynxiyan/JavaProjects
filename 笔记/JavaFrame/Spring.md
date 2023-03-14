@@ -917,7 +917,7 @@ AOP(Aspect Oriented programming) 面向切面编程，一种编程范式，指�
 
 AOP通知描述了抽取的共性功能，根据共性功能抽取的位置不同，最终运行代码时要将其加入到合理的位置
 
-![image-20230313141139952](C:/Users/XIYAN/AppData/Roaming/Typora/typora-user-images/image-20230313141139952.png)
+![image-20230313141139952](https://img2023.cnblogs.com/blog/2854528/202303/2854528-20230313193113088-482141283.png)
 
 | 名称                           | 说明                                                         |
 | ------------------------------ | ------------------------------------------------------------ |
@@ -1048,19 +1048,105 @@ public void afterThrowing(Throwable throwable) {
 
 
 
-### 七、事务（Transaction）
+### 七、Spring事务（PlatformTransactionManager）
 
 ---
 
-#### 1. 事务的简介
+事务作用：在数据层保障一系列的数据库操作同成功同失败
 
+**Spring事务作用：**在数据层或业务层保障一系列的数据库操作同成功同失败
 
+开启spring事务的步骤：
 
-#### 2. 事务角色
+1. 在业务层上添加Spring事务管理
 
+   ```java
+   @Service 
+   public class AccountServiceImpl implements AccountService {
+       @Autowired
+       private AccountDao accountDao; 
+       //使用spring事务
+       @Transactional 
+       public void transfer(String out,String in ,Double money) { 
+           accountDao.outMoney(out,money); 
+           int i = 1/0; 
+           accountDao.inMoney(in,money);
+       } 
+   }
+   ```
 
+   注意：- spring注解式事务通常添加在业务层接口中而不会添加到业务层实现类中，降低耦合
 
-#### 3. 事务属性
+   ​			- 注解式事务可以添加到业务方法上表示当前方法开启事务，也可以添加到接口上表示当			  前接口所有方法开启事务
+
+2. 设置spring事务管理器
+
+   ```java
+   public class JdbcByDruidConfig {
+       /**
+        * 设置Spring事务管理器
+        *
+        * @param dataSource 传入数据库连接池对象
+        * @return 返回配置好的事务处理器
+        */
+       @Bean
+       public PlatformTransactionManager platformTransactionManager(DataSource dataSource) {
+           DataSourceTransactionManager dataSourceTransactionManager = new DataSourceTransactionManager();
+           dataSourceTransactionManager.setDataSource(dataSource);
+           return dataSourceTransactionManager;
+       }
+   }
+   ```
+
+   注意：- 事务管理器要根据实现技术进行选择
+
+   ​			- MyBaits框架使用的是JDBC事务
+
+3. 开启注解式事务驱动
+
+   ```java
+   @Configuration
+   @ComponentScan("com.spring_mybatis")
+   //开启注解式事务驱动
+   @EnableTransactionManagement
+   public class SpringConfig {
+   
+   }
+   ```
+
+#### 1. Spring事务角色
+
+![image-20230314093830495](https://img2023.cnblogs.com/blog/2854528/202303/2854528-20230314101327807-7382868.png)
+
+**事务管理员：**发起事务方，在Spring中通常指代业务层开启事务的方法
+
+**事务协调员：**加入事务方，在Spring中通常指代数据层方法，也可以是业务层方法
+
+#### 2. Spring事务的属性
+
+![image-20230314094230744](https://img2023.cnblogs.com/blog/2854528/202303/2854528-20230314101327252-858824248.png)
+
+#### 3. Spring事务的传播行为
+
+事务协调员对事务管理员所携带事务的处理态度。
+
+例子：
+
+```java
+@Service 
+public class LogServiceImpl implements LogService {
+    @Autowired 
+    private LogDao logDao; 
+    //propagation设置事务属性：传播行为设置为当前操作需要新事务 @Transactional(propagation = Propagation.REQUIRES_NEW) 
+    public void log(String out,String in,Double money ) { 
+        logDao.log("转账操作由"+out+"到"+in+",金额："+money);
+    } 
+}
+```
+
+**事务传播行为的可选值：**
+
+![image-20230314095911355](https://img2023.cnblogs.com/blog/2854528/202303/2854528-20230314101326616-2016958191.png)
 
 
 
