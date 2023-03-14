@@ -368,6 +368,12 @@ mvn install			安装需要的插件
         <artifactId>aspectjweaver</artifactId>
         <version>1.9.4</version>
     </dependency>
+    <!--    springmvc-->
+    <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-webmvc</artifactId>
+        <version>5.2.10.RELEASE</version>
+    </dependency>
 </dependencies>
 ```
 
