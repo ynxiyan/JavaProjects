@@ -712,7 +712,7 @@ ApplicationContext applicationContext = new AnnotationConfigApplicationContext(S
     */
    @Configuration
    @ComponentScan("com.spring_mybatis")
-   @PropertySource("druid.properties")
+   @PropertySource("classpath:druid.properties")
    @Import({JdbcByDruidConfig.class, MyBatisConfig.class})
    public class SpringConfig {
    

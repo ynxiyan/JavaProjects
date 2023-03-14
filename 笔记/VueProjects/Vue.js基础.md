@@ -1,4 +1,4 @@
-﻿# [Vue基础](https://www.cnblogs.com/ynxiyan/p/17165201.html)
+﻿# [Vue.js基础](https://www.cnblogs.com/ynxiyan/p/17165201.html)
 
 ### 一、Vue的介绍与描述
 

@@ -1,4 +1,4 @@
-package com.spring_mybatis.config;
+package com.springmvc_demo.config;
 
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.mapper.MapperScannerConfigurer;
@@ -21,7 +21,7 @@ public class MyBatisConfig {
         //创建SqlSessionFactoryBean对象
         SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
         //设置类型别名的包路径
-        sqlSessionFactoryBean.setTypeAliasesPackage("com.spring_mybatis.model");
+        sqlSessionFactoryBean.setTypeAliasesPackage("com.springmvc_demo.model");
         //设置数据源
         sqlSessionFactoryBean.setDataSource(jdbcByDruidConfig.druidDataSource());
         return sqlSessionFactoryBean;
@@ -37,7 +37,7 @@ public class MyBatisConfig {
         //创建mapper自动代理对象
         MapperScannerConfigurer mapperScannerConfigurer = new MapperScannerConfigurer();
         //设置包扫描路径
-        mapperScannerConfigurer.setBasePackage("com.spring_mybatis.dao");
+        mapperScannerConfigurer.setBasePackage("com.springmvc_demo.dao");
         return mapperScannerConfigurer;
     }
 }

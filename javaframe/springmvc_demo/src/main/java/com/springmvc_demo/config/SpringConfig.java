@@ -1,4 +1,4 @@
-package com.spring_mybatis.config;
+package com.springmvc_demo.config;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -14,9 +14,9 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 //声明该类为Spring的配置类
 @Configuration
 //规定包扫描
-@ComponentScan("com.spring_mybatis")
+@ComponentScan({"com.springmvc_demo.service", "com.springmvc_demo.dao"})
 //导入Druid的配置文件信息
-@PropertySource("druid.properties")
+@PropertySource("classpath:druid.properties")
 //开启注解式事务驱动
 @EnableTransactionManagement
 //开启注解式AOP开发
