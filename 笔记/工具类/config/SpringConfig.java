@@ -1,4 +1,4 @@
-package com.springmvc_demo.config;
+package com.springmvc_ssm.config;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 //声明该类为Spring的配置类
 @Configuration
 //规定包扫描
-@ComponentScan({"com.springmvc_demo.service","com.springmvc_demo.dao"})
+@ComponentScan({"com.springmvc_ssm.service", "com.springmvc_ssm.dao"})
 //导入Druid的配置文件信息
 @PropertySource("classpath:druid.properties")
 //开启注解式事务驱动

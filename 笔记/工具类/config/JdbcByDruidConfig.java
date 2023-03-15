@@ -1,4 +1,4 @@
-package com.springmvc_demo.config;
+package com.springmvc_ssm.config;
 
 import com.alibaba.druid.pool.DruidDataSource;
 import org.springframework.beans.factory.annotation.Value;
@@ -44,6 +44,7 @@ public class JdbcByDruidConfig {
      *
      * @return 返回初始化后的DruidDataSource对象
      */
+    //声明为bean
     @Bean
     public DataSource druidDataSource() {
         //创建DruidDataSource对象
@@ -70,15 +71,16 @@ public class JdbcByDruidConfig {
     /**
      * 设置Spring事务管理器
      *
-     * @param dataSource 传入数据库连接池对象
+     * @param druidDataSource 传入数据库连接池对象
      * @return 返回配置好的事务处理器
      */
+    //声明为bean
     @Bean
-    public PlatformTransactionManager platformTransactionManager(DataSource dataSource) {
+    public PlatformTransactionManager platformTransactionManager(DataSource druidDataSource) {
         //创建DataSourceTransactionManager对象
         DataSourceTransactionManager dataSourceTransactionManager = new DataSourceTransactionManager();
         //设置数据库连接源对象的事务管理器为Spring事务管理器
-        dataSourceTransactionManager.setDataSource(dataSource);
+        dataSourceTransactionManager.setDataSource(druidDataSource);
         return dataSourceTransactionManager;
     }
 }

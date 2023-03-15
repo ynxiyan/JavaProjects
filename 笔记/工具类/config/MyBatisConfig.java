@@ -1,4 +1,4 @@
-package com.springmvc_demo.config;
+package com.springmvc_ssm.config;
 
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.mapper.MapperScannerConfigurer;
@@ -16,12 +16,13 @@ public class MyBatisConfig {
      * @param jdbcByDruidConfig 传入jdbcByDruid的数据库连接池对象
      * @return 返回初始化后的SqlSession对象
      */
+    //声明为bean
     @Bean
     public SqlSessionFactoryBean sqlSessionFactory(JdbcByDruidConfig jdbcByDruidConfig) {
         //创建SqlSessionFactoryBean对象
         SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
         //设置类型别名的包路径
-        sqlSessionFactoryBean.setTypeAliasesPackage("com.springmvc_demo.model");
+        sqlSessionFactoryBean.setTypeAliasesPackage("com.springmvc_ssm.model");
         //设置数据源
         sqlSessionFactoryBean.setDataSource(jdbcByDruidConfig.druidDataSource());
         return sqlSessionFactoryBean;
@@ -32,12 +33,13 @@ public class MyBatisConfig {
      *
      * @return 返回初始化后的Mapper自动代理映射对象
      */
+    //声明为bean
     @Bean
     public MapperScannerConfigurer mapperScannerConfigurer() {
         //创建mapper自动代理对象
         MapperScannerConfigurer mapperScannerConfigurer = new MapperScannerConfigurer();
         //设置包扫描路径
-        mapperScannerConfigurer.setBasePackage("com.springmvc_demo.dao");
+        mapperScannerConfigurer.setBasePackage("com.springmvc_ssm.dao");
         return mapperScannerConfigurer;
     }
 }

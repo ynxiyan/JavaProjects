@@ -1,4 +1,4 @@
-package com.springmvc_demo.config;
+package com.springmvc_ssm.config;
 
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
