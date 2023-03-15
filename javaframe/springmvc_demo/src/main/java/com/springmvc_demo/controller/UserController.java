@@ -1,7 +1,7 @@
 package com.springmvc_demo.controller;
 
+import com.springmvc_demo.model.User;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -19,8 +19,10 @@ public class UserController {
     @RequestMapping("/save")
     //设置当前操作的返回值类型
     @ResponseBody
-    public String save(@RequestBody String name) {
-        System.out.println(name);
-        return "{'model':'springmvc'}";
+    public User save() {
+        User user = new User();
+        user.setName("itcast");
+        user.setAge(15);
+        return user;
     }
 }

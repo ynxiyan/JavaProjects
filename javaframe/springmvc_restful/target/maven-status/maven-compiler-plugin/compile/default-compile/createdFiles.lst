@@ -1,0 +1,7 @@
+com\springmvc_restful\config\SpringMvcConfig.class
+com\springmvc_restful\controller\BookController.class
+com\springmvc_restful\model\User.class
+com\springmvc_restful\controller\UserController.class
+com\springmvc_restful\config\SpringConfig.class
+com\springmvc_restful\config\ServletContainersInitConfig.class
+com\springmvc_restful\model\Book.class

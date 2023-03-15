@@ -8,10 +8,12 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="spring_datasource" />
+        <module name="springmvc_ssm" />
         <module name="spring_note" />
         <module name="spring_disposition" />
         <module name="springmvc_demo" />
         <module name="spring_mybatis" />
+        <module name="springmvc_restful" />
         <module name="spring_auto" />
         <module name="mybatis_demo" />
         <module name="spring_aop" />

@@ -374,6 +374,12 @@ mvn install			安装需要的插件
         <artifactId>spring-webmvc</artifactId>
         <version>5.2.10.RELEASE</version>
     </dependency>
+    <!--        jackson-->
+    <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-databind</artifactId>
+        <version>2.9.0</version>
+    </dependency>
 </dependencies>
 ```
 

@@ -286,10 +286,11 @@ SpringMVC是处于Web层的框架，所以其主要的作用就是用来接收�
 
   ```xml
   <dependencies>
+      <!--        jackson-->
       <dependency>
-          <groupId>com.alibaba</groupId>
-          <artifactId>fastjson</artifactId>
-          <version>1.2.83</version>
+          <groupId>com.fasterxml.jackson.core</groupId>
+          <artifactId>jackson-databind</artifactId>
+          <version>2.9.0</version>
       </dependency>
   </dependencies>
   ```
@@ -339,9 +340,902 @@ SpringMVC是处于Web层的框架，所以其主要的作用就是用来接收�
 
 ##### 1-5. 日期类型的参数传递
 
+举例：
 
+后端方法
+
+```java
+@RequestMapping("/dataParam") 
+@ResponseBody 
+public String dataParam(Date date,Date date1) {
+    System.out.println("参数传递 date ==> "+date); 
+    return "{'module':'data param'}";
+}
+```
+
+前端请求
+
+```http
+http://localhost/dataParam?date=2088/08/08&date1=2088-08-08
+```
+
+发送请求和数据后，页面会报400，控制台会报出一个错误，错误的原因是在将2088-08-08转换成日期类型的时候失败了，原因是 SpringMVC默认支持的字符串转日期的格式为yyyy/MM/dd,而我们现在传递的不符合其默认格式， SpringMVC就无法进行格式转换，所以报错
+
+**解决方法：**
+
+使用@DateTimeFormat注解
+
+![image-20230315091959595](https://img2023.cnblogs.com/blog/2854528/202303/2854528-20230315171312478-1539910637.png)
+
+```java
+@RequestMapping("/dataParam") 
+@ResponseBody 
+public String dataParam(Date date, 
+                        @DateTimeFormat(pattern="yyyy-MM-dd") Date date1, @DateTimeFormat(pattern="yyyy/MM/dd HH:mm:ss") Date date2) 
+{
+    System.out.println("参数传递 date ==> "+date); 
+    System.out.println("参数传递 date1(yyyy-MM-dd) ==> "+date1); System.out.println("参数传递 date2(yyyy/MM/dd HH:mm:ss) ==> "+date2); 
+    return "{'module':'data param'}";
+}
+```
 
 #### 2.响应
+
+SpringMVC在接收到请求和数据后，进行了一些处理，当然这个处理可以是转发给Service， Service层再调用Dao层完成的
+
+1. 响应页面
+
+   ```java
+   @RequestMapping("/toJumpPage") 
+   //注意 
+   //1.此处不能添加@ResponseBody,如果加了该注入，会直接将page.jsp当字符串返回前端 //2.方法需要返回String 
+   public String toJumpPage(){ 
+       System.out.println("跳转页面"); 
+       return "page.jsp";
+   }
+   ```
+
+2. 响应数据
+
+   ![image-20230315095238922](https://img2023.cnblogs.com/blog/2854528/202303/2854528-20230315171312103-78413959.png)
+
+   **说明：**
+
+   ```markdown
+   * 该注解可以写在类上或者方法上
+   * 写在类上就是该类下的所有方法都有@ReponseBody功能，当方法上有@ReponseBody注解后
+           - 方法的返回值为字符串，会将其作为文本内容直接响应给前端
+           - 方法的返回值为对象，会将对象转换成JSON响应给前端
+   ```
+
+   - 文本数据
+
+     ```java
+     @RequestMapping("/toText") 
+     //注意此处该注解就不能省略，如果省略了,会把response text当前页面名称去查找，如果没有会报404错误 
+     @ResponseBody 
+     public String toText(){ 
+         System.out.println("返回纯文本数据"); 
+         return "response text";
+     }
+     ```
+
+   - json数据
+
+     ```java
+     @RequestMapping("/toJsonPOJO") 
+     //注意此处返回值为实体类对象，设置返回值为实体类类型，即可实现返回对应对象的json数据，需要依赖@ResponseBody和@EnableWebMvc注解
+     @ResponseBody 
+     public User toJsonPOJO(){ 
+         System.out.println("返回json对象数据"); 
+         User user = new User(); 
+         user.setName("itcast"); 
+         user.setAge(15); 
+         return user;
+     }
+     ```
+
+   - json集合对象
+
+     ```java
+     @RequestMapping("/toJsonList") 
+     @ResponseBody 
+     public List<User> toJsonList(){ 
+         System.out.println("返回json集合数据"); 
+         User user1 = new User(); 
+         user1.setName("传智播客"); 
+         user1.setAge(15);
+         User user2 = new User(); 
+         user2.setName("黑马程序员"); 
+         user2.setAge(12);
+         List<User> userList = new ArrayList<User>(); 
+         userList.add(user1); 
+         userList.add(user2);
+         return userList; 
+     }
+     ```
+
+#### 3. 类型转换器
+
+![image-20230315092547285](https://img2023.cnblogs.com/blog/2854528/202303/2854528-20230315171311565-1936242568.png)
+
+**HttpMessageConverter**接口是实现对象与JSON之间的转换工作
+
+- 所以Converter除了前面所说的功能外，它还可以实现:
+  - 对象转Json数据(POJO -> json)
+  - 集合转Json数据(Collection -> json)
+
+**注意：**在SpringMVC的配置类把@EnableWebMvc当做标配配置上去，不要省略
+
+
+
+### 五、REST风格
+
+---
+
+REST（Representational State Transfer），表现形式状态转换,它是一种软件架构风格（访问网络资源的格式）
+
+**REST的优点：**
+
+​			隐藏资源的访问行为，无法通过地址得知对资源是何种操作、书写简化
+
+![image-20230315100630178](https://img2023.cnblogs.com/blog/2854528/202303/2854528-20230315171311090-453765127.png)
+
+**注意：**
+
+- 上述行为是约定方式，约定不是规范，可以打破，所以称REST风格，而不是REST规范
+  - REST提供了对应的架构方式，按照这种架构设计项目可以降低开发的复杂性，提高系统的可伸缩性
+  - REST中规定GET/POST/PUT/DELETE针对的是查询/新增/修改/删除
+
+- 描述模块的名称通常使用复数，也就是加s的格式描述，表示此类资源，而非单个资源
+- 根据REST风格对资源进行访问称为RESTful后期开发中，大多是都是遵从REST风格来访问我们的后台服务，所以可以说以后都是基于RESTful来进行开发
+
+#### 1. RESTful入门
+
+1. 设定http请求动作（动词）
+
+   ```java
+   //设置当前请求方法为POST，表示REST风格中的添加操作 
+   @RequestMapping(value = "/users",method = RequestMethod.POST) @ResponseBody 
+   public String save() { 
+       System.out.println("user save..."); 
+       return "{'module':'user save'}";
+   }
+   ```
+
+   ![image-20230315105946712](https://img2023.cnblogs.com/blog/2854528/202303/2854528-20230315171310564-2073502385.png)
+
+2. 设定请求参数（路径变量）
+
+   ```java
+   //设置当前请求方法为DELETE，表示REST风格中的删除操作 
+   @RequestMapping(value = "/users/{id}",method = RequestMethod.DELETE) @ResponseBody 
+   public String delete(@PathVariable Integer id) { 					     	System.out.println("user delete..." + id);
+      return "{'module':'user delete'}";
+   }
+   ```
+
+   ![image-20230315105903752](https://img2023.cnblogs.com/blog/2854528/202303/2854528-20230315171310020-1971582232.png)
+
+   **注意：**
+
+   - 如果方法形参的名称和路径{}中的值不一致可以使用以下做法解决：
+
+     ![image-20230315105711458](https://img2023.cnblogs.com/blog/2854528/202303/2854528-20230315171309590-2092744283.png)
+
+   - 如果有多个参数需要传递可以使用以下方法解决：
+
+     ![image-20230315105819707](https://img2023.cnblogs.com/blog/2854528/202303/2854528-20230315171309042-900000466.png)
+
+#### 2. @RequestBody、@RequestParam、@PathVariable的区别与应用
+
+**区别：**
+
+- @RequestParam用于接收url地址传参或表单传参
+- @RequestBody用于接收json数据
+- @PathVariable用于接收路径参数，使用{参数名称}描述路径参数
+
+**应用：**
+
+- 在后期开发中，发送请求参数超过1个时，以json格式为主，@RequestBody应用较广
+- 如果发送非json格式数据，选用@RequestParam接收请求参数
+- 当参数数量较少时，例如1个，采用RESTful进行开发，可以使用@PathVariable接收请求路径变量，通常用于传递id值
+
+#### 3. RESTful快速开发
+
+![image-20230315111645034](https://img2023.cnblogs.com/blog/2854528/202303/2854528-20230315171308632-688514757.png)
+
+```java
+//@Controller
+//@ResponseBody
+@RestController
+@RequestMapping("/books")
+public class BookController {
+    //    @RequestMapping(value = "/books", method = RequestMethod.POST)
+    @PostMapping
+    public String save(@RequestBody Book book) {
+        System.out.println("book save..." + book);
+        return "{'module':'book save'}";
+    }
+
+    //    @RequestMapping(value = "/books/{id}", method = RequestMethod.DELETE)
+    @DeleteMapping("/{id}")
+    public String delete(@PathVariable Integer id) {
+        System.out.println("book delete..." + id);
+        return "{'module':'book delete'}";
+    }
+
+    //    @RequestMapping(value = "/books", method = RequestMethod.PUT)
+    @PutMapping
+    public String update(@RequestBody Book book) {
+        System.out.println("book update..." + book);
+        return "{'module':'book update'}";
+    }
+
+    //    @RequestMapping(value = "/books/{id}", method = RequestMethod.GET)
+    @GetMapping("/{id}")
+    public String getById(@PathVariable Integer id) {
+        System.out.println("book getById..." + id);
+        return "{'module':'book getById'}";
+    }
+
+    //    @RequestMapping(value = "/books", method = RequestMethod.GET)
+    @GetMapping
+    public String getAll() {
+        System.out.println("book getAll...");
+        return "{'module':'book getAll'}";
+    }
+}
+```
+
+![image-20230315111703877](https://img2023.cnblogs.com/blog/2854528/202303/2854528-20230315171308195-1115589610.png)
+
+
+
+### 六、SSM整合
+
+---
+
+前置操作，导入相应坐标
+
+```xml
+<dependencies>
+    <!--    SpringMVC-->
+    <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-webmvc</artifactId>
+        <version>5.2.10.RELEASE</version>
+    </dependency>
+    <!--    MySQL-->
+    <dependency>
+        <groupId>mysql</groupId>
+        <artifactId>mysql-connector-java</artifactId>
+        <version>8.0.32</version>
+    </dependency>
+    <!--    Druid-->
+    <dependency>
+        <groupId>com.alibaba</groupId>
+        <artifactId>druid</artifactId>
+        <version>1.1.10</version>
+    </dependency>
+    <!--    Spring整合JDBC-->
+    <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-jdbc</artifactId>
+        <version>5.2.10.RELEASE</version>
+    </dependency>
+    <!--    MyBatis-->
+    <dependency>
+        <groupId>org.mybatis</groupId>
+        <artifactId>mybatis</artifactId>
+        <version>3.5.5</version>
+    </dependency>
+    <!--        Spring整合MyBatis-->
+    <dependency>
+        <groupId>org.mybatis</groupId>
+        <artifactId>mybatis-spring</artifactId>
+        <version>1.3.0</version>
+    </dependency>
+    <!--    Junit-->
+    <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>4.13.2</version>
+        <scope>test</scope>
+    </dependency>
+    <!--    Spring整合Junit-->
+    <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-test</artifactId>
+        <version>5.2.10.RELEASE</version>
+    </dependency>
+    <!--Servlet-->
+    <dependency>
+        <groupId>javax.servlet</groupId>
+        <artifactId>javax.servlet-api</artifactId>
+        <version>4.0.0</version>
+        <scope>provided</scope>
+    </dependency>
+    <!--        jackson-->
+    <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-databind</artifactId>
+        <version>2.9.0</version>
+    </dependency>
+</dependencies>
+<build>
+    <plugins>
+        <plugin>
+            <!--        tomcat-->
+            <groupId>org.apache.tomcat.maven</groupId>
+            <artifactId>tomcat7-maven-plugin</artifactId>
+            <version>2.2</version>
+            <configuration>
+                <!--          设置解编码集-->
+                <uriEncoding>UTF-8</uriEncoding>
+            </configuration>
+        </plugin>
+    </plugins>
+</build>
+```
+
+#### 1. 配置整合
+
+1. JdbcByDruid
+
+   ```java
+   /**
+    * @Author: XIYAN
+    * @Date: 2023/3/11 16:25
+    * @注释:Spring整合JdbcByDruid
+    */
+   public class JdbcByDruidConfig {
+       //注册驱动
+       @Value("${driverClassName}")
+       private String driver;
+       //数据库连接源
+       @Value("${url}")
+       private String url;
+       //用户名
+       @Value("${username}")
+       private String username;
+       //密码
+       @Value("${password}")
+       private String password;
+       //初始连接大小
+       @Value("${initialSize}")
+       private int initialSize;
+       //最小空闲连接大小
+       @Value("${minIdle}")
+       private int minIdle;
+       //最大活动连接大小
+       @Value("${maxActive}")
+       private int maxActive;
+       //最长等待时间
+       @Value("${maxWait}")
+       private int maxWait;
+   
+       /**
+        * 初始化jdbcByDruid数据源连接池
+        *
+        * @return 返回初始化后的DruidDataSource对象
+        */
+       //声明为bean
+       @Bean
+       public DataSource druidDataSource() {
+           //创建DruidDataSource对象
+           DruidDataSource druidDataSource = new DruidDataSource();
+           //设置JDBC驱动
+           druidDataSource.setDriverClassName(driver);
+           //设置数据库连接源
+           druidDataSource.setUrl(url);
+           //设置用户名
+           druidDataSource.setUsername(username);
+           //设置密码
+           druidDataSource.setPassword(password);
+           //设置初始连接大小
+           druidDataSource.setInitialSize(initialSize);
+           //设置最小空闲连接大小
+           druidDataSource.setMinIdle(minIdle);
+           //设置最大活动连接大小
+           druidDataSource.setMaxActive(maxActive);
+           //设置最长等待时间
+           druidDataSource.setMaxWait(maxWait);
+           return druidDataSource;
+       }
+   
+       /**
+        * 设置Spring事务管理器
+        *
+        * @param druidDataSource 传入数据库连接池对象
+        * @return 返回配置好的事务处理器
+        */
+       //声明为bean
+       @Bean
+       public PlatformTransactionManager platformTransactionManager(DataSource druidDataSource) {
+           //创建DataSourceTransactionManager对象
+           DataSourceTransactionManager dataSourceTransactionManager = new DataSourceTransactionManager();
+           //设置数据库连接源对象的事务管理器为Spring事务管理器
+           dataSourceTransactionManager.setDataSource(druidDataSource);
+           return dataSourceTransactionManager;
+       }
+   }
+   ```
+
+2. MyBatis
+
+   ```java
+   /**
+    * @Author: XIYAN
+    * @Date: 2023/3/11 16:28
+    * @注释:Spring整合MyBatis
+    */
+   public class MyBatisConfig {
+       /**
+        * 初始化SqlSessionFactory并设置相关参数
+        *
+        * @param jdbcByDruidConfig 传入jdbcByDruid的数据库连接池对象
+        * @return 返回初始化后的SqlSession对象
+        */
+       //声明为bean
+       @Bean
+       public SqlSessionFactoryBean sqlSessionFactory(JdbcByDruidConfig jdbcByDruidConfig) {
+           //创建SqlSessionFactoryBean对象
+           SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
+           //设置类型别名的包路径
+           sqlSessionFactoryBean.setTypeAliasesPackage("com.springmvc_ssm.model");
+           //设置数据源
+           sqlSessionFactoryBean.setDataSource(jdbcByDruidConfig.druidDataSource());
+           return sqlSessionFactoryBean;
+       }
+   
+       /**
+        * 设置Mapper自动代理的映射文件
+        *
+        * @return 返回初始化后的Mapper自动代理映射对象
+        */
+       //声明为bean
+       @Bean
+       public MapperScannerConfigurer mapperScannerConfigurer() {
+           //创建mapper自动代理对象
+           MapperScannerConfigurer mapperScannerConfigurer = new MapperScannerConfigurer();
+           //设置包扫描路径
+           mapperScannerConfigurer.setBasePackage("com.springmvc_ssm.dao");
+           return mapperScannerConfigurer;
+       }
+   }
+   ```
+
+3. Spring
+
+   ```java
+   /**
+    * @Author: XIYAN
+    * @Date: 2023/3/11 16:12
+    * @注释:Spring配置
+    */
+   //声明该类为Spring的配置类
+   @Configuration
+   //规定包扫描
+   @ComponentScan({"com.springmvc_ssm.service","com.springmvc_ssm.dao"})
+   //导入Druid的配置文件信息
+   @PropertySource("classpath:druid.properties")
+   //开启注解式事务驱动
+   @EnableTransactionManagement
+   //开启注解式AOP开发
+   //@EnableAspectJAutoProxy
+   //导入其他配置类
+   @Import({JdbcByDruidConfig.class, MyBatisConfig.class})
+   public class SpringConfig {
+   
+   }
+   ```
+
+4. SpringMVC
+
+   - ServletContainersInit
+
+     ```java
+     /**
+      * @Author: XIYAN
+      * @Date: 2023/3/14 10:48
+      * @注释:Servlet容器与Spring容器的初始化配置
+      */
+     public class ServletContainersInitConfig extends AbstractAnnotationConfigDispatcherServletInitializer {
+         /**
+          * 获取Spring容器的配置类
+          *
+          * @return 返回初始化后的Spring容器
+          */
+         protected Class<?>[] getRootConfigClasses() {
+             return new Class[]{SpringConfig.class};
+         }
+     
+         /**
+          * 获取SpringMVC容器的配置类
+          *
+          * @return 返回初始化后的SpringMVC容器
+          */
+         protected Class<?>[] getServletConfigClasses() {
+             return new Class[]{SpringMvcConfig.class};
+         }
+     
+         /**
+          * 获取归属于SpringMVC处理的请求路径
+          *
+          * @return 返回所有请求路径
+          */
+         protected String[] getServletMappings() {
+             return new String[]{"/"};
+         }
+     
+         /**
+          * 处理中文乱码
+          *
+          * @return 返回初始化后的中文乱码过滤器
+          */
+         @Override
+         protected Filter[] getServletFilters() {
+             //创建CharacterEncodingFilter对象
+             CharacterEncodingFilter encodingFilter = new CharacterEncodingFilter();
+             //设置字符编码为UTF-8
+             encodingFilter.setEncoding("UTF-8");
+             encodingFilter.setForceEncoding(true);
+             return new Filter[]{encodingFilter};
+         }
+     }
+     ```
+
+   - SpringMVC
+
+     ```java
+     /**
+      * @Author: XIYAN
+      * @Date: 2023/3/14 10:45
+      * @注释:SpringMVC的配置
+      */
+     //声明该类为springmvc的配置类
+     @Configuration
+     //规定包扫描
+     @ComponentScan({"com.springmvc_ssm.controller", "com.springmvc_ssm.config"})
+     //开启json数据转java对象
+     @EnableWebMvc
+     public class SpringMvcConfig {
+     }
+     ```
+
+5. 静态资源过滤器
+
+   ```java
+   /**
+    * @Author: XIYAN
+    * @Date: 2023/3/15 11:38
+    * @注释:SpringMVC静态资源过滤
+    */
+   //声明该类为Spring的配置类
+   @Configuration
+   public class SpringMvcSupport extends WebMvcConfigurationSupport {
+       /**
+        * 静态资源过滤器
+        *
+        * @param registry
+        */
+       @Override
+       protected void addResourceHandlers(ResourceHandlerRegistry registry) {
+           //当访问/pages/**时，走/pages/路径
+           registry.addResourceHandler("/pages/**").addResourceLocations("/pages/");
+           //当访问/js/**时，走/js/路径
+           registry.addResourceHandler("/js/**").addResourceLocations("/js/");
+           //当访问/css/**时，走/css/路径
+           registry.addResourceHandler("/css/**").addResourceLocations("/css/");
+       }
+   }
+   ```
+
+#### 2. 功能测试
+
+1. model
+
+   ```java
+   /**
+    * @Author: XIYAN
+    * @Date: 2023/3/15 15:14
+    * @注释:图书实体
+    */
+   //自动装配get、set方法
+   @Data
+   public class Book {
+       //图书序号
+       private Integer id;
+       //图书类型
+       private String type;
+       //图书名称
+       private String name;
+       //图书简介
+       private String description;
+   
+       public Book() {
+       }
+   
+       public Book(Integer id, String type, String name, String description) {
+           this.id = id;
+           this.type = type;
+           this.name = name;
+           this.description = description;
+       }
+   
+       @Override
+       public String toString() {
+           return "Book{" +
+               "id=" + id +
+               ", type='" + type + '\'' +
+               ", name='" + name + '\'' +
+               ", description='" + description + '\'' +
+               '}';
+       }
+   }
+   ```
+
+2. dao
+
+   ```java
+   /**
+    * @Author: XIYAN
+    * @Date: 2023/3/15 15:15
+    * @注释:图书数据层接口
+    */
+   public interface BookDao {
+       /**
+        * 新增图书信息
+        *
+        * @param book 传入图书对象
+        */
+       //mapper自动代理（插入）
+       @Insert("insert into tbl_book (type,name,description) values(#{type},#{name},#{description})")
+       void save(Book book);
+   
+       /**
+        * 通过图书序号更新图书信息
+        *
+        * @param book 传入图书序号
+        */
+       //mapper自动代理（更新）
+       @Update("update tbl_book set type = #{type}, name = #{name}, description = #{description} where id = #{id}")
+       void update(Book book);
+   
+       /**
+        * 通过图书序号删除图书信息
+        *
+        * @param id 传入图书序号
+        */
+       //mapper自动代理（删除）
+       @Delete("delete from tbl_book where id = #{id}")
+       void delete(Integer id);
+   
+       /**
+        * 通过图书序号查询图书信息
+        *
+        * @param id 传入图书序号
+        * @return 返回图书信息
+        */
+       //mapper自动代理（查询）
+       @Select("select * from tbl_book where id = #{id}")
+       Book getById(Integer id);
+   
+       /**
+        * 查询全部图书信息
+        *
+        * @return 返回图书信息列表
+        */
+       //mapper自动代理（查询）
+       @Select("select * from tbl_book")
+       List<Book> getAll();
+   }
+   ```
+
+3. service
+
+   ```java
+   /**
+    * @Author: XIYAN
+    * @Date: 2023/3/15 15:15
+    * @注释:图书业务层接口
+    */
+   //使用Spring管理事务
+   @Transactional
+   public interface BookService {
+       /**
+        * 新增图书信息
+        *
+        * @param book 传入图书对象
+        * @return 返回执行结果
+        */
+       boolean save(Book book);
+   
+       /**
+        * 通过图书序号修改图书信息
+        *
+        * @param book 传入图书序号
+        * @return 返回执行结果
+        */
+       boolean update(Book book);
+   
+       /**
+        * 通过图书序号删除图书信息
+        *
+        * @param id 传入图书序号
+        * @return 返回执行结果
+        */
+       boolean delete(Integer id);
+   
+       /**
+        * 通过图书序号查询图书信息
+        *
+        * @param id 传入图书序号
+        * @return 返回图书信息
+        */
+       Book getById(Integer id);
+   
+       /**
+        * 查询全部图书信息
+        *
+        * @return 返回图书信息列表
+        */
+       List<Book> getAll();
+   }
+   ```
+
+   - 测试业务层接口
+
+     ```java
+     /**
+      * @Author: XIYAN
+      * @Date: 2023/3/15 16:08
+      * @注释:图书业务层接口测试
+      */
+     //指定当前类为Spring的测试类
+     @RunWith(SpringJUnit4ClassRunner.class)
+     //加载Spring测试配置
+     @ContextConfiguration(classes = SpringConfig.class)
+     public class BookServiceTest {
+         //自动装配Service
+         @Autowired
+         private BookService bookService;
+     
+         //测试新增图书信息
+         @Test
+         public void TestSave() {
+             Book book = new Book();
+             book.setName("111");
+             book.setType("123");
+             book.setDescription("123");
+             System.out.println(bookService.save(book));
+         }
+     
+         //测试通过图书序号更新图书信息
+         @Test
+         public void TestUpdate() {
+             Book book = new Book();
+             book.setName("222");
+             book.setId(14);
+             System.out.println(bookService.update(book));
+         }
+     
+         //测试通过图书序号删除图书信息
+         @Test
+         public void TestDelete() {
+             System.out.println(bookService.delete(13));
+         }
+     
+         //测试通过图书序号查询图书信息
+         @Test
+         public void TestGetById() {
+             System.out.println(bookService.getById(1));
+         }
+     
+         //测试查询全部图书信息列表
+         @Test
+         public void TestGetByAll() {
+             System.out.println(bookService.getAll());
+         }
+     }
+     ```
+
+4. controller
+
+   ```java
+   /**
+    * @Author: XIYAN
+    * @Date: 2023/3/15 15:17
+    * @注释:图书表现层功能实现
+    */
+   //使用基于RESTful开发的b'x层功能
+   @RestController
+   //请求路径前缀
+   @RequestMapping("/books")
+   public class BookController {
+       //自动装配Service
+       @Autowired
+       private BookService bookService;
+   
+       /**
+        * 新增图书信息
+        *
+        * @param book 传入图书信息
+        * @return
+        */
+       //POST请求
+       @PostMapping
+       //@RequestBody表示接收的请求参数为json数据
+       public boolean save(@RequestBody Book book) {
+           return bookService.save(book);
+       }
+   
+       /**
+        * 通过图书序号更新图书信息
+        *
+        * @param book 传入图书序号
+        * @return
+        */
+       //PUT请求
+       @PutMapping
+       //@RequestBody表示接收的请求参数为json数据
+       public boolean update(@RequestBody Book book) {
+           return bookService.update(book);
+       }
+   
+       /**
+        * 通过图书序号删除图书信息
+        *
+        * @param id 传入图书序号
+        * @return
+        */
+       //DELETE请求
+       @DeleteMapping("/{id}")
+       //@PathVariable表示当前参数来自路径参数
+       public boolean delete(@PathVariable Integer id) {
+           return bookService.delete(id);
+       }
+   
+       /**
+        * 通过图书序号查询图书信息
+        *
+        * @param id 传入图书序号
+        * @return
+        */
+       //GET请求
+       @GetMapping("/{id}")
+       //@PathVariable表示当前参数来自路径参数
+       public Book getById(@PathVariable Integer id) {
+           return bookService.getById(id);
+       }
+   
+       /**
+        * 查询全部图书信息
+        *
+        * @return
+        */
+       //GET请求
+       @GetMapping
+       public List<Book> getAll() {
+           return bookService.getAll();
+       }
+   }
+   ```
+
+   - 测试表现层功能实现
+
+     ![image-20230315170838100](https://img2023.cnblogs.com/blog/2854528/202303/2854528-20230315171307695-1963836651.png)
+
+     ![image-20230315170914577](https://img2023.cnblogs.com/blog/2854528/202303/2854528-20230315171307235-1677571574.png)
+
+     ![image-20230315170950223](https://img2023.cnblogs.com/blog/2854528/202303/2854528-20230315171306821-1984229808.png)
+
+     ![image-20230315171004650](https://img2023.cnblogs.com/blog/2854528/202303/2854528-20230315171306396-84746371.png)
+
+     ![image-20230315171020336](https://img2023.cnblogs.com/blog/2854528/202303/2854528-20230315171305738-683762264.png)
+
+
 
 
 
