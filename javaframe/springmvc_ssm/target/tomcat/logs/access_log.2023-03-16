@@ -5,3 +5,5 @@
 0:0:0:0:0:0:0:1 - - [16/Mar/2023:09:50:31 +0800] "GET /springmvc_ssm/books/1 HTTP/1.1" 200 188 http-bio-8080-exec-1 629
 0:0:0:0:0:0:0:1 - - [16/Mar/2023:09:50:37 +0800] "GET /springmvc_ssm/books HTTP/1.1" 200 2367 http-bio-8080-exec-2 22
 0:0:0:0:0:0:0:1 - - [16/Mar/2023:09:50:42 +0800] "POST /springmvc_ssm/books HTTP/1.1" 200 48 http-bio-8080-exec-3 71
+0:0:0:0:0:0:0:1 - - [16/Mar/2023:11:15:05 +0800] "POST /springmvc_ssm/books HTTP/1.1" 200 48 http-bio-8080-exec-1 613
+0:0:0:0:0:0:0:1 - - [16/Mar/2023:11:15:18 +0800] "GET /springmvc_ssm/books/1 HTTP/1.1" 200 188 http-bio-8080-exec-2 66

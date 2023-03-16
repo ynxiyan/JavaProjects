@@ -18,28 +18,31 @@ public interface BookDao {
      * 新增图书信息
      *
      * @param book 传入图书对象
+     * @return 返回受影响的行数
      */
     //mapper自动代理（插入）
     @Insert("insert into tbl_book (type,name,description) values(#{type},#{name},#{description})")
-    void save(Book book);
+    int save(Book book);
 
     /**
      * 通过图书序号更新图书信息
      *
      * @param book 传入图书序号
+     * @return 返回受影响的行数
      */
     //mapper自动代理（更新）
     @Update("update tbl_book set type = #{type}, name = #{name}, description = #{description} where id = #{id}")
-    void update(Book book);
+    int update(Book book);
 
     /**
      * 通过图书序号删除图书信息
      *
      * @param id 传入图书序号
+     * @return 返回受影响的行数
      */
     //mapper自动代理（删除）
     @Delete("delete from tbl_book where id = #{id}")
-    void delete(Integer id);
+    int delete(Integer id);
 
     /**
      * 通过图书序号查询图书信息
