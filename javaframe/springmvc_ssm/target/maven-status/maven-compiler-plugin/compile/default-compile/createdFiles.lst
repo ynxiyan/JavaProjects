@@ -1,11 +1,13 @@
 com\springmvc_ssm\config\SpringMvcConfig.class
 com\springmvc_ssm\dao\BookDao.class
 com\springmvc_ssm\config\MyBatisConfig.class
-com\springmvc_ssm\controller\BookController.class
-com\springmvc_ssm\config\SpringConfig.class
 com\springmvc_ssm\config\ServletContainersInitConfig.class
 com\springmvc_ssm\model\Book.class
+com\springmvc_ssm\controller\Result.class
+com\springmvc_ssm\config\SpringMvcSupport.class
+com\springmvc_ssm\controller\BookController.class
+com\springmvc_ssm\controller\Code.class
+com\springmvc_ssm\config\SpringConfig.class
 com\springmvc_ssm\config\JdbcByDruidConfig.class
 com\springmvc_ssm\service\impl\BookServiceImpl.class
-com\springmvc_ssm\config\SpringMvcSupport.class
 com\springmvc_ssm\service\BookService.class

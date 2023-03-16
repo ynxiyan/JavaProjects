@@ -30,8 +30,9 @@ public class BookController {
     //POST请求
     @PostMapping
     //@RequestBody表示接收的请求参数为json数据
-    public boolean save(@RequestBody Book book) {
-        return bookService.save(book);
+    public Result save(@RequestBody Book book) {
+        boolean save = bookService.save(book);
+        return new Result(save ? Code.SAVE_OK : Code.SAVE_ERROR, save);
     }
 
     /**
@@ -43,8 +44,9 @@ public class BookController {
     //PUT请求
     @PutMapping
     //@RequestBody表示接收的请求参数为json数据
-    public boolean update(@RequestBody Book book) {
-        return bookService.update(book);
+    public Result update(@RequestBody Book book) {
+        boolean update = bookService.update(book);
+        return new Result(update ? Code.UPDATE_OK : Code.UPDATE_ERROR, update);
     }
 
     /**
@@ -56,8 +58,9 @@ public class BookController {
     //DELETE请求
     @DeleteMapping("/{id}")
     //@PathVariable表示当前参数来自路径参数
-    public boolean delete(@PathVariable Integer id) {
-        return bookService.delete(id);
+    public Result delete(@PathVariable Integer id) {
+        boolean delete = bookService.delete(id);
+        return new Result(delete ? Code.DELETE_OK : Code.DELETE_ERROR, delete);
     }
 
     /**
@@ -69,8 +72,11 @@ public class BookController {
     //GET请求
     @GetMapping("/{id}")
     //@PathVariable表示当前参数来自路径参数
-    public Book getById(@PathVariable Integer id) {
-        return bookService.getById(id);
+    public Result getById(@PathVariable Integer id) {
+        Book book = bookService.getById(id);
+        Integer code = book != null ? Code.GET_OK : Code.GET_ERROR;
+        String message = book != null ? "" : "查询失败，请重试";
+        return new Result(code, book, message);
     }
 
     /**
@@ -80,7 +86,10 @@ public class BookController {
      */
     //GET请求
     @GetMapping
-    public List<Book> getAll() {
-        return bookService.getAll();
+    public Result getAll() {
+        List<Book> bookList = bookService.getAll();
+        Integer code = bookList != null ? Code.GET_OK : Code.GET_ERROR;
+        String message = bookList != null ? "" : "查询失败，请重试";
+        return new Result(code, bookList, message);
     }
 }

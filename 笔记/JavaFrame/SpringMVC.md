@@ -1149,7 +1149,7 @@ public class BookController {
     * @Date: 2023/3/15 15:17
     * @注释:图书表现层功能实现
     */
-   //使用基于RESTful开发的b'x层功能
+   //使用基于RESTful开发的表现层功能
    @RestController
    //请求路径前缀
    @RequestMapping("/books")
@@ -1235,9 +1235,277 @@ public class BookController {
 
      ![image-20230315171020336](https://img2023.cnblogs.com/blog/2854528/202303/2854528-20230315171305738-683762264.png)
 
+#### 3. 表现层数据封装
 
+1. 设置统一数据返回结果类
 
+   ```java
+   /**
+    * @Author: XIYAN
+    * @Date: 2023/3/16 9:19
+    * @注释:表现层数据封装
+    */
+   //自动装配get、set
+   @Data
+   public class Result {
+       //状态码
+       private Integer code;
+       //数据
+       private Object data;
+       //消息
+       private String msg;
+   
+       public Result() {
+       }
+   
+       public Result(Integer code, Object data) {
+           this.code = code;
+           this.data = data;
+       }
+   
+       public Result(Integer code, Object data, String msg) {
+           this.code = code;
+           this.data = data;
+           this.msg = msg;
+       }
+   }
+   ```
 
+2. 定义状态码
+
+   ```java
+   /**
+    * @Author: XIYAN
+    * @Date: 2023/3/16 9:26
+    * @注释:状态码
+    */
+   public class Code {
+       //新增成功
+       public static final Integer SAVE_OK = 20011;
+       //删除成功
+       public static final Integer DELETE_OK = 20021;
+       //更新成功
+       public static final Integer UPDATE_OK = 20031;
+       //查询成功
+       public static final Integer GET_OK = 20041;
+       //新增失败
+       public static final Integer SAVE_ERROR = 20010;
+       //删除失败
+       public static final Integer DELETE_ERROR = 20020;
+       //更新失败
+       public static final Integer UPDATE_ERROR = 20030;
+       //查询失败
+       public static final Integer GET_ERROR = 20040;
+       //系统错误
+       public static final Integer SYSTEM_ERROR = 50001;
+       //服务器访问超时
+       public static final Integer SYSTEM_TIMEOUT_ERROR = 50002;
+       //系统未知错误
+       public static final Integer SYSTEM_UNKNOW_ERROR = 59999;
+       //业务错误
+       public static final Integer BUSINESS_ERROR = 60001;
+   }
+   ```
+
+3. 表现层功能实现（数据封装）
+
+   ```java
+   /**
+    * @Author: XIYAN
+    * @Date: 2023/3/15 15:17
+    * @注释:图书表现层功能实现
+    */
+   //使用基于RESTful开发的业务层功能
+   @RestController
+   //请求路径前缀
+   @RequestMapping("/books")
+   public class BookController {
+       //自动装配Service
+       @Autowired
+       private BookService bookService;
+   
+       /**
+        * 新增图书信息
+        *
+        * @param book 传入图书信息
+        * @return
+        */
+       //POST请求
+       @PostMapping
+       //@RequestBody表示接收的请求参数为json数据
+       public Result save(@RequestBody Book book) {
+           boolean save = bookService.save(book);
+           return new Result(save ? Code.SAVE_OK : Code.SAVE_ERROR, save);
+       }
+   
+       /**
+        * 通过图书序号更新图书信息
+        *
+        * @param book 传入图书序号
+        * @return
+        */
+       //PUT请求
+       @PutMapping
+       //@RequestBody表示接收的请求参数为json数据
+       public Result update(@RequestBody Book book) {
+           boolean update = bookService.update(book);
+           return new Result(update ? Code.UPDATE_OK : Code.UPDATE_ERROR, update);
+       }
+   
+       /**
+        * 通过图书序号删除图书信息
+        *
+        * @param id 传入图书序号
+        * @return
+        */
+       //DELETE请求
+       @DeleteMapping("/{id}")
+       //@PathVariable表示当前参数来自路径参数
+       public Result delete(@PathVariable Integer id) {
+           boolean delete = bookService.delete(id);
+           return new Result(delete ? Code.DELETE_OK : Code.DELETE_ERROR, delete);
+       }
+   
+       /**
+        * 通过图书序号查询图书信息
+        *
+        * @param id 传入图书序号
+        * @return
+        */
+       //GET请求
+       @GetMapping("/{id}")
+       //@PathVariable表示当前参数来自路径参数
+       public Result getById(@PathVariable Integer id) {
+           Book book = bookService.getById(id);
+           Integer code = book != null ? Code.GET_OK : Code.GET_ERROR;
+           String message = book != null ? "" : "查询失败，请重试";
+           return new Result(code, book, message);
+       }
+   
+       /**
+        * 查询全部图书信息
+        *
+        * @return
+        */
+       //GET请求
+       @GetMapping
+       public Result getAll() {
+           List<Book> bookList = bookService.getAll();
+           Integer code = bookList != null ? Code.GET_OK : Code.GET_ERROR;
+           String message = bookList != null ? "" : "查询失败，请重试";
+           return new Result(code, bookList, message);
+       }
+   }
+   ```
+
+#### 4. 异常处理器
+
+集中的、统一的处理项目中出现的异常
+
+![image-20230316095919468](https://img2023.cnblogs.com/blog/2854528/202303/2854528-20230316111122865-1947271281.png)
+
+创建SpringMVC、RESTful的统一异常处理类
+
+![image-20230316101609257](https://img2023.cnblogs.com/blog/2854528/202303/2854528-20230316111122202-672532983.png)
+
+**注：**此注解自带@ResponseBody注解与@Component注解，具备对应的功能
+
+![image-20230316101654631](https://img2023.cnblogs.com/blog/2854528/202303/2854528-20230316111121633-1627180569.png)
+
+**注：**此类方法可以根据处理的异常不同，制作多个方法分别处理对应的异常
+
+```java
+/**
+ * @Author: XIYAN
+ * @Date: 2023/3/16 10:05
+ * @注释:SpringMVC统一异常处理器
+ */
+//声明该类为SpringMVC、RESTful的统一异常处理类
+@RestControllerAdvice
+public class ProjectExceptionAdvice {
+    //标记拦截的异常类型（处理系统异常）
+    @ExceptionHandler(SystemException.class)
+    public Result doSystemException(SystemException systemException) {
+        //记录日志
+        //发送消息给运维
+        //发送邮箱将systemException对象给开发者
+        return new Result(systemException.getCode(), null, systemException.getMessage());
+    }
+
+    //标记拦截的异常类型（处理业务异常）
+    @ExceptionHandler(BusinessException.class)
+    public Result doBusinessException(BusinessException businessException) {
+        return new Result(businessException.getCode(), null, businessException.getMessage());
+    }
+
+    //标记拦截的异常类型（处理其他异常）
+    @ExceptionHandler(Exception.class)
+    public Result doException(Exception exception) {
+        //记录日志
+        //发送消息给运维
+        //发送邮箱将exception对象给开发者
+        return new Result(Code.SYSTEM_UNKNOW_ERROR, null, "系统繁忙，请稍后再试");
+    }
+}
+```
+
+<a style="color:red">注意：</a>发消息和记录日志对用户来说是不可见的，属于后台程序 
+
+#### 5. 项目异常处理方案
+
+- 业务异常（BusinessException） ：发送对应消息传递给用户，提醒规范操作；常见的就是提示用户名已存在或密码格式不正确等
+
+  ```java
+  /**
+   * @Author: XIYAN
+   * @Date: 2023/3/16 10:31
+   * @注释:处理业务异常
+   */
+  //自动装配get、set
+  @Data
+  public class BusinessException extends RuntimeException {
+      //异常状态码
+      private Integer code;
+  
+      public BusinessException(Integer code, String message) {
+          super(message);
+          this.code = code;
+      }
+  
+      public BusinessException(Integer code, String message, Throwable cause) {
+          super(message, cause);
+          this.code = code;
+      }
+  }
+  ```
+
+- 系统异常（SystemException） ：发送固定消息传递给用户，安抚用户；如系统繁忙，请稍后再试、系统正在维护升级，请稍后再试、系统出问题，请联系系统管理员等发送特定消息给运维人员，提醒维护，可以发送短信、邮箱或者是公司内部通信软件
+
+  ```java
+  /**
+   * @Author: XIYAN
+   * @Date: 2023/3/16 10:31
+   * @注释:处理系统异常
+   */
+  //自动装配get、set
+  @Data
+  public class SystemException extends RuntimeException {
+      //异常状态码
+      private Integer code;
+  
+      public SystemException(Integer code, String message) {
+          super(message);
+          this.code = code;
+      }
+  
+      public SystemException(Integer code, String message, Throwable cause) {
+          super(message, cause);
+          this.code = code;
+      }
+  }
+  ```
+
+- 其他异常（Exception） ：发送固定消息传递给用户，安抚用户；发送特定消息给编程人员，提醒维护（纳入预期范围内） 一般是程序没有考虑全，比如未做非空校验等
 
 
 
