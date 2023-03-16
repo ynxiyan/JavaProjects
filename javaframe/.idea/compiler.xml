@@ -11,6 +11,7 @@
         <module name="springmvc_ssm" />
         <module name="spring_note" />
         <module name="spring_disposition" />
+        <module name="springmvc_interceptor" />
         <module name="springmvc_demo" />
         <module name="spring_mybatis" />
         <module name="springmvc_restful" />

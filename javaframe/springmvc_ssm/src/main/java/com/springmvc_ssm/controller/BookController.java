@@ -1,5 +1,6 @@
 package com.springmvc_ssm.controller;
 
+import com.springmvc_ssm.exception.BusinessException;
 import com.springmvc_ssm.model.Book;
 import com.springmvc_ssm.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,12 @@ public class BookController {
     @PostMapping
     //@RequestBody表示接收的请求参数为json数据
     public Result save(@RequestBody Book book) {
-        boolean save = bookService.save(book);
+        boolean save;
+        try {
+            save = bookService.save(book);
+        } catch (Exception exception) {
+            throw new BusinessException(Code.BUSINESS_ERROR, "请合法输入");
+        }
         return new Result(save ? Code.SAVE_OK : Code.SAVE_ERROR, save);
     }
 
@@ -75,7 +81,7 @@ public class BookController {
     public Result getById(@PathVariable Integer id) {
         Book book = bookService.getById(id);
         Integer code = book != null ? Code.GET_OK : Code.GET_ERROR;
-        String message = book != null ? "" : "查询失败，请重试";
+        String message = book != null ? "查询成功" : "查询失败，请重试";
         return new Result(code, book, message);
     }
 
@@ -89,7 +95,7 @@ public class BookController {
     public Result getAll() {
         List<Book> bookList = bookService.getAll();
         Integer code = bookList != null ? Code.GET_OK : Code.GET_ERROR;
-        String message = bookList != null ? "" : "查询失败，请重试";
+        String message = bookList != null ? "查询成功" : "查询失败，请重试";
         return new Result(code, bookList, message);
     }
 }

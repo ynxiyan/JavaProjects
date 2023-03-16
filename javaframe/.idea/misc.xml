@@ -9,6 +9,7 @@
   <component name="FrameworkDetectionExcludesConfiguration">
     <file type="web" url="file://$PROJECT_DIR$/mybatis_demo" />
     <file type="web" url="file://$PROJECT_DIR$/springmvc_demo" />
+    <file type="web" url="file://$PROJECT_DIR$/springmvc_interceptor" />
     <file type="web" url="file://$PROJECT_DIR$/springmvc_restful" />
     <file type="web" url="file://$PROJECT_DIR$/springmvc_ssm" />
   </component>
@@ -27,6 +28,7 @@
         <option value="$PROJECT_DIR$/springmvc_demo/pom.xml" />
         <option value="$PROJECT_DIR$/springmvc_restful/pom.xml" />
         <option value="$PROJECT_DIR$/springmvc_ssm/pom.xml" />
+        <option value="$PROJECT_DIR$/springmvc_interceptor/pom.xml" />
       </list>
     </option>
   </component>

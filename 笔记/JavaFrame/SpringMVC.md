@@ -1511,6 +1511,147 @@ public class ProjectExceptionAdvice {
 
 
 
+### 七、SpringMVC拦截器
+
+---
+
+![image-20230316143655757](https://img2023.cnblogs.com/blog/2854528/202303/2854528-20230316155447078-1575489186.png)
+
+拦截器 （lnterceptor）：是一种动态拦截方法调用的机制，在SpringMVC中动态拦截控制器方法的执行
+
+**作用：**在指定的方法调用前后执行预先设定的代码、阻止原始方法的执行
+
+**拦截器与过滤器区别：**
+
+- 归属不同：Filter属于servlet技术，lnterceptor属于SpringMVC技术
+-  拦截内容不同：Filter对所有访问进行增强，lnterceptor仅针对SpringMVC的访问进行增强
+
+![image-20230316144631305](https://img2023.cnblogs.com/blog/2854528/202303/2854528-20230316155446691-1355991360.png)
+
+**总结：lnterceptor在访问控制器的前面和后面执行**
+
+#### 1. 使用步骤
+
+1. 创建SpringMVC拦截器
+
+   ```java
+   /**
+    * @Author: XIYAN
+    * @Date: 2023/3/16 15:02
+    * @注释:SpringMVC拦截器
+    */
+   //声明该类为SpringMVC的容器bean
+   @Component
+   public class ProjectInterceptor implements HandlerInterceptor {
+       /**
+        * 原始方法调用前执行的操作
+        *
+        * @param request
+        * @param response
+        * @param handler
+        * @return
+        * @throws Exception
+        */
+       public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+           //true表示放行原始操作、false表示终止原始操作
+           return true;
+       }
+   
+       /**
+        * 原始方法调用后执行的操作
+        *
+        * @param request
+        * @param response
+        * @param handler
+        * @param modelAndView
+        * @throws Exception
+        */
+       public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
+       }
+   
+       /**
+        * 原始方法调用完成后执行的操作
+        *
+        * @param request
+        * @param response
+        * @param handler
+        * @param ex
+        * @throws Exception
+        */
+       public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+       }
+   }
+   ```
+
+2. 配置SpringMVC拦截器
+
+   ```java
+   /**
+    * @Author: XIYAN
+    * @Date: 2023/3/14 10:45
+    * @注释:SpringMVC的配置
+    */
+   //声明该类为springmvc的配置类
+   @Configuration
+   //规定包扫描
+   @ComponentScan("com.springmvc_interceptor.controller")
+   //开启json数据转java对象
+   @EnableWebMvc
+   public class SpringMvcConfig implements WebMvcConfigurer {
+       //自动装配SpringMVC容器bean（拦截器）
+       @Autowired
+       private ProjectInterceptor interceptor;
+   
+       /**
+        * 静态资源过滤器
+        *
+        * @param registry
+        */
+       public void addResourceHandlers(ResourceHandlerRegistry registry) {
+           //当访问/pages/**时，走/pages/路径
+           registry.addResourceHandler("/pages/**").addResourceLocations("/pages/");
+           //当访问/js/**时，走/js/路径
+           registry.addResourceHandler("/js/**").addResourceLocations("/js/");
+           //当访问/css/**时，走/css/路径
+           registry.addResourceHandler("/css/**").addResourceLocations("/css/");
+       }
+   
+       /**
+        * 动态资源拦截器
+        *
+        * @param registry
+        */
+       public void addInterceptors(InterceptorRegistry registry) {
+           //当访问/books、/books/*时，拦截
+           registry.addInterceptor(interceptor).addPathPatterns("/books", "/books/*");
+       }
+   }
+   ```
+
+**拦截器的执行流程：**
+
+![image-20230316153318225](https://img2023.cnblogs.com/blog/2854528/202303/2854528-20230316155446337-1142083468.png)
+
+#### 2. 拦截器参数
+
+1. 前置处理
+
+   ![image-20230316154140184](https://img2023.cnblogs.com/blog/2854528/202303/2854528-20230316155445959-1095333188.png)
+
+2. 后置处理
+
+   ![image-20230316154204677](https://img2023.cnblogs.com/blog/2854528/202303/2854528-20230316155445520-1068548709.png)
+
+3. 完成后处理
+
+   ![image-20230316154220793](https://img2023.cnblogs.com/blog/2854528/202303/2854528-20230316155445146-188651288.png)
+
+#### 3. 拦截器链配置
+
+![image-20230316154912476](https://img2023.cnblogs.com/blog/2854528/202303/2854528-20230316155444577-1219954435.png)
+
+
+
 
 
 所有的笔记来源于：[黑马程序员的个人空间_哔哩哔哩_bilibili](https://space.bilibili.com/37974444)
