@@ -37,5 +37,4 @@ git remote  // 将会显示 master(默认远程主仓别名) 和 private (自定
 git remote private // 删除远程仓
 git remote // 只会显示master(默认远程主仓别名)
 ```
-"# JavaProjects" 
-"# JavaProjects" 
+"# JavaProjects"

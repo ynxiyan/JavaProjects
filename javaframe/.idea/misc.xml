@@ -12,6 +12,7 @@
     <file type="web" url="file://$PROJECT_DIR$/springmvc_interceptor" />
     <file type="web" url="file://$PROJECT_DIR$/springmvc_restful" />
     <file type="web" url="file://$PROJECT_DIR$/springmvc_ssm" />
+    <file type="web" url="file://$PROJECT_DIR$/ssm_maven" />
   </component>
   <component name="MavenProjectsManager">
     <option name="originalFiles">
@@ -29,6 +30,8 @@
         <option value="$PROJECT_DIR$/springmvc_restful/pom.xml" />
         <option value="$PROJECT_DIR$/springmvc_ssm/pom.xml" />
         <option value="$PROJECT_DIR$/springmvc_interceptor/pom.xml" />
+        <option value="$PROJECT_DIR$/ssm_maven/pom.xml" />
+        <option value="$PROJECT_DIR$/ssm_maven_model/pom.xml" />
       </list>
     </option>
   </component>
