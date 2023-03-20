@@ -21,5 +21,19 @@
             <scope>compile</scope>
         </dependency>
     </dependencies>
-
+    <!--    配置当前工程保存在私服中的具体位置-->
+    <distributionManagement>
+        <!--    快照仓库配置-->
+        <snapshotRepository>
+            <id>yn.xiyan_snapshot</id>
+            <name>快照</name>
+            <url>http://localhost:8081/repository/yn.xiyan_snapshot/</url>
+        </snapshotRepository>
+        <!--    发布仓库配置-->
+        <repository>
+            <id>yn.xiyan_release</id>
+            <name>发布</name>
+            <url>http://localhost:8081/repository/yn.xiyan_release/</url>
+        </repository>
+    </distributionManagement>
 </project>

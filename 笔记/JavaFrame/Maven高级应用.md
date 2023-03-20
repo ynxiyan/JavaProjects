@@ -381,8 +381,75 @@
 
 修改基础配置信息
 
-- 安装路径下etc目录中nexus-default.properties文件保存有nexus基础配置信息，例如 默认访问端口。
+- 安装路径下etc目录中nexus-default.properties文件保存有nexus基础配置信息，例如 默认访问端口
 
 修改服务器运行配置信息
 
-- 安装路径下bin目录中nexus.vmoptions文件保存有nexus服务器启动对应的配置信息，例如 默认占用内存空间。
+- 安装路径下bin目录中nexus.vmoptions文件保存有nexus服务器启动对应的配置信息，例如 默认占用内存空间
+
+1. 仓库分类
+
+   ![image-20230320091723692](https://img2023.cnblogs.com/blog/2854528/202303/2854528-20230320100304754-1332484876.png)
+
+2. 本地仓库配置
+
+   ![image-20230320092344116](https://img2023.cnblogs.com/blog/2854528/202303/2854528-20230320100304095-419511487.png)
+
+   - 配置私服的访问权限
+
+     ```xml
+     <server>
+         <id>yn.xiyan_snapshot</id>
+         <username>admin</username>
+         <password>123456</password>
+     </server>
+     <server>
+         <id>yn.xiyan_release</id>
+         <username>admin</username>
+         <password>123456</password>
+     </server>
+     ```
+
+   - 配置服务器映射地址
+
+     ```xml
+     <mirror>
+         <id>maven-public</id>
+         <mirrorOf>*</mirrorOf>
+         <name>本地私服</name>
+         <url>http://localhost:8081/repository/maven-public/</url>
+     </mirror>
+     ```
+
+     注意：为了避免阿里云Maven私服地址的影响，建议先将之前配置的阿里云Maven私服镜像地址注释掉
+
+   - 配置上传位置
+
+     ```xml
+     <!--    配置当前工程保存在私服中的具体位置-->
+     <distributionManagement>
+         <!--    快照仓库配置-->
+         <snapshotRepository>
+             <id>yn.xiyan_snapshot</id>
+             <name>快照</name>
+             <url>http://localhost:8081/repository/yn.xiyan_snapshot/</url>
+         </snapshotRepository>
+         <!--    发布仓库配置-->
+         <repository>
+             <id>yn.xiyan_release</id>
+             <name>发布</name> 				 
+             <url>http://localhost:8081/repository/yn.xiyan_release/</url>
+         </repository>
+     </distributionManagement>
+     ```
+
+   - 发布指令
+
+     ```bash
+     mvn deploy
+     ```
+
+
+
+
+所有的笔记来源于：[黑马程序员的个人空间_哔哩哔哩_bilibili](https://space.bilibili.com/37974444)

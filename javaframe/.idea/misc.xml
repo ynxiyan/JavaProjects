@@ -32,6 +32,8 @@
         <option value="$PROJECT_DIR$/springmvc_interceptor/pom.xml" />
         <option value="$PROJECT_DIR$/ssm_maven/pom.xml" />
         <option value="$PROJECT_DIR$/ssm_maven_model/pom.xml" />
+        <option value="$PROJECT_DIR$/springboot_demo/pom.xml" />
+        <option value="$PROJECT_DIR$/springboot_ssm/pom.xml" />
       </list>
     </option>
   </component>
