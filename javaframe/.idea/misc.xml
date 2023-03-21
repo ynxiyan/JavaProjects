@@ -34,6 +34,7 @@
         <option value="$PROJECT_DIR$/ssm_maven_model/pom.xml" />
         <option value="$PROJECT_DIR$/springboot_demo/pom.xml" />
         <option value="$PROJECT_DIR$/springboot_ssm/pom.xml" />
+        <option value="$PROJECT_DIR$/springboot_mybatisplus/pom.xml" />
       </list>
     </option>
   </component>

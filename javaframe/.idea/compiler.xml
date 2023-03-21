@@ -7,6 +7,7 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="springboot_mybatisplus" />
         <module name="spring_disposition" />
         <module name="springmvc_interceptor" />
         <module name="springboot_demo" />
@@ -31,6 +32,7 @@
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="springboot_demo" options="-parameters" />
+      <module name="springboot_mybatisplus" options="-parameters" />
       <module name="springboot_ssm" options="-parameters" />
       <module name="springboot_test" options="-parameters" />
     </option>
