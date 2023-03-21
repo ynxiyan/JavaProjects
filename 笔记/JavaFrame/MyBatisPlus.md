@@ -139,14 +139,6 @@ void testSelectAll() {
 }
 ```
 
-##### 1-6. 分页查询
-
-
-
-##### 1-7. 按条件查询
-
-
-
 #### 2. LomBok
 
 Lombok，是一个Java类库，提供了一组注解，简化POJO实体类开发
@@ -195,5 +187,233 @@ public class User {
 }
 ```
 
-#### 3. 分页功能
+#### 3. 分页插件
+
+##### 3-1. Page
+
+Page继承了 IPage 类，实现了 简单分页模型 如果你要实现自己的分页模型可以继承 Page类或者实现 IPage类
+
+**Page的属性：**
+
+![image-20230321145404138](https://img2023.cnblogs.com/blog/2854528/202303/2854528-20230321165318744-1406262292.png)
+
+图片来源于：[分页插件 | MyBatis-Plus (baomidou.com)](https://baomidou.com/pages/97710a/#page)
+
+##### 3-2. 分页插件的使用
+
+1. 配置MyBatisPlus的分页拦截器
+
+   ```java
+   /**
+    * @Author: XIYAN
+    * @Date: 2023/3/21 14:23
+    * @注释:MyBatisPlus配置
+    */
+   @Configuration
+   public class MyBaitsPlusConfig {
+       /**
+        * MyBatisPlus拦截器
+        *
+        * @return
+        */
+       @Bean
+       public MybatisPlusInterceptor mybatisPlusInterceptor() {
+           //创建拦截器对象
+           MybatisPlusInterceptor mybatisPlusInterceptor = new MybatisPlusInterceptor();
+           //添加分页拦截器
+           mybatisPlusInterceptor.addInnerInterceptor(new PaginationInnerInterceptor());
+           return mybatisPlusInterceptor;
+       }
+   }
+   ```
+
+2. 测试
+
+   ```java
+   @Test
+   void testSelectAllPage() {
+       IPage page = new Page(1,4);
+       userDao.selectPage(page, null);
+       System.out.println("当前页码为：" + page.getCurrent() + "，每页显示：" + page.getSize() + "条，共：" + page.getPages() + "页");
+       System.out.println("总计：" + page.getTotal() + "条");
+       page.getRecords().forEach(System.out::println);
+   }
+   ```
+
+**附：**开启日志
+
+```yaml
+#  配置MyBatisPlus
+mybatis-plus:
+  configuration:
+    #      输出日志到控制台
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+```
+
+#### 4. DQL编程控制
+
+##### 4-1. 条件查询方式
+
+- 方式一：字符串
+
+  ```java
+  //字符串
+  QueryWrapper queryWrapper = new QueryWrapper();
+  //条件：年龄小于13
+  queryWrapper.lt("age", 13);
+  System.out.println(userDao.selectList(queryWrapper));
+  ```
+
+- 方式二：lambda
+
+  ```java
+  //lambda
+  QueryWrapper<User> queryWrapper = new QueryWrapper();
+  //条件：年龄小于13
+  queryWrapper.lambda().lt(User::getAge,13);
+  System.out.println(userDao.selectList(queryWrapper));
+  ```
+
+- 方式三：lambda(LambdaQueryWrapper)
+
+  ```java
+  //lambda(LambdaQueryWrapper)
+  LambdaQueryWrapper<User> lambdaQueryWrapper = new LambdaQueryWrapper();
+  //条件：年龄小于13
+  lambdaQueryWrapper.lt(User::getAge,13);
+  System.out.println(userDao.selectList(lambdaQueryWrapper));
+  ```
+
+**注：**or()相当于sql语句的or关键字,默认为and
+
+##### 4-2. 条件NULL值处理
+
+在条件查询中如若出现某一条件为空可使用以下方法解决：
+
+1. 创建Query实体类，继承于model实体
+
+   ```java
+   @Data
+   @NoArgsConstructor
+   @AllArgsConstructor
+   public class UserQuery extends User {
+       private Integer qAge;
+   }
+   ```
+
+2. 使用表达式判断当前条件是否为空
+
+   ```java
+   //模拟页面传递过来的查询数据 
+   UserQuery uq = new UserQuery(); 
+   uq.setAge(10); 
+   uq.setQAge(30); 
+   LambdaQueryWrapper<User> lqw = new LambdaQueryWrapper<User>(); lqw.lt(uq.getQAge() != null,User::getAge, uq.getQAge()); lqw.gt(uq.getAge() != null,User::getAge, uq.getAge()); 
+   System.out.println(userDao.selectList(lqw));
+   ```
+
+##### 4-2. 查询投影
+
+![image-20230321155659917](https://img2023.cnblogs.com/blog/2854528/202303/2854528-20230321165318296-1366948745.png)
+
+##### 4-3. 查询条件设定
+
+1. 等值匹配
+
+   eq()： 相当于 =,对应的sql语句为：
+
+   ```mysql
+   SELECT id,name,password,age,tel FROM user WHERE (name = ? AND password = ?)
+   ```
+
+   - selectList：查询结果为多个或者单个
+
+   - selectOne:查询结果为单个
+
+2. 范围匹配（>、>=、<、<=、between）
+
+   - gt():大于(>)
+   - ge():大于等于(>=) 
+   - lt():小于(<) 
+   - lte():小于等于(<=)
+   - between():between ? and ?
+
+3. 模糊匹配（like）
+
+   - like():前后加百分号,如 %J% 
+   - likeLeft():前面加百分号,如 %J 
+   - likeRight():后面加百分号,如 J%
+
+4. 排序（order）
+
+   - orderBy排序 
+     - condition:条件，true则添加排序，false则不添加排序 
+     - isAsc:是否为升序，true升序，false降序 
+     - columns:排序字段，可以有多个 
+
+   - orderByAsc/Desc(单个column):按照指定字段进行升序/降序 
+   - orderByAsc/Desc(多个column):按照多个字段进行升序/降序 
+   - orderByAsc/Desc 
+     - condition:条件，true添加排序，false不添加排序 
+     - 多个columns：按照多个字段进行排序
+
+5. 具体条件请参考官方文档的条件构造器
+
+   ```http
+   https://baomidou.com/pages/10c804/#abstractwrapper
+   ```
+
+##### 4-4. 字段映射与表名映射
+
+1. 字段映射
+
+   ![image-20230321162600944](https://img2023.cnblogs.com/blog/2854528/202303/2854528-20230321165317825-1622747605.png)
+
+2. 表名映射
+
+   ![image-20230321162619081](https://img2023.cnblogs.com/blog/2854528/202303/2854528-20230321165317375-2031343849.png)
+
+**表名映射（前缀）全局配置：**
+
+```yaml
+mybatis-plus: 
+  global-config: 
+    db-config: 
+      table-prefix: tbl_
+```
+
+
+
+### 三、DML编程控制
+
+---
+
+#### 1. Id生成策略
+
+![image-20230321163649037](https://img2023.cnblogs.com/blog/2854528/202303/2854528-20230321165316804-1506172698.png)
+
+type属性可选值：
+
+- NONE：不设置id生成策略
+- AUTO：使用数据库ID自增，在使用该策略的时候一定要确保对应的 数据库表设置了ID主键自增，否则无效
+- INPUT：用户手工输入id
+- ASSIGN_ID：雪花算法生成id(可兼容数值型与字符串型)
+- ASSIGN_UUID：以UUID生成算法作为id生成策略
+
+**id生成策略全局配置：**
+
+```yaml
+mybatis-plus: 
+  global-config: 
+    db-config: 
+      id-type: assign_id
+```
+
+
+
+
+
+
+
+所有的笔记来源于：[黑马程序员的个人空间_哔哩哔哩_bilibili](https://space.bilibili.com/37974444)
 
