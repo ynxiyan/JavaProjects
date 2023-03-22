@@ -598,13 +598,168 @@ mybatis-plus:
 
    ![image-20230322113655968](https://img2023.cnblogs.com/blog/2854528/202303/2854528-20230322114534750-1951824045.png)
 
-具体实现可参考官网：
+具体实现可参看官方文档：
 
 ```http
 https://baomidou.com/pages/0d93c0/#optimisticlockerinnerinterceptor
 ```
 
 
+
+### 四、快速开发（代码生成器）
+
+---
+
+代码生成器包含以下内容：
+
+- 模板: MyBatisPlus提供，可以自己提供，但是麻烦，不建议
+- 数据库相关配置:读取数据库获取表和字段信息
+- 开发者自定义配置:手工配置，比如ID生成策略
+
+使用步骤：
+
+1. 在创建SpringBoot项目时勾选需要的技术集
+
+   ![image-20230321102056130](https://img2023.cnblogs.com/blog/2854528/202303/2854528-20230321113007290-1348502694.png)
+
+2. 导入相应坐标
+
+   ```xml
+   <dependency>
+       <groupId>com.baomidou</groupId>
+       <artifactId>mybatis-plus-boot-starter</artifactId>
+       <version>3.4.1</version>
+   </dependency>
+   <!--        MyBatisPlus代码生成器-->
+   <dependency>
+       <groupId>com.baomidou</groupId>
+       <artifactId>mybatis-plus-generator</artifactId>
+       <version>3.4.1</version>
+   </dependency>
+   <!--        velocity模板引擎-->
+   <dependency>
+       <groupId>org.apache.velocity</groupId>
+       <artifactId>velocity-engine-core</artifactId>
+       <version>2.3</version>
+   </dependency>
+   <dependency>
+       <groupId>com.alibaba</groupId>
+       <artifactId>druid</artifactId>
+       <version>1.1.10</version>
+   </dependency>
+   <dependency>
+       <groupId>org.projectlombok</groupId>
+       <artifactId>lombok</artifactId>
+   </dependency>
+   <dependency>
+       <groupId>com.springmvc_restful</groupId>
+       <artifactId>springmvc_restful</artifactId>
+       <version>1.0-SNAPSHOT</version>
+   </dependency>
+   ```
+
+3. 配置代码生成器
+
+   ```java
+   /**
+    * @Author: XIYAN
+    * @Date: 2023/3/22 14:50
+    * @注释:MyBatisPlus代码生成器
+    */
+   public class CodeGenerator {
+       public static void main(String[] args) {
+           //1.创建代码生成器对象AutoGenerator
+           AutoGenerator autoGenerator = new AutoGenerator();
+   
+           //================================================
+   
+           //2.设置数据库相关配置
+           //创建yamlBean实例工厂对象
+           YamlPropertiesFactoryBean ymlBean = new YamlPropertiesFactoryBean();
+           //读取配置文件类路径
+           ymlBean.setResources(new ClassPathResource("application.yml"));
+           //读取配置文件
+           Properties properties = ymlBean.getObject();
+           //创建数据库连接源对象
+           DataSourceConfig dataSourceConfig = new DataSourceConfig();
+           //设置MySQL驱动
+           dataSourceConfig.setDriverName(properties.getProperty("spring.datasource.driver-class-name"));
+           //设置数据库链接
+           dataSourceConfig.setUrl(properties.getProperty("spring.datasource.url"));
+           //设置用户名
+           dataSourceConfig.setUsername(properties.getProperty("spring.datasource.username"));
+           //设置密码
+           dataSourceConfig.setPassword(properties.getProperty("spring.datasource.password"));
+           autoGenerator.setDataSource(dataSourceConfig);
+   
+           //================================================
+   
+           //3.设置全局配置
+           //创建全局配置对象
+           GlobalConfig globalConfig = new GlobalConfig();
+           //设置代码生成位置
+           globalConfig.setOutputDir(System.getProperty("user.dir") + "\\springboot_generator\\src\\main\\java");
+           //设置生成完毕后是否打开生成代码所在的目录
+           globalConfig.setOpen(false);
+           //设置作者
+           globalConfig.setAuthor("XIYAN");
+           //设置是否覆盖原始生成的文件
+           globalConfig.setFileOverride(true);
+           //设置数据层接口名，%s为占位符，指代模块名称
+           globalConfig.setMapperName("%sDao");
+           //设置Id生成策略
+           globalConfig.setIdType(IdType.AUTO);
+           autoGenerator.setGlobalConfig(globalConfig);
+   
+           //================================================
+   
+           //4.设置包名相关配置
+           //创建包名配置对象
+           PackageConfig packageConfig = new PackageConfig();
+           //设置生成的包名，与代码所在位置不冲突，二者叠加组成完整路径
+           packageConfig.setParent("com.springboot_generator");
+           //设置实体类包名
+           packageConfig.setEntity("model");
+           //设置数据层包名
+           packageConfig.setMapper("dao");
+           autoGenerator.setPackageInfo(packageConfig);
+   
+           //================================================
+   
+           //5.设置策略相关配置
+           //创建策略配置对象
+           StrategyConfig strategyConfig = new StrategyConfig();
+           //设置当前参与生成的表名，参数为可变参数，不写默认为当前数据库连接对象的所以表
+           //strategyConfig.setInclude("tbl_user");
+           //设置数据库表的前缀名称，模块名 =数据库表名 - 前缀名 例如： User = tbl_user - tbl_
+           //strategyConfig.setTablePrefix("tbl_");
+           //设置是否启用Rest风格
+           strategyConfig.setRestControllerStyle(true);
+           //设置乐观锁字段名
+           strategyConfig.setVersionFieldName("version");
+           //设置逻辑删除字段名
+           strategyConfig.setLogicDeleteFieldName("deleted");
+           //设置是否启用lombok
+           strategyConfig.setEntityLombokModel(true);
+           autoGenerator.setStrategy(strategyConfig);
+   
+           //================================================
+   
+           //6.执行代码生成器
+           autoGenerator.execute();
+       }
+   }
+   ```
+
+**注意：**代码生成器生成的Mapper.xml中对于MyBatis的环境是没有进行配置的，如果想要运行， 需要将配置文件中的内容进行完善后在运行，即配置MyBatis：[MyBatis](https://www.cnblogs.com/ynxiyan/p/17201088.html)
+
+
+
+**附：**对于Service层里MyBatisPlus封装的方法有哪些方法可用，可参看官方文档：
+
+```http
+https://baomidou.com/pages/49cc81/#service-crud-%E6%8E%A5%E5%8F%A3
+```
 
 
 

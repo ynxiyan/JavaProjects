@@ -1,0 +1,8 @@
+spring:
+  #  配置数据源
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://localhost:3306/mybatisplus_db?serverTimezone=UTC
+    username: root
+    password: 123456
