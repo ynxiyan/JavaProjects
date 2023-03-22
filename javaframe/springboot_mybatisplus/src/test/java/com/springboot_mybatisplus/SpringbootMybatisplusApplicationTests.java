@@ -15,14 +15,14 @@ class SpringbootMybatisplusApplicationTests {
 
     @Test
     void testInsert() {
-        User user = new User(null, "test", "1234", 12, "1564456776");
-        System.out.println(userDao.insert(user));
+        //User user = new User(null, "test", "1234", 12, "1564456776");
+        //System.out.println(userDao.insert(user));
     }
 
     @Test
     void testDeleteById() {
         User user = new User();
-        System.out.println(userDao.deleteById(1638011119938093058l));
+        System.out.println(userDao.deleteById(1638009402685128705l));
     }
 
     @Test

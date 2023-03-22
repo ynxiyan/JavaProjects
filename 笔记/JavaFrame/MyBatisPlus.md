@@ -369,9 +369,40 @@ mybatis-plus:
 
    ![image-20230321162600944](https://img2023.cnblogs.com/blog/2854528/202303/2854528-20230321165317825-1622747605.png)
 
+   ```java
+   @Data
+   @NoArgsConstructor
+   @AllArgsConstructor
+   //实体类映射的表
+   @TableName("user")
+   public class User {
+       ...
+       //不查询的字段
+       @TableField(select = false)
+       private String password;
+       private Integer age;
+       private String tel;
+       //不存在的字段
+       @TableField(exist = false)
+       private Integer online;
+   ...
+   }
+   ```
+
 2. 表名映射
 
    ![image-20230321162619081](https://img2023.cnblogs.com/blog/2854528/202303/2854528-20230321165317375-2031343849.png)
+   
+   ```java
+   @Data
+   @NoArgsConstructor
+   @AllArgsConstructor
+   //实体类映射的表
+   @TableName("user")
+   public class User {
+   ...
+   }
+   ```
 
 **表名映射（前缀）全局配置：**
 
@@ -392,13 +423,27 @@ mybatis-plus:
 
 ![image-20230321163649037](https://img2023.cnblogs.com/blog/2854528/202303/2854528-20230321165316804-1506172698.png)
 
+```java
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+//实体类映射的表
+@TableName("user")
+public class User {
+    //使用数据库自增策略
+    @TableId(type = IdType.AUTO)
+    private Long id;
+...
+}
+```
+
 type属性可选值：
 
 - NONE：不设置id生成策略
 - AUTO：使用数据库ID自增，在使用该策略的时候一定要确保对应的 数据库表设置了ID主键自增，否则无效
-- INPUT：用户手工输入id
-- ASSIGN_ID：雪花算法生成id(可兼容数值型与字符串型)
-- ASSIGN_UUID：以UUID生成算法作为id生成策略
+- INPUT：用户手工输入id，在使用该策略的时候需要将表的自增策略删除掉
+- ASSIGN_ID：雪花算法生成id(可兼容数值型与字符串型)，在使用该策略的时候不需要手动设置ID，如果手动设置ID，则会使用自己设置的值
+- ASSIGN_UUID：以UUID生成算法作为id生成策略，在使用该策略的时候需要注意的是，主键的类型不能是Long，而应该改成String类型（表字段的主键类型需要设置为varchar，长度要大于32，因为UUID生成的主键为32位，如果长度小的话就会导致插入失败）
 
 **id生成策略全局配置：**
 
@@ -407,6 +452,156 @@ mybatis-plus:
   global-config: 
     db-config: 
       id-type: assign_id
+```
+
+**分布式ID是什么?**
+
+- 当数据量足够大的时候，一台数据库服务器存储不下，这个时候就需要多台数据库服务器进行存储 比如订单表就有可能被存储在不同的服务器上
+- 如果用数据库表的自增主键，因为在两台服务器上所以会出现冲突这个时候就需要一个全局唯一ID,这个ID就是分布式ID。
+
+**雪花算法：**
+
+雪花算法(SnowFlake)，是Twitter官方给出的算法实现是用Scala写的；其生成的结果是一个64bit大小的整数，它的结构如下图：
+
+![image-20230322095738527](https://img2023.cnblogs.com/blog/2854528/202303/2854528-20230322110344954-1256809403.png)
+
+- 1bit,不用,因为二进制中最高位是符号位，1表示负数，0表示正数
+
+  生成的id一般都是用整数， 所以最高位固定为0
+
+- 41bit-时间戳，用来记录时间戳，毫秒级 3. 10bit-工作机器id，用来记录工作机器id,其中高位5bit是数据中心ID其取值范围0-31，低位 5bit是工作节点ID其取值范围0-31，两个组合起来最多可以容纳1024个节点
+
+- 序列号占用12bit，每个节点每毫秒0开始不断累加，最多可以累加到4095，一共可以产生4096 个ID
+
+Id生成策略对比：
+
+| 策略名称    | 具体描述                                                     |
+| ----------- | ------------------------------------------------------------ |
+| NONE        | 不设置id生成策略，MP不自动生成，约等于INPUT,所以这两种方式都需要用户手动设 置，但是手动设置第一个问题是容易出现相同的ID造成主键冲突，为了保证主键不冲突就需要做很 多判定，实现起来比较复杂 |
+| AUTO        | 数据库ID自增,这种策略适合在数据库服务器只有1台的情况下使用,不可作为分布式ID使用 |
+| ASSIGN_UUID | 可以在分布式的情况下使用，而且能够保证唯一，但是生成的主键是32位的字符 串，长度过长占用空间而且还不能排序，查询性能也慢 |
+| ASSIGN_ID   | 可以在分布式的情况下使用，生成的是Long类型的数字，可以排序性能也高，但是 生成的策略和服务器时间有关，如果修改了系统时间就有可能导致出现重复主键 |
+
+#### 2. 多记录操作
+
+实际业务中数据删除带来的问题：统计报表
+
+![image-20230322102143715](https://img2023.cnblogs.com/blog/2854528/202303/2854528-20230322110344432-763276593.png)
+
+#### 3. 逻辑删除
+
+1. 修改数据库表添加deleted列
+
+   ![image-20230322104806984](https://img2023.cnblogs.com/blog/2854528/202303/2854528-20230322110344018-882261336.png)
+
+2. 实体类添加属性
+
+   ```java
+   @Data
+   @NoArgsConstructor
+   @AllArgsConstructor
+   //实体类映射的表
+   @TableName("user")
+   public class User {
+       //使用数据库自增策略
+       @TableId(type = IdType.AUTO)
+       private Long id;
+       private String name;
+       //不查询的字段
+       @TableField(select = false)
+       private String password;
+       private Integer age;
+       private String tel;
+       //不存在的字段
+       @TableField(exist = false)
+       private Integer online;
+       @TableLogic(value = "0", delval = "1")
+       private Integer deleted;
+   }
+   ```
+
+   ![image-20230322104551273](https://img2023.cnblogs.com/blog/2854528/202303/2854528-20230322110343552-1948967517.png)
+
+   **注：**逻辑删除的本质其实是修改操作；如果加了逻辑删除字段，查询数据时也会自动带上逻辑删除字段
+
+**逻辑删除全局配置：**
+
+```yaml
+mybatis-plus: 
+  global-config: 
+    db-config: 
+      # 逻辑删除字段名 
+      logic-delete-field: deleted 
+      # 逻辑删除字面值：未删除为0 
+      logic-not-delete-value: 0 
+      # 逻辑删除字面值：删除为1 
+      logic-delete-value: 1
+```
+
+#### 4. 乐观锁
+
+实现业务并发现象带来的问题：秒杀
+
+1. 数据库表添加version列
+
+   ![image-20230322113245285](https://img2023.cnblogs.com/blog/2854528/202303/2854528-20230322114535545-1955865488.png)
+
+2. 在实体类中添加属性
+
+   ```java
+   @Data
+   @NoArgsConstructor
+   @AllArgsConstructor
+   //实体类映射的表
+   @TableName("user")
+   public class User {
+   ...
+       @Version
+       private Integer version;
+   }
+   ```
+
+3. 添加乐观锁的拦截器
+
+   ```java
+   @Configuration
+   public class MyBaitsPlusConfig {
+       /**
+        * MyBatisPlus拦截器
+        *
+        * @return
+        */
+       @Bean
+       public MybatisPlusInterceptor mybatisPlusInterceptor() {
+           //创建拦截器对象
+           MybatisPlusInterceptor mybatisPlusInterceptor = new MybatisPlusInterceptor();
+   ...
+           //添加乐观锁拦截器
+           mybatisPlusInterceptor.addInnerInterceptor(new OptimisticLockerInnerInterceptor());
+           return mybatisPlusInterceptor;
+       }
+   }
+   ```
+
+4. 测试
+
+   ```java
+   @Test 
+   void testUpdate(){ 
+       //1.先通过要修改的数据id将当前数据查询出来 
+       User user = userDao.selectById(3L); 	//version=3
+       User user2 = userDao.selectById(3L);	//version=3
+       user2.setName("Jock aaa"); userDao.updateById(user2);	//verion=3条件成立，执行成功=>version=4
+       user.setName("Jock bbb"); userDao.updateById(user);		//verion=3条件不成立，执行失败
+   }
+   ```
+
+   ![image-20230322113655968](https://img2023.cnblogs.com/blog/2854528/202303/2854528-20230322114534750-1951824045.png)
+
+具体实现可参考官网：
+
+```http
+https://baomidou.com/pages/0d93c0/#optimisticlockerinnerinterceptor
 ```
 
 
