@@ -1,6 +1,8 @@
 # [Vue项目创建](https://www.cnblogs.com/ynxiyan/p/17026455.html)
 
-#### 一、创建项目
+### 一、创建项目
+
+---
 
 1.安装淘宝镜像
 
@@ -48,7 +50,11 @@ vue ui
 npm run dev
 ```
 
-#### 二、导入ElementUI
+
+
+### 二、导入ElementUI
+
+----
 
 1.安装ElementUI
 
@@ -65,7 +71,11 @@ import 'element-ui/lib/theme-chalk/index.css';
 Vue.use(ElementUI);
 ```
 
-#### 三、导入路由
+
+
+### 三、导入路由
+
+---
 
 **? Install vue-router? No时才需要安装**
 
@@ -81,32 +91,21 @@ npm install vue-router -S
 // 引入依赖
 import Vue from 'vue'
 import VueRouter from 'vue-router'
- 
+import HelloWorld from '@/components/HelloWorld'
+
 // 使用路由中间件
 Vue.use(VueRouter)
- 
-// 懒加载引入组件
-const index = () => import('../page/index.vue')
- 
-// 路由表
-const routes = [{
-    path: '/',
-    component: index,
-    meta: {
-        title: '首页'
-    }
-}, ]
- 
- 
-// 修改路由模式
-const router = new VueRouter({
-    mode: 'history',
-    base: process.env.BASE_URL,
-    routes
-})
- 
+
 //暴露
-export default router
+export default new Router({
+    routes: [
+        {
+            path: '/',
+            name: 'HelloWorld',
+            component: HelloWorld
+        }
+    ]
+})
 ```
 
 3.在mian.js中引入刚刚改好的index.js文件 并添加到vue实例中
@@ -114,14 +113,13 @@ export default router
 ```js
 ···
 import router from './router'
- 
- 
+
 ···
- 
- 
+
 new Vue({
-  router:router,
-  ···
+    ...
+    router,
+    ···
 }
 ```
 
@@ -147,7 +145,81 @@ route是局部路由对象，当前页面或组件的路由，用来获取信息
 
 
 
-### 四、解决node版本过高问题
+### 四、导入Axios
+
+---
+
+##### 1. npm安装
+
+```bash
+npm install axios
+```
+
+##### 2. 解决跨域问题
+
+1. Vue：
+
+   - 在config目录下的index.js找到proxyTable字段并加上以下语句即可
+
+     ```js
+     proxyTable: {
+         //解决跨域
+         '/api': {
+             target: 'http://localhost:8080', // 你请求的第三方接口
+                 changeOrigin: true, // 在本地会创建一个虚拟服务端，然后发送请求的数据，并同时接收请求的数据，这样服务端和服务端进行数据的交互就不会有跨域问题
+                     pathRewrite: {  // 路径重写，
+                         '^/api': ''  // 替换target中的请求地址，也就是说以后你在请求http://localhost:8080这个地址的时候直接写成/api即可。
+                     }
+         }
+     },
+     ```
+
+   - 定义axios的请求前缀（在src目录下的min.js里加入以下语句即可）
+
+     ```js
+     axios.defaults.baseURL = '/api'
+     ```
+
+2. java：
+
+   ```java
+   /**
+    * @Author: XIYAN
+    * @Date: 2023/3/24 13:21
+    * @注释:跨域处理
+    */
+   @Configuration
+   public class WebConfig implements WebMvcConfigurer {
+       /**
+        * 跨域处理配置
+        *
+        * @param registry
+        */
+       @Override
+       public void addCorsMappings(CorsRegistry registry) {
+           // 跨域路径
+           CorsRegistration cors = registry.addMapping("/**");
+   
+           // 可访问的外部域
+           cors.allowedOrigins("*");
+           // 支持跨域用户凭证
+           //cors.allowCredentials(true);
+           //cors.allowedOriginPatterns("*");
+           // 设置 header 能携带的信息
+           cors.allowedHeaders("*");
+           // 支持跨域的请求方法
+           cors.allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS");
+           // 设置跨域过期时间，单位为秒
+           cors.maxAge(3600);
+       }
+   }
+   ```
+
+   
+
+### 五、解决node版本过高问题
+
+---
 
 <a style="color:red">临时</a>
 
