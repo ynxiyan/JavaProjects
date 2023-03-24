@@ -1,0 +1,4 @@
+0:0:0:0:0:0:0:1 - - [23/Mar/2023:10:27:31 +0800] "GET /springmvc_mybatis_test/books HTTP/1.1" 200 684 http-bio-8080-exec-1 487
+0:0:0:0:0:0:0:1 - - [23/Mar/2023:10:29:04 +0800] "GET /springmvc_mybatis_test/books HTTP/1.1" 200 774 http-bio-8080-exec-1 484
+0:0:0:0:0:0:0:1 - - [23/Mar/2023:10:30:17 +0800] "GET /springmvc_mybatis_test/books HTTP/1.1" 200 58 http-bio-8080-exec-1 530
+0:0:0:0:0:0:0:1 - - [23/Mar/2023:10:30:43 +0800] "GET /springmvc_mybatis_test/books HTTP/1.1" 200 774 http-bio-8080-exec-1 524

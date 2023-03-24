@@ -8,8 +8,11 @@
   <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="FrameworkDetectionExcludesConfiguration">
     <file type="web" url="file://$PROJECT_DIR$/mybatis_demo" />
+    <file type="web" url="file://$PROJECT_DIR$/springboot_mybatisplus_test" />
     <file type="web" url="file://$PROJECT_DIR$/springmvc_demo" />
     <file type="web" url="file://$PROJECT_DIR$/springmvc_interceptor" />
+    <file type="web" url="file://$PROJECT_DIR$/springmvc_mybatis_test" />
+    <file type="web" url="file://$PROJECT_DIR$/springmvc_mybatisplus_test" />
     <file type="web" url="file://$PROJECT_DIR$/springmvc_restful" />
     <file type="web" url="file://$PROJECT_DIR$/springmvc_ssm" />
     <file type="web" url="file://$PROJECT_DIR$/ssm_maven" />
@@ -36,6 +39,11 @@
         <option value="$PROJECT_DIR$/springboot_ssm/pom.xml" />
         <option value="$PROJECT_DIR$/springboot_mybatisplus/pom.xml" />
         <option value="$PROJECT_DIR$/springboot_generator/pom.xml" />
+        <option value="$PROJECT_DIR$/spring_mybatis_test/pom.xml" />
+        <option value="$PROJECT_DIR$/springmvc_mybatis_test/pom.xml" />
+        <option value="$PROJECT_DIR$/springmvc_mybatisplus_test/pom.xml" />
+        <option value="$PROJECT_DIR$/springboot_mybatis_test/pom.xml" />
+        <option value="$PROJECT_DIR$/springboot_mybatisplus_test/pom.xml" />
       </list>
     </option>
   </component>

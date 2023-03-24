@@ -21,7 +21,11 @@
         <module name="spring_note" />
         <module name="springmvc_demo" />
         <module name="springboot_ssm" />
+        <module name="springmvc_mybatis_test" />
         <module name="spring_mybatis" />
+        <module name="springmvc_mybatisplus_test" />
+        <module name="springboot_mybatisplus_test" />
+        <module name="springboot_mybatis_test" />
         <module name="spring_aop" />
         <module name="ssm_maven_model" />
       </profile>
@@ -34,7 +38,9 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="springboot_demo" options="-parameters" />
       <module name="springboot_generator" options="-parameters" />
+      <module name="springboot_mybatis_test" options="-parameters" />
       <module name="springboot_mybatisplus" options="-parameters" />
+      <module name="springboot_mybatisplus_test" options="-parameters" />
       <module name="springboot_ssm" options="-parameters" />
       <module name="springboot_test" options="-parameters" />
     </option>
