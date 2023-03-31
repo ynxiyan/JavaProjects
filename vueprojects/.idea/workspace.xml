@@ -5,7 +5,37 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a6d5c50d-20ee-43f4-a735-c895d407ad1a" name="变更" comment="由ynxiyan:&#10;于2023年03月24日，提交">
+      <change afterPath="$PROJECT_DIR$/../javaframe/mybatis_demo1/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../javaframe/mybatis_demo1/src/main/webapp/WEB-INF/web.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../javaframe/mybatis_demo1/src/main/webapp/index.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javaframe/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../javaframe/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javaframe/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../javaframe/.idea/dataSources.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javaframe/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../javaframe/.idea/encodings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javaframe/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../javaframe/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javaframe/spring_datasource/target/classes/applicationContext.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../javaframe/spring_datasource/target/classes/applicationContext.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javaframe/springboot_mybatis_test/src/main/java/com/ynxiyan/dao/BookDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/../javaframe/springboot_mybatis_test/src/main/java/com/ynxiyan/dao/BookDao.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javaframe/springboot_mybatis_test/src/main/java/com/ynxiyan/model/Book.java" beforeDir="false" afterPath="$PROJECT_DIR$/../javaframe/springboot_mybatis_test/src/main/java/com/ynxiyan/model/Book.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javaframe/springboot_mybatis_test/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../javaframe/springboot_mybatis_test/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javaframe/springboot_mybatis_test/src/test/java/com/ynxiyan/SpringbootMybatisTestApplicationTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/../javaframe/springboot_mybatis_test/src/test/java/com/ynxiyan/SpringbootMybatisTestApplicationTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javaframe/springboot_mybatis_test/target/classes/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../javaframe/springboot_mybatis_test/target/classes/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javaframe/springboot_mybatis_test/target/classes/com/ynxiyan/dao/BookDao.class" beforeDir="false" afterPath="$PROJECT_DIR$/../javaframe/springboot_mybatis_test/target/classes/com/ynxiyan/dao/BookDao.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javaframe/springboot_mybatis_test/target/classes/com/ynxiyan/model/Book.class" beforeDir="false" afterPath="$PROJECT_DIR$/../javaframe/springboot_mybatis_test/target/classes/com/ynxiyan/model/Book.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javaframe/springboot_mybatis_test/target/test-classes/com/ynxiyan/SpringbootMybatisTestApplicationTests.class" beforeDir="false" afterPath="$PROJECT_DIR$/../javaframe/springboot_mybatis_test/target/test-classes/com/ynxiyan/SpringbootMybatisTestApplicationTests.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javaframe/springboot_mybatisplus_test/src/test/java/com/ynxiyan/SpringbootMybatisplusTestApplicationTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/../javaframe/springboot_mybatisplus_test/src/test/java/com/ynxiyan/SpringbootMybatisplusTestApplicationTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javaframe/springboot_mybatisplus_test/target/classes/com/ynxiyan/config/WebConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/../javaframe/springboot_mybatisplus_test/target/classes/com/ynxiyan/config/WebConfig.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javaframe/springboot_mybatisplus_test/target/test-classes/com/ynxiyan/SpringbootMybatisplusTestApplicationTests.class" beforeDir="false" afterPath="$PROJECT_DIR$/../javaframe/springboot_mybatisplus_test/target/test-classes/com/ynxiyan/SpringbootMybatisplusTestApplicationTests.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javaframe/springmvc_mybatis_test/target/classes/druid.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../javaframe/springmvc_mybatis_test/target/classes/druid.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vue2_demo/config/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/vue2_demo/config/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vue2_demo/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/vue2_demo/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vue2_demo/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/vue2_demo/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vue2_demo/src/App.vue" beforeDir="false" afterPath="$PROJECT_DIR$/vue2_demo/src/App.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vue2_demo/src/components/test.vue" beforeDir="false" afterPath="$PROJECT_DIR$/vue2_demo/src/components/test.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vue2_demo/src/login.vue" beforeDir="false" afterPath="$PROJECT_DIR$/vue2_demo/src/views/login.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vue2_demo/src/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/vue2_demo/src/main.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vue2_demo/src/router/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/vue2_demo/src/router/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../笔记/VueProjects/Vue2.md" beforeDir="false" afterPath="$PROJECT_DIR$/../笔记/VueProjects/Vue2.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../笔记/VueProjects/Vue项目创建.md" beforeDir="false" afterPath="$PROJECT_DIR$/../笔记/VueProjects/Vue项目创建.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -18,6 +48,9 @@
         <option value="Vue Single File Component" />
       </list>
     </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -35,19 +68,26 @@
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;javascript.nodejs.core.library.configured.version&quot;: &quot;18.12.1&quot;,
-    &quot;javascript.nodejs.core.library.typings.version&quot;: &quot;18.15.6&quot;,
+    &quot;javascript.nodejs.core.library.typings.version&quot;: &quot;18.15.11&quot;,
     &quot;last_opened_file_path&quot;: &quot;D:/IntelliJ IDEA/Projects/vueprojects&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;settings.nodejs&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.obiscr.chatgpt.settings.commandActions&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;D:\\WebStorm\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external&quot;,
     &quot;typescript.add.unambiguous.imports.on.the.fly&quot;: &quot;true&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\IntelliJ IDEA\Projects\vueprojects\vue2_demo\src\views" />
+    </key>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="应用程序级" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="默认任务">
@@ -60,6 +100,19 @@
       <workItem from="1679626874496" duration="2178000" />
       <workItem from="1679629109045" duration="353000" />
       <workItem from="1679629484492" duration="12785000" />
+      <workItem from="1679713597307" duration="1024000" />
+      <workItem from="1679878189440" duration="5580000" />
+      <workItem from="1680138214108" duration="10000" />
+      <workItem from="1680155333717" duration="173000" />
+      <workItem from="1680155570339" duration="79000" />
+      <workItem from="1680156109328" duration="38000" />
+      <workItem from="1680156852461" duration="52000" />
+      <workItem from="1680158066161" duration="21000" />
+      <workItem from="1680158135031" duration="9000" />
+      <workItem from="1680161263702" duration="70000" />
+      <workItem from="1680170718664" duration="64000" />
+      <workItem from="1680170795498" duration="96000" />
+      <workItem from="1680170911766" duration="28000" />
     </task>
     <task id="LOCAL-00001" summary="由ynxiyan:&#10;于2023年03月24日，提交">
       <created>1679626972357</created>

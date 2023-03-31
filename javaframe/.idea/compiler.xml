@@ -17,6 +17,7 @@
         <module name="mybatis_demo" />
         <module name="ssm_maven" />
         <module name="spring_datasource" />
+        <module name="springboot_mybatis_demo" />
         <module name="springmvc_ssm" />
         <module name="spring_note" />
         <module name="springmvc_demo" />
@@ -24,6 +25,7 @@
         <module name="springmvc_mybatis_test" />
         <module name="spring_mybatis" />
         <module name="springmvc_mybatisplus_test" />
+        <module name="mybatis_demo1" />
         <module name="springboot_mybatisplus_test" />
         <module name="springboot_mybatis_test" />
         <module name="spring_aop" />
@@ -31,6 +33,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="mybatisplus_demo" target="1.8" />
       <module name="springboot_test" target="1.8" />
     </bytecodeTargetLevel>
   </component>
@@ -38,6 +41,7 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="springboot_demo" options="-parameters" />
       <module name="springboot_generator" options="-parameters" />
+      <module name="springboot_mybatis_demo" options="-parameters" />
       <module name="springboot_mybatis_test" options="-parameters" />
       <module name="springboot_mybatisplus" options="-parameters" />
       <module name="springboot_mybatisplus_test" options="-parameters" />

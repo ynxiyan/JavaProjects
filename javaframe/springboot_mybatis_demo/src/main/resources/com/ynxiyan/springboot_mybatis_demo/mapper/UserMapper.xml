@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ynxiyan.springboot_mybatis_demo.mapper.UserMapper">
+    <!--    处理字段-->
+    <resultMap id="userColum" type="com.ynxiyan.springboot_mybatis_demo.model.User">
+        <result column="username" property="userName"/>
+    </resultMap>
+    <!--    新增用户信息-->
+    <insert id="insertUser">
+        insert into tb_user (username, password
+        <if test="gender != null and gender != ''">
+            ,gender
+        </if>
+        <if test="addr != null and addr != ''">
+            ,addr
+        </if>
+        )
+        values (#{userName},'0000'
+        <if test="gender != null and gender != ''">
+            ,#{gender}
+        </if>
+        <if test="addr != null and addr != ''">
+            ,#{addr}
+        </if>
+        )
+    </insert>
+    <!--    修改用户信息-->
+    <update id="updateUser">
+        update tb_user
+        <set>
+            <if test="userName != null and userName != ''">
+                username = #{userName}
+            </if>
+            <if test="gender != null and gender != ''">
+                gender = #{gender}
+            </if>
+            <if test="addr != null and addr != ''">
+                addr = #{addr}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+    <!--    批量删除用户信息-->
+    <delete id="deleteUserByids">
+        delete
+        from tb_user
+        where id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <!--    单条件查询用户信息-->
+    <select id="selectUserSwith" resultMap="userColum">
+        select id, username, gender, addr
+        from tb_user
+        <where>
+            <choose>
+                <when test="userName != null and userName != ''">
+                    username like #{userName}
+                </when>
+                <when test="gender != null and gender != ''">
+                    gender=#{gender}
+                </when>
+                <when test="addr != null and addr != ''">
+                    addr=#{addr}
+                </when>
+            </choose>
+        </where>
+    </select>
+    <!--    多条件查询用户信息-->
+    <select id="selectUserCondition" resultMap="userColum">
+        select id, username, gender, addr
+        from tb_user
+        <where>
+            <if test="userName != null and userName != ''">
+                username like #{userName}
+            </if>
+            <if test="gender != null and gender != ''">
+                and gender=#{gender}
+            </if>
+            <if test="addr != null and addr != ''">
+                and addr=#{addr}
+            </if>
+        </where>
+    </select>
+</mapper>

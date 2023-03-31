@@ -1,3 +1,6 @@
+# 配置mapper映射
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver

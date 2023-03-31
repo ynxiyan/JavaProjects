@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--命名空间-->
+<mapper namespace="com.mybatis_demo1.mapper.BrandMapper">
+
+    <!--    字段映射-->
+    <resultMap id="brandColumn" type="com.mybatis_demo1.model.Brand">
+        <!--        品牌名称映射（普通字段）-->
+        <result column="brand_name" property="brandName"/>
+        <!--        公司名称映射（普通字段）-->
+        <result column="company_name" property="companyName"/>
+    </resultMap>
+
+    <!--    新增品牌信息（主键返回：true）-->
+    <insert id="insertBrand" useGeneratedKeys="true" keyProperty="id">
+        insert into tb_brand (brand_name, company_name, ordered, description, status)
+        values (#{brandName}, #{companyName}, #{ordered}, #{description}, #{status});
+    </insert>
+
+    <!--    修改品牌信息（动态sql）-->
+    <update id="updateBrandById">
+        update tb_brand
+        <set>
+            <if test="brandName != null and brandName != ''">
+                brand_name=
+                #{brandName},
+            </if>
+            <if test="companyName != null and companyName != ''">
+                company_name=
+                #{companyName},
+            </if>
+            <if test="ordered != null">
+                ordered=
+                #{ordered},
+            </if>
+            <if test="description != null and description != ''">
+                description=
+                #{description},
+            </if>
+            <if test="status != null">
+                status=
+                #{status}
+            </if>
+        </set>
+        where id = #{id};
+    </update>
+
+    <!--    通过品牌id删除品牌信息-->
+    <delete id="deleteBrandById">
+        delete
+        from tb_brand
+        where id = #{id};
+    </delete>
+
+    <!--    批量删除-->
+    <delete id="deleteBrandByIds">
+        delete
+        from tb_brand
+        where id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!--    查询所有品牌信息-->
+    <select id="selectBrandAll" resultMap="brandColumn">
+        select *
+        from tb_brand;
+    </select>
+
+    <!--    通过id查询品牌信息-->
+    <select id="selectBrandById" resultMap="brandColumn">
+        select *
+        from tb_brand
+        where id = #{id};
+    </select>
+
+    <!--    多条件查询品牌信息（动态sql）-->
+    <select id="selectBrandByCondition" resultMap="brandColumn">
+        select *
+        from tb_brand
+        <where>
+            <if test="status != null">
+                status =
+                #{status}
+            </if>
+            <if test="companyName != null and companyName != ''">
+                and company_name like
+                #{companyName}
+            </if>
+            <if test="brandName != null and brandName != ''">
+                and brand_name like
+                #{brandName}
+            </if>
+        </where>
+    </select>
+
+    <!--    单条件查询品牌信息（动态sql）-->
+    <select id="selectBrandBySwitch" resultMap="brandColumn">
+        select *
+        from tb_brand
+        <where>
+            <choose>
+                <when test="status != null">
+                    status =
+                    #{status}
+                </when>
+                <when test="companyName != null and companyName != ''">
+                    and company_name like
+                    #{companyName}
+                </when>
+                <when test="brandName != null and brandName != ''">
+                    and brand_name like
+                    #{brandName}
+                </when>
+            </choose>
+        </where>
+    </select>
+</mapper>

@@ -155,6 +155,12 @@ route是局部路由对象，当前页面或组件的路由，用来获取信息
 npm install axios
 ```
 
+在mian.js里使用axios
+
+```js
+Vue.prototype.axios = axios;
+```
+
 ##### 2. 解决跨域问题
 
 1. Vue：
@@ -215,9 +221,29 @@ npm install axios
    }
    ```
 
-   
 
-### 五、解决node版本过高问题
+
+
+### 五、安装Vuex
+
+---
+
+1. npm安装
+
+   ```bash
+   npm install vuex -S
+   ```
+
+2. 在mian.js里使用Vuex
+
+   ```js
+   import Vuex from 'vuex'
+   Vue.use(Vuex);
+   ```
+
+
+
+### 六、解决node版本过高问题
 
 ---
 

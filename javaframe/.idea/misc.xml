@@ -8,6 +8,7 @@
   <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="FrameworkDetectionExcludesConfiguration">
     <file type="web" url="file://$PROJECT_DIR$/mybatis_demo" />
+    <file type="web" url="file://$PROJECT_DIR$/mybatis_demo1" />
     <file type="web" url="file://$PROJECT_DIR$/springboot_mybatisplus_test" />
     <file type="web" url="file://$PROJECT_DIR$/springmvc_demo" />
     <file type="web" url="file://$PROJECT_DIR$/springmvc_interceptor" />
@@ -44,7 +45,15 @@
         <option value="$PROJECT_DIR$/springmvc_mybatisplus_test/pom.xml" />
         <option value="$PROJECT_DIR$/springboot_mybatis_test/pom.xml" />
         <option value="$PROJECT_DIR$/springboot_mybatisplus_test/pom.xml" />
+        <option value="$PROJECT_DIR$/mybatis_demo1/pom.xml" />
+        <option value="$PROJECT_DIR$/mybatisplus_demo/pom.xml" />
+        <option value="$PROJECT_DIR$/springboot_mybatis_demo/pom.xml" />
       </list>
+    </option>
+    <option name="ignoredFiles">
+      <set>
+        <option value="$PROJECT_DIR$/mybatisplus_demo/pom.xml" />
+      </set>
     </option>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">

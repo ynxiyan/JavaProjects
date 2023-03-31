@@ -6,10 +6,13 @@ import router from './router'
 import axios from "axios";
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
+import Vuex from 'vuex';
 
 Vue.config.productionTip = false;
+Vue.prototype.axios = axios;
 axios.defaults.baseURL = '/api';
 Vue.use(ElementUI);
+Vue.use(Vuex)
 
 /* eslint-disable no-new */
 new Vue({

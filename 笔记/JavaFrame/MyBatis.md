@@ -743,3 +743,49 @@ Mybatis缓存机制是指Mybatis框架提供的一种提高查询效率的功能
 
 如果需要自定义缓存实现，可以在\<cache/>标签中指定type属性为自定义的Cache接口实现类。
 
+
+
+### 九、分页插件
+
+---
+
+#### 1. MyBatis内置
+
+Mybatis内置了一个专门处理分页的类——RowBounds，我们使用它可以轻松完成分页
+
+1. mapper
+
+   ```java
+   @Mapper
+   public interface UserMapper {
+       /**
+        * 查询所有用户信息
+        *
+        * @param rowBounds 传入当前页码和每页显示数
+        * @return 返回筛选后的用户列表
+        */
+       List<User> selectUserAll(RowBounds rowBounds);
+   }
+   ```
+
+2. 测试
+
+   ```java
+   @Autowired
+   private UserMapper userMapper;
+   
+   @Test
+   void getUserAll() {
+       //当前页码
+       int currPage = 1;
+       //当前页显示记录数量
+       int pageSize = 1;
+       //注意：currPage和start别搞错了，一个表示当前页码，一个是从第几行读取记录
+       //计算从第几行读取记录
+       int start = (currPage - 1) * pageSize;
+       RowBounds rowBounds = new RowBounds(start, pageSize);
+       List<User> userList = userMapper.selectUserAll(rowBounds);
+       System.out.println(userList);
+   }
+   ```
+

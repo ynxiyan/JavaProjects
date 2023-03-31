@@ -13,6 +13,8 @@ import java.util.List;
  */
 @Mapper
 public interface BookDao {
-    @Select("select * from books")
+    @Select("select id as id,book_name as bookName,ISBN as ISBN from books")
     List<Book> selectBookAll();
+
+    int upadteById(Book book);
 }

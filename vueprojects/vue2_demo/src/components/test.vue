@@ -17,7 +17,6 @@
 </template>
 
 <script>
-import axios from "axios";
 
 export default {
   name: "test",
@@ -35,7 +34,7 @@ export default {
   },
   methods: {
     getBookList() {
-      axios.get("/books").then((response) => {
+      this.axios.get("/books").then((response) => {
         this.table = response.data.data;
       })
     }
